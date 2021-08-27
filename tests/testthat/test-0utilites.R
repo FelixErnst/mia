@@ -61,8 +61,8 @@ test_that("meltAssay", {
     expect_equal(colnames(molten_assay)[c(1:4,11)], c("FeatureID","SampleID","counts","Kingdom","X.SampleID"))
     expect_equal(is.numeric(assay_taxa_coldata$counts), TRUE)
     #
-    actual <- meltAssay(x, TRUE, TRUE)
-    expect_warning(actual2 <- meltAssay(x2, TRUE, TRUE))
+    actual <- meltAssay(x, add_row_data = TRUE, add_col_data = TRUE)
+    expect_warning(actual2 <- meltAssay(x2, add_row_data = TRUE, add_col_data = TRUE))
     expect_false("FeatureID_row" %in% colnames(actual))
     expect_true("FeatureID_row" %in% colnames(actual2))
     expect_false("SampleID_col" %in% colnames(actual))
@@ -70,7 +70,7 @@ test_that("meltAssay", {
     x3 <- x2
     rownames(x3) <- NULL
     colnames(x3) <- NULL
-    actual3 <- meltAssay(x3, TRUE, TRUE)
+    actual3 <- meltAssay(x3, add_row_data = TRUE, add_col_data = TRUE)
     expect_false("FeatureID_row" %in% colnames(actual))
     expect_false("SampleID_col" %in% colnames(actual))
     #

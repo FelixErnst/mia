@@ -1,7 +1,7 @@
 #' Converting a \code{\link[SummarizedExperiment:SummarizedExperiment-class]{SummarizedExperiment}}
 #' object into a long data.frame
 #'
-#' \code{metlAssaay} Converts a
+#' \code{meltAssay} Converts a
 #' \code{\link[SummarizedExperiment:SummarizedExperiment-class]{SummarizedExperiment}} object into a
 #' long data.frame which can be used for \code{tidyverse}-tools.
 #'
@@ -13,6 +13,9 @@
 #'
 #' @param x A numeric matrix or a
 #'   \code{\link[SummarizedExperiment:SummarizedExperiment-class]{SummarizedExperiment}}
+#'   
+#' @param abund_values a \code{character} value to select an
+#'   \code{\link[SummarizedExperiment:SummarizedExperiment-class]{assayNames}}
 #'
 #' @param add_col_data \code{NULL}, \code{TRUE} or a \code{character} vector to
 #'   select information from the \code{colData} to add to the molten assay data.
@@ -29,9 +32,6 @@
 #'   \code{add_row_data} is a \code{character} vector, it will be used to subset
 #'   to given column names in \code{rowData}. (default:
 #'   \code{add_row_data = NULL})
-#'
-#' @param abund_values a \code{character} value to select an
-#'   \code{\link[SummarizedExperiment:SummarizedExperiment-class]{assayNames}}
 #'
 #' @param feature_name a \code{character} scalar to use as the output's name
 #'   for the feature identifier. (default: \code{feature_name = "FeatureID"})
@@ -60,9 +60,10 @@
 #' @examples
 #' data(GlobalPatterns)
 #' molten_se <- meltAssay(GlobalPatterns,
+#'                        abund_values = "counts",
 #'                        add_row_data = TRUE,
-#'                        add_col_data = TRUE,
-#'                        abund_values = "counts")
+#'                        add_col_data = TRUE
+#'                        )
 #' molten_se
 NULL
 
@@ -71,9 +72,9 @@ NULL
 setGeneric("meltAssay",
            signature = "x",
            function(x,
+                    abund_values = "counts",
                     add_row_data = NULL,
                     add_col_data = NULL,
-                    abund_values = "counts", 
                     feature_name = "FeatureID",
                     sample_name = "SampleID",
                     ...)
@@ -163,9 +164,9 @@ setGeneric("meltAssay",
 #' @export
 setMethod("meltAssay", signature = c(x = "SummarizedExperiment"),
     function(x,
+             abund_values = "counts", 
              add_row_data = NULL,
              add_col_data = NULL,
-             abund_values = "counts", 
              feature_name = "FeatureID",
              sample_name = "SampleID",
              ...) {
@@ -219,7 +220,7 @@ setMethod("meltAssay", signature = c(x = "SummarizedExperiment"),
 #' @importFrom dplyr rename left_join
 .add_row_data_to_molten_assay <- function(molten_assay, x, add_row_data,
                                           feature_name) {
-    rd <- SummarizedExperiment::rowData(x)[,add_row_data] %>%
+    rd <- SummarizedExperiment::rowData(x)[,add_row_data,drop=FALSE] %>%
         data.frame()
     if(feature_name %in% add_row_data){
         rd <- rd %>%
@@ -238,7 +239,7 @@ setMethod("meltAssay", signature = c(x = "SummarizedExperiment"),
 #' @importFrom dplyr rename left_join
 .add_col_data_to_molten_assay <- function(molten_assay, x, add_col_data,
                                           sample_name, check_names = FALSE) {
-    cd <- SummarizedExperiment::colData(x)[,add_col_data] %>%
+    cd <- SummarizedExperiment::colData(x)[,add_col_data,drop=FALSE] %>%
         data.frame()
     # This makes sure that sample names match
     if(check_names == TRUE){
