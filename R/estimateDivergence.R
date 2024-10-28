@@ -119,7 +119,8 @@ setMethod("getDivergence", signature = c(x="SummarizedExperiment"),
         }
         ################# Input check end #############
         # Get assay and references
-        mat <- .get_matrix_and_reference(x, assay.type, reference, ref_type)
+        mat <- .get_matrix_and_reference(
+            x, assay.type, reference, ref_type, ...)
         reference <- mat[[2]]
         mat <- mat[[1]]
         # Calculate sample-wise divergence
@@ -165,7 +166,7 @@ setMethod("getDivergence", signature = c(x="SummarizedExperiment"),
 #' @importFrom SingleCellExperiment reducedDimNames reducedDim
 .get_matrix_and_reference <- function(
         x, assay.type, reference, ref_type, dimred = NULL,
-        ref.name = "temporal_reference_for_divergence"){
+        ref.name = "temporal_reference_for_divergence", ...){
     #
     if( !.is_a_string(ref.name) ){
         stop("'ref.name' must be a single character value.", call. = FALSE)
