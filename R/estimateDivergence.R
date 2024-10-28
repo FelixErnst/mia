@@ -162,16 +162,33 @@ setMethod("getDivergence", signature = c(x="SummarizedExperiment"),
 }
 
 # This function gets the abundance table along with reference information
+#' @importFrom SingleCellExperiment reducedDimNames reducedDim
 .get_matrix_and_reference <- function(
-        x, assay.type, reference, ref_type,
+        x, assay.type, reference, ref_type, dimred = NULL,
         ref.name = "temporal_reference_for_divergence"){
     #
     if( !.is_a_string(ref.name) ){
         stop("'ref.name' must be a single character value.", call. = FALSE)
     }
     #
-    # Get assay
-    mat <- assay(x, assay.type)
+    if( !is.null(dimred) && !is(x, "SingleCellExperiment") ){
+        stop("If 'dimred' is specified, 'x' must be SingleCellExperiment.",
+            call. = FALSE)
+    }
+    if( !(is.null(dimred) || (
+        (.is_a_string(dimred) && dimred %in% reducedDimNames(x)) ||
+        .is_integer(dimred) && dimred > 0 && dimred <= length(reducedDims(x))
+        ))){
+        stop("'dimred' must be NULL or specify a name from reducedDimNames(x).",
+            call.= FALSE)
+    }
+    # Get assay or reducedDim
+    if( is.null(dimred) ){
+        mat <- assay(x, assay.type)
+    } else{
+        mat <- t(reducedDim(x, dimred))
+    }
+    
     # If reference type is median or mean, calculate it
     if( ref_type %in% c("median", "mean") ){
         reference <- apply(mat, 1, ref_type)
@@ -190,6 +207,11 @@ setMethod("getDivergence", signature = c(x="SummarizedExperiment"),
     # If the reference is only one sample, replicate it to cover all samples
     if( .is_a_string(reference) ){
         reference <- rep(reference, ncol(mat))
+    }
+    # Check that all reference samples are included in the data
+    if( !all(reference %in% colnames(mat)) ){
+        stop("All reference samples must be included in the data.",
+            call. = FALSE)
     }
     # Return a list with matrix and reference samples for each sample
     res <- list(mat, reference)
