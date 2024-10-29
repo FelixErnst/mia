@@ -201,7 +201,7 @@ setMethod("meltSE", signature = c(x = "SummarizedExperiment"),
         # At this point, the variable includes character vector.
         # Check that the input includes only those values that can be found.
         if( any(!add.row %in% cn ) ){
-            stop("All column specified by 'add.", .internal_MARGIN, "' ",
+            stop("All columns specified by 'add.", .internal_MARGIN, "' ",
                 "must match with columns in ",.internal_MARGIN, "Data()",
                 call. = FALSE)
         }
@@ -271,7 +271,9 @@ setMethod("meltSE", signature = c(x = "SummarizedExperiment"),
                 "'", .internal_MARGIN, "Data(), which will be renamed to '",
                 row.name, "_", .internal_MARGIN, "'", call. = FALSE)
         rd <- rd |>
-            dplyr::rename(!!sym(.row_switch_name(row.name)) := !!sym(row.name))
+            dplyr::rename(
+                !!sym(paste0(row.name, "_", .internal_MARGIN))
+                := !!sym(row.name))
     }
     # Add feature names to column in rowData
     rd <- rd |>
