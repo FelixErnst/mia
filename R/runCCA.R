@@ -480,7 +480,7 @@ setMethod("addRDA", "SingleCellExperiment",
     # Get data in correct orientation. Samples should be in rows in abundance
     # table.
     x <- as.matrix(t(x))
-    data <- as.data.frame(data)
+    data <- data.frame(data, check.names = FALSE)
     # Instead of letting na.action pass through, give informative error
     # about missing values.
     if( any(is.na(data)) && isTRUE(all.equal(na.action, na.fail)) ){
