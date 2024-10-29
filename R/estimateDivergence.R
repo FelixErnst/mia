@@ -103,6 +103,8 @@ setMethod("getDivergence", signature = c(x="SummarizedExperiment"),
         x, assay.type = assay_name, assay_name = "counts", 
         reference = "median", method = "bray", ...){
         ################### Input check ###############
+        # Get altExp if user has specified
+        x <- .check_and_get_altExp(x, ...)
         # Check assay.type
         .check_assay_present(assay.type, x)
         # Check reference
@@ -119,12 +121,11 @@ setMethod("getDivergence", signature = c(x="SummarizedExperiment"),
         }
         ################# Input check end #############
         # Get assay and references
-        mat <- .get_matrix_and_reference(
+        args <- .get_matrix_and_reference(
             x, assay.type, reference, ref_type, ...)
-        reference <- mat[[2]]
-        mat <- mat[[1]]
         # Calculate sample-wise divergence
-        res <- .calc_divergence(mat, reference, method, ...)
+        args <- c(args, list(method = method), list(...))
+        res <- do.call(.calc_divergence, args)
         # Get only values and ensure that their order is correct
         res <- res[match(colnames(x), res[["sample"]]), "value"]
         return(res)
@@ -176,6 +177,7 @@ setMethod("getDivergence", signature = c(x="SummarizedExperiment"),
         stop("If 'dimred' is specified, 'x' must be SingleCellExperiment.",
             call. = FALSE)
     }
+    #
     if( !(is.null(dimred) || (
         (.is_a_string(dimred) && dimred %in% reducedDimNames(x)) ||
         .is_integer(dimred) && dimred > 0 && dimred <= length(reducedDims(x))
