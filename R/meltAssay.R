@@ -217,15 +217,15 @@ setMethod("meltSE", signature = c(x = "SummarizedExperiment"),
 .melt_assay <- function(x, assay.type, row.name, col.name, ...){
     # Get assay, ensure that it is a matrix. Ensure that it has row and colnames
     # from the TreeSE
-    mat <- assay(x, assay.type) %>%
+    mat <- assay(x, assay.type) |>
         as.matrix() 
     rownames(mat) <- rownames(x)
     colnames(mat) <- colnames(x)
     # Convert it to long format
-    mat <- mat %>%
+    mat <- mat |>
         # Convert to data.frame, add feature names to column
-        data.frame(check.names = FALSE) %>%
-        rownames_to_column(row.name) %>%
+        data.frame(check.names = FALSE) |>
+        rownames_to_column(row.name) |>
         # Melt data to long format. There are now 3 columns: for feature names
         # sample names, and for abundance values.
         pivot_longer(
@@ -254,7 +254,7 @@ setMethod("meltSE", signature = c(x = "SummarizedExperiment"),
     #
     # Get rowData/colData, and only specified columns
     rd <- MARGIN_FUN(x)
-    rd <- rd[ , colnames(rd) %in% add.row, drop = FALSE] %>%
+    rd <- rd[ , colnames(rd) %in% add.row, drop = FALSE] |>
         data.frame(check.names = FALSE)
     # Now get those variables from rowData that match with the
     # user-specified columns. For instance, it might be that there are
@@ -270,14 +270,14 @@ setMethod("meltSE", signature = c(x = "SummarizedExperiment"),
         warning("'x' contains a column '", row.name, "' in its ",
                 "'", .internal_MARGIN, "Data(), which will be renamed to '",
                 row.name, "_", .internal_MARGIN, "'", call. = FALSE)
-        rd <- rd %>%
+        rd <- rd |>
             dplyr::rename(!!sym(.row_switch_name(row.name)) := !!sym(row.name))
     }
     # Add feature names to column in rowData
-    rd <- rd %>%
+    rd <- rd |>
         rownames_to_column(row.name)
     # Add rowData to melted data
-    molten_assay <- molten_assay %>%
+    molten_assay <- molten_assay |>
         dplyr::left_join(rd, by = row.name)
     return(molten_assay)
 }
@@ -294,7 +294,7 @@ setMethod("meltSE", signature = c(x = "SummarizedExperiment"),
     }
     #
     # Factorize feature names and sample names
-    molten_assay <- molten_assay %>%
+    molten_assay <- molten_assay |>
         mutate(
             !!sym(row.name) := factor(!!sym(row.name)),
             !!sym(col.name) := factor(!!sym(col.name)))
