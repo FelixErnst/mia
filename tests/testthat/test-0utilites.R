@@ -77,7 +77,7 @@ test_that("meltSE", {
     # Should give warning that FeatureID and SampleID columns are renamed
     expect_warning(actual2 <- meltSE(x2, add.row = TRUE, add.col = TRUE))
     # Should not give warning since row/colData are not added
-    expect_no_warning(actual2 <- meltSE(x2, add.row = FALSE, add.col = FALSE))
+    expect_no_warning(meltSE(x2, add.row = FALSE, add.col = FALSE))
     expect_false("FeatureID_row" %in% colnames(actual))
     expect_true("FeatureID_row" %in% colnames(actual2))
     expect_false("SampleID_col" %in% colnames(actual))
