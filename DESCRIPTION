@@ -1,16 +1,16 @@
 Package: mia
 Type: Package
-Version: 1.13.46
+Version: 1.13.47
 Authors@R:
-    c(person(given = "Felix G.M.", family = "Ernst", role = c("aut"),
+    c(person(given = "Tuomas", family = "Borman", role = c("aut", "cre"),
+             email = "tuomas.v.borman@utu.fi",
+             comment = c(ORCID = "0000-0002-8563-8884")),
+      person(given = "Felix G.M.", family = "Ernst", role = c("aut"),
              email = "felix.gm.ernst@outlook.com",
              comment = c(ORCID = "0000-0001-5064-0928")),
       person(given = "Sudarshan A.", family = "Shetty", role = c("aut"),
              email = "sudarshanshetty9@gmail.com",
              comment = c(ORCID = "0000-0001-7280-9915")),
-      person(given = "Tuomas", family = "Borman", role = c("aut", "cre"),
-             email = "tuomas.v.borman@utu.fi",
-             comment = c(ORCID = "0000-0002-8563-8884")),
       person(given = "Leo", family = "Lahti", role = c("aut"),
              email = "leo.lahti@iki.fi",
              comment = c(ORCID = "0000-0001-5537-637X")),

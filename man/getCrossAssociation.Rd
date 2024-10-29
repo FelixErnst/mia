@@ -48,7 +48,8 @@ getCrossAssociation(x, ...)
 }
 \arguments{
 \item{x}{A
-\code{\link[MultiAssayExperiment:MultiAssayExperiment-class]{MultiAssayExperiment}} or
+\code{\link[MultiAssayExperiment:MultiAssayExperiment-class]{MultiAssayExperiment}}
+or
 \code{\link[SummarizedExperiment:SummarizedExperiment-class]{SummarizedExperiment}}
 object.}
 
@@ -57,47 +58,48 @@ object.}
 \item \code{symmetric}:   \code{Logical scalar}. Specifies if
 measure is symmetric or not. When \code{symmetric = TRUE}, associations
 are calculated only for unique variable-pairs, and they are assigned to
-corresponding variable-pair. This decreases the number of calculations in 2-fold
-meaning faster execution. (By default: \code{FALSE})
-\item \code{association.fun}:  A function that is used to calculate (dis-)similarity
-between features. Function must take matrix as an input and give numeric
-values as an output. Adjust \code{method} and other parameters correspondingly.
-Supported functions are, for example, \code{stats::dist} and \code{vegan::vegdist}.
+corresponding variable-pair. This decreases the number of calculations in
+2-fold meaning faster execution. (By default: \code{FALSE})
+
+\item \code{association.fun}:  A function that is used to calculate
+(dis-)similarity between features. Function must take matrix as an input
+and give numeric values as an output. Adjust \code{method} and other
+parameters correspondingly. Supported functions are, for example,
+\code{stats::dist} and \code{vegan::vegdist}.
 }}
 
-\item{experiment1}{\code{Character scalar} or \code{numeric scalar}. Selects the experiment 1
-from \code{experiments(x)} of \code{MultiassayExperiment} object.
-(Default: \code{1})}
+\item{experiment1}{\code{Character scalar} or \code{numeric scalar}.
+Selects the experiment 1 from \code{experiments(x)} of
+\code{MultiassayExperiment} object. (Default: \code{1})}
 
-\item{experiment2}{\code{Character scalar} or \code{numeric scalar}. Selects the experiment 2
-from\code{experiments(x)} of \code{MultiAssayExperiment} object or
+\item{experiment2}{\code{Character scalar} or \code{numeric scalar}.
+Selects the experiment 2 from\code{experiments(x)} of
+\code{MultiAssayExperiment} object or
 \code{altExp(x)} of \code{TreeSummarizedExperiment} object. Alternatively,
-\code{experiment2} can also be \code{TreeSE} object when \code{x} is \code{TreeSE} object.
-(Default: \code{2} when \code{x} is \code{MAE} and
+\code{experiment2} can also be \code{TreeSE} object when \code{x} is
+\code{TreeSE} object. (Default: \code{2} when \code{x} is \code{MAE} and
 \code{x} when \code{x} is \code{TreeSE})}
 
-\item{assay.type1}{\code{Character scalar}. Specifies the name of the assay in experiment 1
-to be transformed.. (Default: \code{"counts"})}
+\item{assay.type1}{\code{Character scalar}. Specifies the name of the assay
+in experiment 1 to be transformed.. (Default: \code{"counts"})}
 
 \item{assay_name1}{Deprecated. Use \code{assay.type1} instead.}
 
-\item{assay.type2}{\code{Character scalar}. Specifies the name of the assay in experiment 2
-to be transformed.. (Default: \code{"counts"})}
+\item{assay.type2}{\code{Character scalar}. Specifies the name of the
+assay in experiment 2 to be transformed.. (Default: \code{"counts"})}
 
 \item{assay_name2}{Deprecated. Use \code{assay.type2} instead.}
 
-\item{altexp1}{\code{Character scalar} or \code{numeric scalar}. Specifies alternative experiment
-from the altExp of experiment 1. If NULL, then the experiment is itself
-and altExp option is disabled.
-(Default: \code{NULL})}
+\item{altexp1}{\code{Character scalar} or \code{numeric scalar}. Specifies
+alternative experiment from the altExp of experiment 1. If NULL, then the
+experiment is itself and altExp option is disabled. (Default: \code{NULL})}
 
-\item{altexp2}{\code{Character scalar} or \code{numeric scalar}. Specifies alternative experiment
-from the altExp of experiment 2. If NULL, then the experiment is itself
-and altExp option is disabled.
-(Default: \code{NULL})}
+\item{altexp2}{\code{Character scalar} or \code{numeric scalar}. Specifies
+alternative experiment from the altExp of experiment 2. If NULL, then the
+experiment is itself and altExp option is disabled. (Default: \code{NULL})}
 
-\item{col.var1}{\code{Character scalar}. Specifies column(s) from colData
-of experiment 1. If col.var1 is used, assay.type1 is disabled.
+\item{col.var1}{\code{Character scalar}. Specifies column(s) from
+\code{colData} of experiment 1. If col.var1 is used, assay.type1 is disabled.
 (Default: \code{NULL})}
 
 \item{colData_variable1}{Deprecated. Use \code{col.var1} instead.}
@@ -115,8 +117,8 @@ Must be \code{'rows'} or \code{'cols'}.}
 \item{MARGIN}{Deprecated. Use \code{by} instead.}
 
 \item{method}{\code{Character scalar}. Defines the association method
-('kendall', pearson', or 'spearman' for continuous/numeric; 'categorical' for discrete)
-(Default: \code{"kendall"})}
+('kendall', pearson', or 'spearman' for continuous/numeric; 'categorical'
+for discrete) (Default: \code{"kendall"})}
 
 \item{mode}{\code{Character scalar}. Specifies the  output format
 Available formats are  'table' and 'matrix'.  (Default: \code{"table"})}
@@ -144,11 +146,12 @@ in result matrices. Used method is hierarchical clustering.
 (Default: \code{FALSE})}
 
 \item{filter.self.cor}{\code{Logical scalar}. Specifies whether to
-filter out correlations between identical items. Applies only when correlation
-between experiment itself is tested, i.e., when assays are identical.
-(Default: \code{FALSE})}
+filter out correlations between identical items. Applies only when
+correlation between experiment itself is tested, i.e., when assays are
+identical. (Default: \code{FALSE})}
 
-\item{filter_self_correlations}{Deprecated. Use \code{filter.self.cor} instead.}
+\item{filter_self_correlations}{Deprecated. Use \code{filter.self.cor}
+instead.}
 
 \item{verbose}{\code{Logical scalar}. Specifies whether to get messages
 about progress of calculation. (Default: \code{FALSE})}
@@ -159,8 +162,8 @@ statistical significance of associations.
 
 \item{test_significance}{Deprecated. Use \code{test.signif} instead.}
 
-\item{show.warnings}{\code{Logical scalar}. specifies whether to show warnings
-that might occur when correlations and p-values are calculated.
+\item{show.warnings}{\code{Logical scalar}. specifies whether to show
+warnings that might occur when correlations and p-values are calculated.
 (Default: \code{FALSE})}
 
 \item{show_warnings}{Deprecated. use \code{show.warnings} instead.}
@@ -170,11 +173,11 @@ that might occur when correlations and p-values are calculated.
 when \code{by = 1}. (Default: \code{FALSE})}
 }
 \value{
-This function returns associations in table or matrix format. In table format,
-returned value is a data frame that includes  features and associations
-(and p-values) in columns. In matrix format, returned value is a one matrix
-when only associations are calculated. If also significances are tested, then
-returned value is a list of matrices.
+This function returns associations in table or matrix format. In table
+format, returned value is a data frame that includes  features and
+associations (and p-values) in columns. In matrix format, returned value
+is a one matrix when only associations are calculated. If also significances
+are tested, then returned value is a list of matrices.
 }
 \description{
 Calculate correlations between features of two experiments.
@@ -185,10 +188,10 @@ features of two experiments. By default, it not only computes associations
 but also tests their significance. If desired, setting
 \code{test.signif} to FALSE disables significance calculation.
 
-We recommend the non-parametric Kendall's tau as the default method for association
-analysis. Kendall's tau has desirable statistical properties and robustness at lower
-sample sizes. Spearman rank correlation can provide faster solutions when
-running times are critical.
+We recommend the non-parametric Kendall's tau as the default method for
+association analysis. Kendall's tau has desirable statistical properties and
+robustness at lower sample sizes. Spearman rank correlation can provide
+faster solutions when running times are critical.
 }
 \examples{
 data(HintikkaXOData)
@@ -198,7 +201,8 @@ mae <- HintikkaXOData
 mae[[1]] <- mae[[1]][1:20, 1:10]
 mae[[2]] <- mae[[2]][1:20, 1:10]
 # Several rows in the counts assay have a standard deviation of zero
-# Remove them, since they do not add useful information about cross-association
+# Remove them, since they do not add useful information about
+# cross-association
 mae[[1]] <- mae[[1]][rowSds(assay(mae[[1]])) > 0, ]
 # Transform data
 mae[[1]] <- transformAssay(mae[[1]], method = "rclr")
@@ -211,7 +215,8 @@ head(result, 5)
 # Use altExp option to specify alternative experiment from the experiment
 altExp(mae[[1]], "Phylum") <- agglomerateByRank(mae[[1]], rank = "Phylum")
 # Transform data
-altExp(mae[[1]], "Phylum") <- transformAssay(altExp(mae[[1]], "Phylum"), method = "relabundance")
+altExp(mae[[1]], "Phylum") <- transformAssay(
+    altExp(mae[[1]], "Phylum"), method = "relabundance")
 # When mode = "matrix", the return value is a matrix
 result <- getCrossAssociation(
     mae, experiment2 = 2, assay.type1 = "relabundance", assay.type2 = "nmr",
@@ -224,10 +229,9 @@ head(result, 5)
 # filter.self.cor = TRUE filters self correlations
 # p.adj.threshold can be used to filter those features that do not
 # have any correlations whose p-value is lower than the threshold
-result <- getCrossAssociation(mae[[1]], experiment2 = mae[[1]], method = "pearson",
-                                         filter.self.cor = TRUE,
-                                         p.adj.threshold = 0.05,
-                                         test.signif = TRUE)
+result <- getCrossAssociation(
+    mae[[1]], experiment2 = mae[[1]], method = "pearson",
+    filter.self.cor = TRUE, p.adj.threshold = 0.05, test.signif = TRUE)
 # Show first 5 entries
 head(result, 5)
                                         
@@ -236,20 +240,19 @@ names(result)
 
 # Calculate Bray-Curtis dissimilarity between samples. If dataset includes
 # paired samples, you can use paired = TRUE.
-result <- getCrossAssociation(mae[[1]], mae[[1]], by = 2, paired = FALSE,
-                                        association.fun = vegan::vegdist, 
-                                        method = "bray")
+result <- getCrossAssociation(
+    mae[[1]], mae[[1]], by = 2, paired = FALSE,
+    association.fun = getDissimilarity, method = "bray")
                                         
 
-# If experiments are equal and measure is symmetric (e.g., taxa1 vs taxa2 == taxa2 vs taxa1),
-# it is possible to speed-up calculations by calculating association only for unique
-# variable-pairs. Use "symmetric" to choose whether to measure association for only
-# other half of of variable-pairs.
-result <- getCrossAssociation(mae, experiment1 = "microbiota", 
-                                 experiment2 = "microbiota", 
-                                 assay.type1 = "counts", 
-                                 assay.type2 = "counts",
-                                 symmetric = TRUE)
+# If experiments are equal and measure is symmetric
+# (e.g., taxa1 vs taxa2 == taxa2 vs taxa1),
+# it is possible to speed-up calculations by calculating association only
+# for unique variable-pairs. Use "symmetric" to choose whether to measure
+# association for only other half of of variable-pairs.
+result <- getCrossAssociation(
+    mae, experiment1 = "microbiota", experiment2 = "microbiota", 
+    assay.type1 = "counts", assay.type2 = "counts", symmetric = TRUE)
 
 # For big data sets, the calculations might take a long time.
 # To speed them up, you can take a random sample from the data. 
@@ -260,12 +263,13 @@ tse <- mae[[1]]
 tse_sub <- tse[ sample( seq_len( nrow(tse) ), sample_size * nrow(tse) ), ]
 result <- getCrossAssociation(tse_sub)
 
-# It is also possible to choose variables from colData and calculate association
-# between assay and sample metadata or between variables of sample metadata
+# It is also possible to choose variables from colData and calculate
+# association between assay and sample metadata or between variables of
+# sample metadata
 mae[[1]] <- addAlpha(mae[[1]])
-# colData_variable works similarly to assay.type. Instead of fetching an assay
-# named assay.type from assay slot, it fetches a column named colData_variable
-# from colData.
+# col.var works similarly to assay.type. Instead of fetching
+# an assay named assay.type from assay slot, it fetches a column named
+# col.var from colData.
 result <- getCrossAssociation(
     mae[[1]], assay.type1 = "counts", 
     col.var2 = c("shannon_diversity", "coverage_diversity"),
