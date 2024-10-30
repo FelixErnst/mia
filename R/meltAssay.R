@@ -82,8 +82,10 @@ setMethod("meltSE", signature = c(x = "SummarizedExperiment"),
     function(
         x,
         assay.type = assay_name, assay_name = "counts", 
-        add.row = NULL,
-        add.col = NULL,
+        add.row = add_row_data,
+        add_row_data = NULL,
+        add.col = add_col_data,
+        add_col_data = NULL,
         row.name = feature_name,
         feature_name = "FeatureID",
         col.name = sample_name,
@@ -286,7 +288,7 @@ setMethod("meltSE", signature = c(x = "SummarizedExperiment"),
 
 # This function factorize feature and sample names and modifies colnames if
 # specified.
-#' @importFrom dplyr mutate select
+#' @importFrom dplyr mutate sym
 .format_molten_assay <- function(
         molten_assay, x, row.name, col.name, check.names = check_names,
         check_names = FALSE, ...) {
