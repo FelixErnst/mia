@@ -19,7 +19,7 @@ object."><!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mat
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mia</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.13.47</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.15.0</span>
       </span>
     </div>
 
@@ -46,7 +46,7 @@ object."><!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mat
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Latent Dirichlet Allocation</h1>
-    <small class="dont-index">Source: <a href="https://github.com/microbiome/mia/blob/var_spaces/R/addLDA.R" class="external-link"><code>R/addLDA.R</code></a></small>
+    <small class="dont-index">Source: <a href="https://github.com/microbiome/mia/blob/devel/R/addLDA.R" class="external-link"><code>R/addLDA.R</code></a></small>
     <div class="hidden name"><code>addLDA.Rd</code></div>
     </div>
 
@@ -137,12 +137,12 @@ feature loadings.</p>
 <span class="r-in"><span><span class="va">loadings</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="fu">reducedDim</span><span class="op">(</span><span class="va">tse</span>, <span class="st">"LDA"</span><span class="op">)</span>, <span class="st">"loadings"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">loadings</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                            1            2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> AD3             3.639838e-07 9.836407e-04</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Acidobacteria   4.177491e-05 3.648936e-02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Actinobacteria  4.941860e-02 1.093380e-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Armatimonadetes 4.574984e-07 5.296288e-04</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> BRC1            1.684705e-07 7.110193e-05</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Bacteroidetes   3.737999e-01 9.678525e-02</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> AD3             0.0009958818 5.399757e-19</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Acidobacteria   0.0327640919 6.384093e-03</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Actinobacteria  0.0562107584 1.313314e-01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Armatimonadetes 0.0001826624 5.379771e-04</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> BRC1            0.0000556889 2.492672e-05</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Bacteroidetes   0.2812962611 8.803735e-02</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Estimate models with number of topics from 2 to 10</span></span></span>
 <span class="r-in"><span><span class="va">tse</span> <span class="op">&lt;-</span> <span class="fu">addLDA</span><span class="op">(</span><span class="va">tse</span>, k <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">3</span>, <span class="fl">4</span>, <span class="fl">5</span>, <span class="fl">6</span>, <span class="fl">7</span>, <span class="fl">8</span>, <span class="fl">9</span>, <span class="fl">10</span><span class="op">)</span>, name <span class="op">=</span> <span class="st">"LDA_10"</span><span class="op">)</span></span></span>
