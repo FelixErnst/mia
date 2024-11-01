@@ -3,23 +3,11 @@
 \name{meltSE}
 \alias{meltSE}
 \alias{meltSE,SummarizedExperiment-method}
-\title{Converting a \code{\link[SummarizedExperiment:SummarizedExperiment-class]{SummarizedExperiment}}
+\title{Converting a
+\code{\link[SummarizedExperiment:SummarizedExperiment-class]{SummarizedExperiment}}
 object into a long data.frame}
 \usage{
-meltSE(
-  x,
-  assay.type = assay_name,
-  assay_name = "counts",
-  add.row = add_row_data,
-  add_row_data = NULL,
-  add.col = add_col_data,
-  add_col_data = NULL,
-  row.name = feature_name,
-  feature_name = "FeatureID",
-  col.name = sample_name,
-  sample_name = "SampleID",
-  ...
-)
+meltSE(x, ...)
 
 \S4method{meltSE}{SummarizedExperiment}(
   x,
@@ -39,6 +27,14 @@ meltSE(
 \arguments{
 \item{x}{\code{\link[TreeSummarizedExperiment:TreeSummarizedExperiment-class]{TreeSummarizedExperiment}}.}
 
+\item{...}{optional arguments:
+\itemize{
+\item check.names: \code{Logical scalar}. Passed to data.frame
+function's check.name argument. Determines if sample names are checked
+that they are syntactically valid variable names and are not duplicated.
+If they are not, sample names are modified. (Default: \code{TRUE})
+}}
+
 \item{assay.type}{\code{Character scalar}. Specifies which assay to use for
 calculation. (Default: \code{"counts"})}
 
@@ -49,15 +45,14 @@ select information from the \code{rowData} to add to the molten assay data.
 If \code{add.row = NULL} no data will be added, if
 \code{add.row = TRUE} all data will be added and if
 \code{add.row} is a \code{character} vector, it will be used to subset
-to given column names in \code{rowData}. (Default:
-\code{NULL})}
+to given column names in \code{rowData}. (Default: \code{NULL})}
 
 \item{add_row_data}{Deprecated. Use \code{add.row} instead.}
 
-\item{add.col}{\code{Logical scalar}. \code{NULL} ,or \code{character vector}. Used to
-select information from the \code{colData} to add to the molten assay data.
-If \code{add.col = NULL} no data will be added, if
-\code{add.col = TRUE} all data will be added and if
+\item{add.col}{\code{Logical scalar}. \code{NULL}, or
+\code{character vector}. Used to select information from the \code{colData}
+to add to the molten assay data. If \code{add.col = NULL} no data will
+be added, if \code{add.col = TRUE} all data will be added and if
 \code{add.col} is a \code{character} vector, it will be used to subset
 to given column names in \code{colData}. (Default: \code{NULL})}
 
@@ -72,25 +67,17 @@ for the feature identifier. (Default: \code{"FeatureID"})}
 for the sample identifier. (Default: \code{"SampleID"})}
 
 \item{sample_name}{Deprecated. Use \code{col.name} instead.}
-
-\item{...}{optional arguments:
-\itemize{
-\item check_names: \code{Logical scalar}. Passed to data.frame function's check.name
-argument. Determines if sample names are checked that they are syntactically
-valid variable names and are not duplicated. If they are not, sample names
-are modified. (Default: \code{TRUE})
-}}
 }
 \value{
 A \code{tibble} with the molten data. The assay values are given in a
 column named like the selected assay \code{assay.type}. In addition, a
 column \dQuote{FeatureID} will contain the rownames, if set, and analogously
-a column \dQuote{SampleID} with the colnames, if set
+a column \dQuote{SampleID} with the colnames, if set.
 }
 \description{
 \code{meltSE} Converts a
-\code{\link[SummarizedExperiment:SummarizedExperiment-class]{SummarizedExperiment}} object into a
-long data.frame which can be used for \code{tidyverse}-tools.
+\code{\link[SummarizedExperiment:SummarizedExperiment-class]{SummarizedExperiment}}
+object into a long data.frame which can be used for \code{tidyverse}-tools.
 }
 \details{
 If the \code{colData} contains a column \dQuote{SampleID} or the
@@ -100,10 +87,11 @@ names are set.
 }
 \examples{
 data(GlobalPatterns)
-molten_tse <- meltSE(GlobalPatterns,
-                        assay.type = "counts",
-                        add.row = TRUE,
-                        add.col = TRUE
-                        )
+molten_tse <- meltSE(
+    GlobalPatterns,
+    assay.type = "counts",
+    add.row = TRUE,
+    add.col = TRUE
+    )
 molten_tse
 }

@@ -132,5 +132,21 @@ test_that("CCA", {
     )
     enterotype <- enterotype[, complete.cases(colData(enterotype)[, variable_names])]
     expect_equal(colnames(res), colnames(enterotype))
+    
+    # Test that variables with spaces work
+    tse <- enterotype
+    tse[["Clinical status"]] <- tse[["ClinicalStatus"]]
+    #
+    res1 <- getCCA(
+        tse, formula = data ~ ClinicalStatus, na.action = na.exclude)
+    res2 <- getCCA(
+        tse, col.var = "Clinical status", na.action = na.exclude)
+    expect_equal(res1, res2, check.attributes = FALSE)
+    #
+    res1 <- getRDA(
+        tse, formula = data ~ ClinicalStatus, na.action = na.exclude)
+    res2 <- getRDA(
+        tse, col.var = "Clinical status", na.action = na.exclude)
+    expect_equal(res1, res2, check.attributes = FALSE)
 })
 

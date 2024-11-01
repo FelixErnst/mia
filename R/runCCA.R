@@ -406,7 +406,7 @@ setMethod("addRDA", "SingleCellExperiment",
         # If column variables are specified, create a formula based on them and
         # get variables
         formula <- as.formula(
-            paste0("mat ~ ", paste(col.var, collapse = " + ")))
+            paste0("mat ~ `", paste(col.var, collapse = "` + `"), "`"))
         # Get the data from colData
         variables <- colData(x)[ , col.var, drop = FALSE]
     } else{
@@ -480,7 +480,7 @@ setMethod("addRDA", "SingleCellExperiment",
     # Get data in correct orientation. Samples should be in rows in abundance
     # table.
     x <- as.matrix(t(x))
-    data <- as.data.frame(data)
+    data <- data.frame(data, check.names = FALSE)
     # Instead of letting na.action pass through, give informative error
     # about missing values.
     if( any(is.na(data)) && isTRUE(all.equal(na.action, na.fail)) ){
@@ -555,10 +555,10 @@ setMethod("addRDA", "SingleCellExperiment",
 #' @importFrom stats anova
 .test_rda <- function(mat, rda, variables, ...){
     # Perform permanova for whole model and for variables
-    permanova_model <- anova.cca(rda, by = NULL, ...)
+    permanova_model <- anova.cca(rda, by = NULL)
     if( !is.null(variables) ){
         res <- .test_rda_vars(
-            mat, rda, variables, permanova_model, by = "margin", ...)
+            mat, rda, variables, permanova_model, ...)
     } else{
         res <- list(permanova = permanova_model)
     }
