@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mia</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.15.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.15.2</span>
       </span>
     </div>
 
@@ -44,7 +44,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Estimate divergence</h1>
-    <small class="dont-index">Source: <a href="https://github.com/microbiome/mia/blob/divergence_dimred/R/estimateDivergence.R" class="external-link"><code>R/estimateDivergence.R</code></a></small>
+    <small class="dont-index">Source: <a href="https://github.com/microbiome/mia/blob/divergence_dimred/R/addDivergence.R" class="external-link"><code>R/addDivergence.R</code></a></small>
     <div class="hidden name"><code>addDivergence.Rd</code></div>
     </div>
 
@@ -92,7 +92,12 @@ in metadata of the output. (Default: <code>method</code>)</p></dd>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
-<dd><p>optional arguments</p></dd>
+<dd><p>optional arguments passed to
+<code><a href="getDissimilarity.html">addDissimilarity</a></code>. Additionally:</p><ul><li><p><code>dimred</code>: <code>Character scalar</code>. Specifies the name of
+dimension reduction result from <code>reducedDim(x)</code>. If used, these
+values are used to calculate divergence instead of the assay. Can be
+disabled with <code>NULL</code>. (Default: <code>NULL</code>)</p></li>
+</ul></dd>
 
 
 <dt id="arg-assay-type">assay.type<a class="anchor" aria-label="anchor" href="#arg-assay-type"></a></dt>
@@ -117,7 +122,7 @@ calculate. (Default: <code>"bray"</code>)</p></dd>
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p><code>x</code> with additional <code>colData</code> named <code>*name*</code></p>
+    <p><code>x</code> with additional <code>colData</code> named <code>name</code></p>
     </div>
     <div id="details">
     <h2>Details</h2>
@@ -131,9 +136,10 @@ applied to equalize sample sizes between comparisons.</p>
     </div>
     <div id="see-also">
     <h2>See also</h2>
-    <div class="dont-index"><p><code><a href="https://rdrr.io/pkg/scater/man/plotColData.html" class="external-link">plotColData</a></code></p><ul><li><p><code><a href="deprecate.html">estimateRichness</a></code></p></li>
-<li><p><code><a href="deprecate.html">estimateEvenness</a></code></p></li>
-<li><p><code><a href="deprecate.html">estimateDominance</a></code></p></li>
+    <div class="dont-index">
+<ul><li><p><code><a href="addAlpha.html">addAlpha</a></code></p></li>
+<li><p><code><a href="getDissimilarity.html">addDissimilarity</a></code></p></li>
+<li><p><code><a href="https://rdrr.io/pkg/scater/man/plotColData.html" class="external-link">plotColData</a></code></p></li>
 </ul></div>
     </div>
 
