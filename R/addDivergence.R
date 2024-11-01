@@ -12,9 +12,16 @@
 #' \code{colData(x)} or either \code{"mean"} or \code{"median"}.
 #' (Default: \code{"median"})
 #'
-#' @param ... optional arguments
+#' @param ... optional arguments passed to
+#' \code{\link[mia:addDissimilarity]{addDissimilarity}}. Additionally:
+#' \itemize{
+#'   \item \code{dimred}: \code{Character scalar}. Specifies the name of
+#'   dimension reduction result from \code{reducedDim(x)}. If used, these
+#'   values are used to calculate divergence instead of the assay. Can be
+#'   disabled with \code{NULL}. (Default: \code{NULL})
+#' }
 #' 
-#' @return \code{x} with additional \code{\link{colData}} named \code{*name*}
+#' @return \code{x} with additional \code{\link{colData}} named \code{name}
 #' 
 #' @details
 #'
@@ -22,17 +29,16 @@
 #' set can be quantified by the average sample dissimilarity or beta
 #' diversity with respect to a given reference sample.
 #'
-#' The calculation makes use of the function `getDissimilarity()`. The
+#' The calculation makes use of the function \code{getDissimilarity()}. The
 #' divergence 
 #' measure is sensitive to sample size. Subsampling or bootstrapping can be 
 #' applied to equalize sample sizes between comparisons.
 #' 
 #' @seealso
-#' \code{\link[scater:plotColData]{plotColData}}
 #' \itemize{
-#'   \item{\code{\link[mia:estimateRichness]{estimateRichness}}}
-#'   \item{\code{\link[mia:estimateEvenness]{estimateEvenness}}}
-#'   \item{\code{\link[mia:estimateDominance]{estimateDominance}}}
+#'   \item \code{\link[mia:addAlpha]{addAlpha}}
+#'   \item \code{\link[mia:addDissimilarity]{addDissimilarity}}
+#'   \item \code{\link[scater:plotColData]{plotColData}}
 #' }
 #' 
 #' @name addDivergence
