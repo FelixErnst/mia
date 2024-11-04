@@ -218,7 +218,7 @@ setMethod("getDivergence", signature = c(x="SummarizedExperiment"),
         reference <- rep(reference, ncol(mat))
     }
     # Check that all reference samples are included in the data
-    if( !all(reference %in% colnames(mat)) ){
+    if( !all(reference %in% colnames(mat) | is.na(reference)) ){
         stop("All reference samples must be included in the data.",
             call. = FALSE)
     }
