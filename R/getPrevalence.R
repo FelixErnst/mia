@@ -28,6 +28,9 @@
 #'
 #' @param na.rm \code{Logical scalar}. Should NA values be omitted when calculating
 #' prevalence? (Default: \code{TRUE})
+#' 
+#' @param update.tree \code{Logical scalar}. Should
+#' \code{rowTree()} also be agglomerated? (Default: \code{FALSE})
 #'
 #' @param ... additional arguments
 #' \itemize{
@@ -444,6 +447,24 @@ setMethod("subsetByPrevalent", signature = c(x = "SummarizedExperiment"),
     }
 )
 
+#' @rdname getPrevalence
+#' @export
+setMethod("subsetByPrevalent", signature = c(x = "TreeSummarizedExperiment"),
+    function(x, update.tree = FALSE, ...){
+        # Check that update.tree is logical value
+        if( !.is_a_bool(update.tree) ){
+            stop("'update.tree' must be TRUE or FALSE.", call. = FALSE)
+        }
+        #
+        x <- callNextMethod(x, ...)
+        # Agglomerate tree if specified
+        if( update.tree ){
+            x <- .agglomerate_trees(x, ...)
+        }
+    return(x)
+    }
+)
+
 ############################# subsetByRare #################################
 
 #' @rdname getPrevalence
@@ -459,6 +480,24 @@ setMethod("subsetByRare", signature = c(x = "SummarizedExperiment"),
         x <- .agg_for_prevalence(x, rank = rank, ...)
         rare_indices <- .get_rare_indices(x, ...)
         x[rare_indices, ]
+    }
+)
+
+#' @rdname getPrevalence
+#' @export
+setMethod("subsetByRare", signature = c(x = "TreeSummarizedExperiment"),
+    function(x, update.tree = FALSE, ...){
+        # Check that update.tree is logical value
+        if( !.is_a_bool(update.tree) ){
+            stop("'update.tree' must be TRUE or FALSE.", call. = FALSE)
+        }
+        #
+        x <- callNextMethod(x, ...)
+        # Agglomerate tree if specified
+        if( update.tree ){
+            x <- .agglomerate_trees(x, ...)
+        }
+        return(x)
     }
 )
 

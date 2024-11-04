@@ -156,3 +156,6 @@ computation
 + transformAssay can apply transformation to altExp
 + Added CSS transformation
 + In agglomerateByVariable, splitOn and getDominant, use 'group' to specify grouping variable.
+
+Changes in version 1.15.x
++ subsetBy*: added update.tree argument

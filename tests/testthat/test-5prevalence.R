@@ -310,6 +310,10 @@ test_that("subsetByPrevalent", {
     alias <- subsetByPrevalent(gp_null, detection=5, prevalence = 0.33, rank = "Phylum")
     alias <- unname(assay(alias, "counts"))
     expect_equal(alias, pr2)
+    
+    # Check that tree subsetting works
+    tse_sub <- subsetByPrevalent(GlobalPatterns, prevalence = 0.4, rank = "Genus", update.tree = TRUE)
+    expect_equal(length(rowTree(tse_sub)$tip.label), nrow(tse_sub))
 
 })
 
@@ -371,7 +375,10 @@ test_that("subsetByRare", {
     alias <- subsetByRare(gp_null, detection=5, prevalence = 0.33, rank = "Phylum")
     alias <- unname(assay(alias, "counts"))
     expect_equal(alias, pr2)
-
+    
+    # Check that tree subsetting works
+    tse_sub <- subsetByRare(GlobalPatterns, rank = "Class", update.tree = TRUE)
+    expect_equal(length(rowTree(tse_sub)$tip.label), nrow(tse_sub))
 })
 
 test_that("agglomerateByPrevalence", {

@@ -12,8 +12,10 @@
 \alias{getRare,SummarizedExperiment-method}
 \alias{subsetByPrevalent}
 \alias{subsetByPrevalent,SummarizedExperiment-method}
+\alias{subsetByPrevalent,TreeSummarizedExperiment-method}
 \alias{subsetByRare}
 \alias{subsetByRare,SummarizedExperiment-method}
+\alias{subsetByRare,TreeSummarizedExperiment-method}
 \alias{getPrevalentAbundance}
 \alias{getPrevalentAbundance,ANY-method}
 \alias{getPrevalentAbundance,SummarizedExperiment-method}
@@ -81,9 +83,13 @@ subsetByPrevalent(x, ...)
 
 \S4method{subsetByPrevalent}{SummarizedExperiment}(x, rank = NULL, ...)
 
+\S4method{subsetByPrevalent}{TreeSummarizedExperiment}(x, update.tree = FALSE, ...)
+
 subsetByRare(x, ...)
 
 \S4method{subsetByRare}{SummarizedExperiment}(x, rank = NULL, ...)
+
+\S4method{subsetByRare}{TreeSummarizedExperiment}(x, update.tree = FALSE, ...)
 
 getPrevalentAbundance(
   x,
@@ -148,6 +154,9 @@ calculation. (Default: \code{"counts"})}
 \item{prevalence}{Prevalence threshold (in 0 to 1). The
 required prevalence is strictly greater by default. To include the
 limit, set \code{include.lowest} to \code{TRUE}.}
+
+\item{update.tree}{\code{Logical scalar}. Should
+\code{rowTree()} also be agglomerated? (Default: \code{FALSE})}
 }
 \value{
 \code{subsetPrevalent} and \code{subsetRareFeatures} return subset of
