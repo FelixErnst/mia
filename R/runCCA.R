@@ -21,7 +21,7 @@
 #' \code{SummarizedExperiment},\code{col.var} can be used to specify variables
 #' from \code{colData}.
 #'   
-#' @param variables Deprecated. Use \code{"col.var"} instead.
+#' @param variables Deprecated. Use \code{col.var} instead.
 #' 
 #' @param test.signif \code{Logical scalar}. Should the PERMANOVA and analysis
 #' of multivariate homogeneity of group dispersions be performed.
@@ -30,45 +30,53 @@
 #' @param altexp \code{Character scalar} or \code{integer scalar}. Specifies an
 #' alternative experiment containing the input data.
 #' 
-#' @param name \code{Character scalar}. A name for the column of the 
-#' \code{colData} where results will be stored. (Default: \code{"CCA"})
+#' @param name \code{Character scalar}. A name for the \code{reducedDim()}  
+#' where results will be stored. (Default: \code{"CCA"})
 #' 
 #' @param exprs_values Deprecated. Use \code{assay.type} instead.
 #'
 #' @param ... additional arguments passed to vegan::cca or vegan::dbrda and
 #' other internal functions.
 #' \itemize{
-#'   \item{\code{method} a dissimilarity measure to be applied in dbRDA and
-#'   possible following homogeneity test. (By default:
-#'   \code{method="euclidean"})}
-#'   \item{\code{scale}: \code{Logical scalar}. Should the expression values be
+#'   \item \code{method} a dissimilarity measure to be applied in dbRDA and
+#'   possible following homogeneity test. (Default: \code{"bray"})
+#'   
+#'   \item \code{scale}: \code{Logical scalar}. Should the expression values be
 #'   standardized? \code{scale} is disabled when using \code{*RDA} functions.
-#'   Please scale before performing RDA. (Default: \code{TRUE})}
-#'   \item{\code{na.action}: \code{function}. Action to take when missing
+#'   Please scale before performing RDA. (Default: \code{TRUE})
+#'   
+#'   \item \code{na.action}: \code{function}. Action to take when missing
 #'   values for any of the variables in \code{formula} are encountered.
-#'   (Default: \code{na.fail})}
-#'   \item{\code{full} \code{Logical scalar}. should all the results from the
-#'   significance calculations be returned. When \code{full=FALSE}, only
-#'   summary tables are returned. (Default: \code{FALSE})}
-#'   \item{\code{homogeneity.test}: \code{Character scalar}. Specifies
-#'   the significance test used to analyse \code{vegan::betadisper} results.
-#'   Options include 'permanova' (\code{vegan::permutest}), 'anova'
-#'   (\code{stats::anova}) and 'tukeyhsd' (\code{stats::TukeyHSD}).
-#'   (By default: \code{homogeneity.test="permanova"})}
-#'   \item{\code{permutations} a numeric value specifying the number of
+#'   (Default: \code{na.fail})
+#'   
+#'   \item \code{full} \code{Logical scalar}. Should all the results from the
+#'   significance calculations be returned. When \code{FALSE}, only
+#'   summary tables are returned. (Default: \code{FALSE})
+#'   
+#'   \item \code{homogeneity.test}: \code{Character scalar}. Specifies
+#'   the significance test used to analyse
+#'   \code{\link[vegan:betadisper]{vegan::betadisper}} results.
+#'   Options include 'permanova'
+#'   (\code{\link[vegan:permutest]{vegan::permutest}}), 'anova'
+#'   (\code{\link[stats:anova]{stats::anova}}) and 'tukeyhsd'
+#'   (\code{\link[stats:TukeyHSD]{stats::TukeyHSD}}).
+#'   (Default: \code{"permanova"})
+#'   
+#'   \item \code{permutations} a numeric value specifying the number of
 #'   permutations for significance testing in \code{vegan::anova.cca}.
-#'   (By default: \code{permutations=999})}
+#'   (Default: \code{999})
 #' }
 #' 
 #' @details
 #' *CCA functions utilize \code{vegan:cca} and *RDA functions
-#' \code{vegan:dbRDA}. By default, dbRDA is done with euclidean distances, which
+#' \code{vegan:dbRDA}.dbRDA performed with euclidean distances
 #' is equivalent to RDA. \code{col.var} and \code{formula} can be missing,
 #' which turns the CCA analysis into a CA analysis and dbRDA into PCoA/MDS.
 #'   
 #' Significance tests are done with \code{vegan:anova.cca} (PERMANOVA). Group
 #' dispersion, i.e., homogeneity within groups is analyzed with 
-#' \code{vegan:betadisper} (multivariate homogeneity of groups dispersions
+#' \code{\link[vegan:betadisper]{vegan::betadisper}}
+#' (multivariate homogeneity of groups dispersions
 #' (variances)) and statistical significance of homogeneity is tested with a
 #' test specified by \code{homogeneity.test} parameter.
 #'
@@ -465,7 +473,7 @@ setMethod("addRDA", "SingleCellExperiment",
 #' @importFrom vegan cca dbrda sppscores<- eigenvals scores
 .calculate_rda <- function(
         x, formula, data, scores, scale = TRUE, na.action = na.fail,
-        method = distance, distance = "euclidean", ord.method = "CCA", ...){
+        method = distance, distance = "bray", ord.method = "CCA", ...){
     # input check
     if(!.is_a_bool(scale)){
         stop("'scale' must be TRUE or FALSE.", call. = FALSE)
@@ -566,21 +574,12 @@ setMethod("addRDA", "SingleCellExperiment",
 }
 
 # Test association of variables to ordination
-#' @importFrom vegan anova.cca vegdist betadisper
+#' @importFrom vegan anova.cca
 .test_rda_vars <- function(
-        mat, rda, variables, permanova_model, by = "margin", full = FALSE,
-        homogeneity.test = "permanova", method = distance,
-        distance = "euclidean", ...){
+        mat, rda, variables, permanova_model, by = "margin", full = FALSE, ...){
     # Check full parameter
     if( !.is_a_bool(full) ){
         stop("'full' must be TRUE or FALSE.", call. = FALSE)
-    }
-    # Check homogeneity.test
-    if( !(is.character(homogeneity.test) &&
-            length(homogeneity.test) == 1 &&
-            homogeneity.test %in% c("permanova", "anova", "tukeyhsd")) ){
-        stop("'homogeneity.test' must be 'permanova', 'anova', or 'tukeyhsd'.",
-            call. = FALSE)
     }
     #
     # Perform PERMANOVA
@@ -597,17 +596,51 @@ setMethod("addRDA", "SingleCellExperiment",
     # Add info about explained variance
     permanova_tab[ , "Explained variance"] <- permanova_tab[ , 2] /
         permanova_tab[ , "Total variance"]
-
+    
     # Perform homogeneity analysis
-    mat <- t(mat)
-    # Get the dissimilarity matrix based on original dissimilarity index
-    # provided by user. If the analysis is CCA, disable method; calculate
-    # always euclidean distances because CCA is based on Euclidean distances.
-    if( length(class(rda)) == 1 && is(rda, 'cca') ){
-        dist_mat <- vegdist(mat, method = "euclidean")
-    } else{
-        dist_mat <- vegdist(mat, method = method, ...)
+    homogeneity <- .calculate_homogeneity(
+        mat, variables, method, full = full, ...)
+    
+    # Return whole data or just a tables
+    permanova_res <- permanova_tab
+    if( full ){
+        permanova_res <- list(
+            summary = permanova_tab,
+            model = permanova_model,
+            variables = permanova)
     }
+    res <- list(permanova = permanova_res, homogeneity = homogeneity)
+    return(res)
+}
+
+#' @importFrom vegan vegdist betadisper
+.calculate_homogeneity <- function(
+        mat, variables, method = distance, distance = "bray",
+        homogeneity.test = "permanova", full = FALSE, ...){
+    # Check homogeneity.test
+    if( !(.is_a_string(homogeneity.test) &&
+          homogeneity.test %in% c("permanova", "anova", "tukeyhsd")) ){
+        stop("'homogeneity.test' must be 'permanova', 'anova', or 'tukeyhsd'.",
+             call. = FALSE)
+    }
+    # Check full parameter
+    if( !.is_a_bool(full) ){
+        stop("'full' must be TRUE or FALSE.", call. = FALSE)
+    }
+    # Check that there are more than one group per variable. If there are only
+    # one group, we cannot calculate homogeneity for those variables.
+    cols <- vapply(
+        variables, function(x) length(unique(x))>1, FUN.VALUE = logical(1))
+    if( any(!cols) ){
+        warning("The following variables contain only one group. Cannot ",
+            "calculate homogeneity for them: '",
+            paste0(names(cols)[!cols], collapse = "','"), "'", call. = FALSE)
+        variables <- variables[, cols, drop = FALSE]
+    }
+    #
+    # Calculate dissimilarity matrix
+    mat <- t(mat)
+    diss_mat <- vegdist(mat, method = method, ...)
     # For all variables run the analysis
     homogeneity <- lapply(colnames(variables), function(x){
         # Get variable values
@@ -617,9 +650,9 @@ setMethod("addRDA", "SingleCellExperiment",
         # changed to zero" Suppress possible messages:
         # "missing observations due to 'group' removed"
         suppressWarnings(
-        suppressMessages(
-        betadisper_res <- betadisper(dist_mat, group = var)
-        )
+            suppressMessages(
+                betadisper_res <- betadisper(diss_mat, group = var)
+            )
         )
         # Run significance test
         significance <- .homogeneity_significance(
@@ -640,23 +673,10 @@ setMethod("addRDA", "SingleCellExperiment",
     # Get tables
     homogeneity_tab <- lapply(homogeneity, function(x) x[["table"]])
     # Combine tables
-    homogeneity_tab <- do.call(rbind, homogeneity_tab)
-    
-    # Return whole data or just a tables
+    res <- do.call(rbind, homogeneity_tab)
+    # Return either only summary table or whole result including fitterd models
     if( full ){
-        res <- list(
-            permanova = list(
-                summary = permanova_tab,
-                model = permanova_model,
-                variables = permanova),
-            homogeneity = list(
-                summary = homogeneity_tab,
-                variables = homogeneity_model)
-        )
-    } else{
-        res <- list(
-            permanova = permanova_tab,
-            homogeneity = homogeneity_tab)
+        res <- list(summary = res, variables = homogeneity_model)    
     }
     return(res)
 }
@@ -666,14 +686,12 @@ setMethod("addRDA", "SingleCellExperiment",
 #' @importFrom vegan permutest
 .homogeneity_significance <- function(betadisper_res, homogeneity.test, ...){
     # Run specified significance test
-    if( homogeneity.test == "anova" ){
-        res <- anova(betadisper_res, ...)
-    } else if ( homogeneity.test == "tukeyhsd" ){
-        res <- TukeyHSD(betadisper_res, ...)
-    } else{
-        res <- permutest(betadisper_res, ...)
-    }
-
+    FUN <- switch(homogeneity.test,
+        "permanova" = permutest,
+        "anova" = anova,
+        "tukeyhsd" = TukeyHSD
+    )
+    res <- do.call(FUN, c(list(betadisper_res), ...))
     # Get summary table from the results
     if( homogeneity.test == "anova" ){
         tab <- as.data.frame(res)
@@ -682,7 +700,6 @@ setMethod("addRDA", "SingleCellExperiment",
     } else{
         tab <- res[["tab"]]
     }
-    
     # Modify permanova/anova table
     if( homogeneity.test != "tukeyhsd" ){
         # Add info about total variance
@@ -694,7 +711,6 @@ setMethod("addRDA", "SingleCellExperiment",
         # Get only groups row (drop residuals row)
         tab <- tab[1, ]
     }
-    
     # Create list from the object and results
     res <- list(
         obj = res,

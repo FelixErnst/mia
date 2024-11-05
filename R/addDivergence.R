@@ -13,7 +13,7 @@
 #' (Default: \code{"median"})
 #'
 #' @param ... optional arguments passed to
-#' \code{\link[mia:addDissimilarity]{addDissimilarity}}. Additionally:
+#' \code{\link[=addDissimilarity]{addDissimilarity}}. Additionally:
 #' \itemize{
 #'   \item \code{dimred}: \code{Character scalar}. Specifies the name of
 #'   dimension reduction result from \code{reducedDim(x)}. If used, these
@@ -36,8 +36,8 @@
 #' 
 #' @seealso
 #' \itemize{
-#'   \item \code{\link[mia:addAlpha]{addAlpha}}
-#'   \item \code{\link[mia:addDissimilarity]{addDissimilarity}}
+#'   \item \code{\link[=addAlpha]{addAlpha}}
+#'   \item \code{\link[=addDissimilarity]{addDissimilarity}}
 #'   \item \code{\link[scater:plotColData]{plotColData}}
 #' }
 #' 

@@ -99,9 +99,9 @@
 #' @seealso
 #' \code{\link[scater:plotColData]{plotColData}}
 #' \itemize{
-#'   \item{\code{\link[mia:estimateRichness]{estimateRichness}}}
-#'   \item{\code{\link[mia:estimateDominance]{estimateDominance}}}
-#'   \item{\code{\link[mia:estimateDiversity]{estimateDiversity}}}
+#'   \item{\code{\link[=estimateRichness]{estimateRichness}}}
+#'   \item{\code{\link[=estimateDominance]{estimateDominance}}}
+#'   \item{\code{\link[=estimateDiversity]{estimateDiversity}}}
 #' }
 #'
 #' @name .estimate_evenness

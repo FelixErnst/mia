@@ -159,3 +159,4 @@ computation
 
 Changes in version 1.15.x
 + subsetBy*: added update.tree argument
++ Added getPERMANOVA and addPERMANOVA functions to calculate PERMANOVA

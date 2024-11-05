@@ -4,6 +4,7 @@ reference:
 - contents:
   - getCrossAssociation
   - getMediation
+  - getPERMANOVA
 
 - title: Clustering
 - contents:

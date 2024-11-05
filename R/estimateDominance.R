@@ -162,9 +162,9 @@
 #'
 #' @seealso
 #' \itemize{
-#'   \item \code{\link[mia:estimateRichness]{estimateRichness}}
-#'   \item \code{\link[mia:estimateEvenness]{estimateEvenness}}
-#'   \item \code{\link[mia:estimateDiversity]{estimateDiversity}}
+#'   \item \code{\link[=estimateRichness]{estimateRichness}}
+#'   \item \code{\link[=estimateEvenness]{estimateEvenness}}
+#'   \item \code{\link[=estimateDiversity]{estimateDiversity}}
 #' }
 #'
 #' @name .estimate_dominance

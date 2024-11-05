@@ -71,26 +71,33 @@ runRDA(x, ...)
 \item{...}{additional arguments passed to vegan::cca or vegan::dbrda and
 other internal functions.
 \itemize{
-\item{\code{method} a dissimilarity measure to be applied in dbRDA and
-possible following homogeneity test. (By default:
-\code{method="euclidean"})}
-\item{\code{scale}: \code{Logical scalar}. Should the expression values be
+\item \code{method} a dissimilarity measure to be applied in dbRDA and
+possible following homogeneity test. (Default: \code{"bray"})
+
+\item \code{scale}: \code{Logical scalar}. Should the expression values be
 standardized? \code{scale} is disabled when using \code{*RDA} functions.
-Please scale before performing RDA. (Default: \code{TRUE})}
-\item{\code{na.action}: \code{function}. Action to take when missing
+Please scale before performing RDA. (Default: \code{TRUE})
+
+\item \code{na.action}: \code{function}. Action to take when missing
 values for any of the variables in \code{formula} are encountered.
-(Default: \code{na.fail})}
-\item{\code{full} \code{Logical scalar}. should all the results from the
-significance calculations be returned. When \code{full=FALSE}, only
-summary tables are returned. (Default: \code{FALSE})}
-\item{\code{homogeneity.test}: \code{Character scalar}. Specifies
-the significance test used to analyse \code{vegan::betadisper} results.
-Options include 'permanova' (\code{vegan::permutest}), 'anova'
-(\code{stats::anova}) and 'tukeyhsd' (\code{stats::TukeyHSD}).
-(By default: \code{homogeneity.test="permanova"})}
-\item{\code{permutations} a numeric value specifying the number of
+(Default: \code{na.fail})
+
+\item \code{full} \code{Logical scalar}. Should all the results from the
+significance calculations be returned. When \code{FALSE}, only
+summary tables are returned. (Default: \code{FALSE})
+
+\item \code{homogeneity.test}: \code{Character scalar}. Specifies
+the significance test used to analyse
+\code{\link[vegan:betadisper]{vegan::betadisper}} results.
+Options include 'permanova'
+(\code{\link[vegan:permutest]{vegan::permutest}}), 'anova'
+(\code{\link[stats:anova]{stats::anova}}) and 'tukeyhsd'
+(\code{\link[stats:TukeyHSD]{stats::TukeyHSD}}).
+(Default: \code{"permanova"})
+
+\item \code{permutations} a numeric value specifying the number of
 permutations for significance testing in \code{vegan::anova.cca}.
-(By default: \code{permutations=999})}
+(Default: \code{999})
 }}
 
 \item{formula}{\code{formula}. If \code{x} is a
@@ -108,7 +115,7 @@ including covariates defined by \code{formula}.}
 \code{SummarizedExperiment},\code{col.var} can be used to specify variables
 from \code{colData}.}
 
-\item{variables}{Deprecated. Use \code{"col.var"} instead.}
+\item{variables}{Deprecated. Use \code{col.var} instead.}
 
 \item{test.signif}{\code{Logical scalar}. Should the PERMANOVA and analysis
 of multivariate homogeneity of group dispersions be performed.
@@ -124,8 +131,8 @@ calculation. (Default: \code{"counts"})}
 \item{altexp}{\code{Character scalar} or \code{integer scalar}. Specifies an
 alternative experiment containing the input data.}
 
-\item{name}{\code{Character scalar}. A name for the column of the
-\code{colData} where results will be stored. (Default: \code{"CCA"})}
+\item{name}{\code{Character scalar}. A name for the \code{reducedDim()}
+where results will be stored. (Default: \code{"CCA"})}
 }
 \value{
 For \code{getCCA} a matrix with samples as rows and CCA dimensions as
@@ -142,13 +149,14 @@ in a \code{SummarizedExperiment}.
 }
 \details{
 *CCA functions utilize \code{vegan:cca} and *RDA functions
-\code{vegan:dbRDA}. By default, dbRDA is done with euclidean distances, which
+\code{vegan:dbRDA}.dbRDA performed with euclidean distances
 is equivalent to RDA. \code{col.var} and \code{formula} can be missing,
 which turns the CCA analysis into a CA analysis and dbRDA into PCoA/MDS.
 
 Significance tests are done with \code{vegan:anova.cca} (PERMANOVA). Group
 dispersion, i.e., homogeneity within groups is analyzed with
-\code{vegan:betadisper} (multivariate homogeneity of groups dispersions
+\code{\link[vegan:betadisper]{vegan::betadisper}}
+(multivariate homogeneity of groups dispersions
 (variances)) and statistical significance of homogeneity is tested with a
 test specified by \code{homogeneity.test} parameter.
 }
