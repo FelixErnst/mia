@@ -70,7 +70,7 @@
 #' data(GlobalPatterns)
 #' tse <- GlobalPatterns
 #' 
-#' # Apply relative transform
+#' # Apply relative transformation
 #' tse <- transformAssay(tse, method = "relabundance")
 #' # Perform PERMANOVA
 #' tse <- addPERMANOVA(
@@ -129,6 +129,7 @@ setMethod("getPERMANOVA", "SummarizedExperiment",
                 call. = FALSE)
         }
         ########################### Input check end ############################
+        # Get abundance table, formula and related sample metadata as DF
         mat <- assay(x, assay.type)
         temp <- .get_formula_and_covariates(x, formula, col.var)
         formula <- temp[["formula"]]
@@ -186,6 +187,9 @@ setMethod("addPERMANOVA", "SummarizedExperiment",
 
 ################################ HELP FUNCTIONS ################################
 
+# This function is internal function to perform PERMANOVA from abundance
+# matrix, formula and sample metadata table.
+#' @importFrom vegan adonis2
 .calculate_permanova <- function(
         x, formula, data, by = "margin", na.action = na.fail, ...){
     #
@@ -211,7 +215,7 @@ setMethod("addPERMANOVA", "SummarizedExperiment",
     formula <- as.formula(
         paste(as.character(formula)[c(2,1,3)], collapse = " "))
     # Calculate PERMANOVA
-    res <- vegan::adonis2(
+    res <- adonis2(
         formula = formula, data = data, by = by, na.action = na.action, ...)
     return(res)
 }

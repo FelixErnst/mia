@@ -106,7 +106,7 @@ homogeneity assumption.
 data(GlobalPatterns)
 tse <- GlobalPatterns
 
-# Apply relative transform
+# Apply relative transformation
 tse <- transformAssay(tse, method = "relabundance")
 # Perform PERMANOVA
 tse <- addPERMANOVA(
