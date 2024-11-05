@@ -39,6 +39,9 @@
 #' @param name \code{Character scalar}. A name for the results that will be
 #' stored to metadata. (Default: \code{"permanova"})
 #' 
+#' @param method \code{Character scalar}. A dissimilarity metric used in
+#' PERMANOVA and group dispersion calculation. (Default: \code{"bray"})
+#' 
 #' @param test.homogeneity \code{Logical scalar}. Should the homogeneity of
 #' group dispersions be evaluated? (Default: \code{TRUE})
 #'
@@ -143,7 +146,7 @@ setMethod("getPERMANOVA", "SummarizedExperiment",
 #' @export
 #' @rdname getPERMANOVA
 setMethod("getPERMANOVA", "ANY", function(
-        x, formula, data, test.homogeneity = TRUE, ...){
+        x, formula, data, method = "bray", test.homogeneity = TRUE, ...){
     if( !is.matrix(x) ){
         stop("'x' must be matrix.", call. = FALSE)
     }
@@ -157,14 +160,18 @@ setMethod("getPERMANOVA", "ANY", function(
         stop("Number of columns in 'x' should match with number of rows in ",
             "'data'.", call. = FALSE)
     }
+    if( !.is_a_string(method) ){
+        stop("'method' must be a single character value.", call. = FALSE)
+    }
     if( !.is_a_bool(test.homogeneity) ){
         stop("'test.homogeneity' must be TRUE or FALSE.", call. = FALSE)
     }
     # Calculate PERMANOVA
-    res <- .calculate_permanova(x, formula = formula, data = data, ...)
+    res <- .calculate_permanova(
+        x, formula = formula, data = data, method = method, ...)
     # Test homogeneity
     if( test.homogeneity ){
-        homogeneity <- .calculate_homogeneity(x, data, ...)
+        homogeneity <- .calculate_homogeneity(x, data, method = method, ...)
         res <- list(permanova = res, homogeneity = homogeneity)
     }
     return(res)

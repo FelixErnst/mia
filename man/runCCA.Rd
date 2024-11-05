@@ -72,7 +72,7 @@ runRDA(x, ...)
 other internal functions.
 \itemize{
 \item \code{method} a dissimilarity measure to be applied in dbRDA and
-possible following homogeneity test. (Default: \code{"bray"})
+possible following homogeneity test. (Default: \code{"euclidean"})
 
 \item \code{scale}: \code{Logical scalar}. Should the expression values be
 standardized? \code{scale} is disabled when using \code{*RDA} functions.
@@ -149,7 +149,7 @@ in a \code{SummarizedExperiment}.
 }
 \details{
 *CCA functions utilize \code{vegan:cca} and *RDA functions
-\code{vegan:dbRDA}.dbRDA performed with euclidean distances
+\code{vegan:dbRDA}. By default, dbRDA is done with euclidean distances, which
 is equivalent to RDA. \code{col.var} and \code{formula} can be missing,
 which turns the CCA analysis into a CA analysis and dbRDA into PCoA/MDS.
 

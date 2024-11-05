@@ -39,7 +39,7 @@
 #' other internal functions.
 #' \itemize{
 #'   \item \code{method} a dissimilarity measure to be applied in dbRDA and
-#'   possible following homogeneity test. (Default: \code{"bray"})
+#'   possible following homogeneity test. (Default: \code{"euclidean"})
 #'   
 #'   \item \code{scale}: \code{Logical scalar}. Should the expression values be
 #'   standardized? \code{scale} is disabled when using \code{*RDA} functions.
@@ -69,7 +69,7 @@
 #' 
 #' @details
 #' *CCA functions utilize \code{vegan:cca} and *RDA functions
-#' \code{vegan:dbRDA}.dbRDA performed with euclidean distances
+#' \code{vegan:dbRDA}. By default, dbRDA is done with euclidean distances, which
 #' is equivalent to RDA. \code{col.var} and \code{formula} can be missing,
 #' which turns the CCA analysis into a CA analysis and dbRDA into PCoA/MDS.
 #'   
@@ -473,7 +473,7 @@ setMethod("addRDA", "SingleCellExperiment",
 #' @importFrom vegan cca dbrda sppscores<- eigenvals scores
 .calculate_rda <- function(
         x, formula, data, scores, scale = TRUE, na.action = na.fail,
-        method = distance, distance = "bray", ord.method = "CCA", ...){
+        method = distance, distance = "euclidean", ord.method = "CCA", ...){
     # input check
     if(!.is_a_bool(scale)){
         stop("'scale' must be TRUE or FALSE.", call. = FALSE)
@@ -598,8 +598,7 @@ setMethod("addRDA", "SingleCellExperiment",
         permanova_tab[ , "Total variance"]
     
     # Perform homogeneity analysis
-    homogeneity <- .calculate_homogeneity(
-        mat, variables, method, full = full, ...)
+    homogeneity <- .calculate_homogeneity(mat, variables, full = full, ...)
     
     # Return whole data or just a tables
     permanova_res <- permanova_tab
@@ -615,7 +614,7 @@ setMethod("addRDA", "SingleCellExperiment",
 
 #' @importFrom vegan vegdist betadisper
 .calculate_homogeneity <- function(
-        mat, variables, method = distance, distance = "bray",
+        mat, variables, method = distance, distance = "euclidean",
         homogeneity.test = "permanova", full = FALSE, ...){
     # Check homogeneity.test
     if( !(.is_a_string(homogeneity.test) &&

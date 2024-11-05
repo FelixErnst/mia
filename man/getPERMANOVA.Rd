@@ -17,7 +17,7 @@ addPERMANOVA(x, ...)
 
 \S4method{getPERMANOVA}{SummarizedExperiment}(x, assay.type = "counts", formula = NULL, col.var = NULL, ...)
 
-\S4method{getPERMANOVA}{ANY}(x, formula, data, test.homogeneity = TRUE, ...)
+\S4method{getPERMANOVA}{ANY}(x, formula, data, method = "bray", test.homogeneity = TRUE, ...)
 
 \S4method{addPERMANOVA}{SummarizedExperiment}(x, name = "permanova", ...)
 }
@@ -64,6 +64,9 @@ from \code{colData}.}
 
 \item{data}{\code{data.frame} or coarcible to one. The covariance table
 including covariates defined by \code{formula}.}
+
+\item{method}{\code{Character scalar}. A dissimilarity metric used in
+PERMANOVA and group dispersion calculation. (Default: \code{"bray"})}
 
 \item{test.homogeneity}{\code{Logical scalar}. Should the homogeneity of
 group dispersions be evaluated? (Default: \code{TRUE})}
