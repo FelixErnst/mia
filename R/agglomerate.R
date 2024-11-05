@@ -504,12 +504,22 @@ setMethod(
         # even after pruning; these rows have still child-nodes that represent
         # other rows.
         # Suppress warning: drop all tips of the tree: returning NULL
-        suppressWarnings(
-            tree <- drop.tip(
+        tree <- tryCatch({
+            drop.tip(
                 tree, remove_tips,
                 trim.internal = FALSE,
                 collapse.singles = FALSE)
-        )
+        }, warning = function(w) {
+            # Do nothing on warning
+        }, error = function(e) {
+            # Try to prune by also pruning internal nodes. Sometimes that is the
+            # case; we need to trim also internal nodes in order to prune
+            # leaf.
+            drop.tip(
+                tree, remove_tips,
+                trim.internal = TRUE,
+                collapse.singles = FALSE)
+        })
         # If all tips were dropped, the result is NULL --> stop loop
         if( is.null(tree) ){
             warning("Pruning resulted to empty tree.", call. = FALSE)
