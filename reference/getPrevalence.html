@@ -18,7 +18,7 @@ SummarizedExperiment-class object."><!-- mathjax --><script src="https://cdnjs.c
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mia</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.15.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.15.4</span>
       </span>
     </div>
 
@@ -45,7 +45,7 @@ SummarizedExperiment-class object."><!-- mathjax --><script src="https://cdnjs.c
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Calculation prevalence information for features across samples</h1>
-    <small class="dont-index">Source: <a href="https://github.com/microbiome/mia/blob/devel/R/getPrevalence.R" class="external-link"><code>R/getPrevalence.R</code></a></small>
+    <small class="dont-index">Source: <a href="https://github.com/microbiome/mia/blob/update_tree_agglomeration/R/getPrevalence.R" class="external-link"><code>R/getPrevalence.R</code></a></small>
     <div class="hidden name"><code>getPrevalence.Rd</code></div>
     </div>
 
@@ -124,10 +124,16 @@ SummarizedExperiment-class object."><!-- mathjax --><script src="https://cdnjs.c
 <span><span class="co"># S4 method for class 'SummarizedExperiment'</span></span>
 <span><span class="fu">subsetByPrevalent</span><span class="op">(</span><span class="va">x</span>, rank <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
+<span><span class="co"># S4 method for class 'TreeSummarizedExperiment'</span></span>
+<span><span class="fu">subsetByPrevalent</span><span class="op">(</span><span class="va">x</span>, update.tree <span class="op">=</span> <span class="cn">FALSE</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
 <span><span class="fu">subsetByRare</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S4 method for class 'SummarizedExperiment'</span></span>
 <span><span class="fu">subsetByRare</span><span class="op">(</span><span class="va">x</span>, rank <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S4 method for class 'TreeSummarizedExperiment'</span></span>
+<span><span class="fu">subsetByRare</span><span class="op">(</span><span class="va">x</span>, update.tree <span class="op">=</span> <span class="cn">FALSE</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">getPrevalentAbundance</span><span class="op">(</span></span>
 <span>  <span class="va">x</span>,</span>
@@ -215,6 +221,11 @@ calculation. (Default: <code>"counts"</code>)</p></dd>
 <dd><p>Prevalence threshold (in 0 to 1). The
 required prevalence is strictly greater by default. To include the
 limit, set <code>include.lowest</code> to <code>TRUE</code>.</p></dd>
+
+
+<dt id="arg-update-tree">update.tree<a class="anchor" aria-label="anchor" href="#arg-update-tree"></a></dt>
+<dd><p><code>Logical scalar</code>. Should
+<code><a href="https://rdrr.io/pkg/TreeSummarizedExperiment/man/TreeSummarizedExperiment-accessor.html" class="external-link">rowTree()</a></code> also be agglomerated? (Default: <code>FALSE</code>)</p></dd>
 
 </dl></div>
     <div id="value">
