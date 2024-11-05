@@ -456,7 +456,8 @@ setMethod(
     tree_FUN <- switch(by, "1" = rowTree, "2" = colTree, stop("."))
     # Get right argument names for subsetByLeaf call
     args_names <- switch(
-        by, "1" = c("x", "rowLeaf", "whichRowTree", "updateTree"),
+        by,
+        "1" = c("x", "rowLeaf", "whichRowTree", "updateTree"),
         "2" = c("x", "colLeaf", "whichColTree", "updateTree"),
         stop("."))
     # Get names of trees and links between trees and rows
@@ -479,63 +480,4 @@ setMethod(
         }
     }
     return(x)
-}
-
-# This function trims tips until all tips can be found from provided set of
-# nodes
-#' @importFrom ape drop.tip has.singles collapse.singles
-.prune_tree <- function(tree, nodes, collapse.singles = TRUE, ...){
-    # Check collapse.singles
-    if( !.is_a_bool(collapse.singles) ){
-        stop("'collapse.singles' must be TRUE or FALSE.", call. = FALSE)
-    }
-    #
-    # Get those tips that can not be found from provided nodes
-    remove_tips <- .get_tips_to_drop(tree, nodes)
-    # As long as there are tips to be dropped, run the loop
-    while( length(remove_tips) > 0 ){
-        # Drop tips that cannot be found. Drop only one layer at the time. Some
-        # dataset might have taxa that are not in tip layer but they are in
-        # higher rank. If we delete more than one layer at the time, we might
-        # loose the node for those taxa. --> The result of pruning is a tree
-        # whose all tips can be found provided nodes i.e., rows of TreeSE. Some
-        # taxa might be higher rank meaning that all rows might not be in tips
-        # even after pruning; these rows have still child-nodes that represent
-        # other rows.
-        # Suppress warning: drop all tips of the tree: returning NULL
-        suppressWarnings(
-            tree <- drop.tip(
-                tree, remove_tips,
-                trim.internal = FALSE,
-                collapse.singles = FALSE)
-        )
-        # If all tips were dropped, the result is NULL --> stop loop
-        if( is.null(tree) ){
-            warning("Pruning resulted to empty tree.", call. = FALSE)
-            break
-        }
-        # Again, get those tips of updated tree that cannot be found from
-        # provided nodes
-        remove_tips <- .get_tips_to_drop(tree, nodes)
-    }
-    # Simplify the tree structure. Remove nodes that have only single
-    # descendant.
-    if( !is.null(tree) && length(tree$tip.label) > 1 && has.singles(tree) &&
-            collapse.singles ){
-        tree <- collapse.singles(tree)
-    }
-    return(tree)
-}
-
-# This function gets tree and nodes as input. As output, it gives set of tips
-# that are not in the set of nodes provided as input.
-.get_tips_to_drop <- function(tree, nodes){
-    # Get those tips cannot be found from node set
-    cannot_be_found <- !tree$tip.label %in% nodes
-    # Get those tips that are duplicated. Single node should match with only
-    # one row.
-    dupl <- duplicated(tree$tip.label)
-    # Get indices of those tips that are going to be removed
-    tips <- which( cannot_be_found | dupl )
-    return(tips)
 }
