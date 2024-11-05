@@ -124,7 +124,7 @@ setMethod("getPERMANOVA", "SummarizedExperiment",
         }
         # User can also specify covariates with col.var
         if( !(is.null(col.var) || (is.character(col.var) &&
-               all(col.var %in% colnames(colData(x))))) ){
+                all(col.var %in% colnames(colData(x))))) ){
             stop("'col.var' must specify column from colData(x) or be NULL.",
                 call. = FALSE)
         }
@@ -155,7 +155,7 @@ setMethod("getPERMANOVA", "ANY", function(
     }
     if( ncol(x) != nrow(data) ){
         stop("Number of columns in 'x' should match with number of rows in ",
-             "'data'.", call. = FALSE)
+            "'data'.", call. = FALSE)
     }
     if( !.is_a_bool(test.homogeneity) ){
         stop("'test.homogeneity' must be TRUE or FALSE.", call. = FALSE)

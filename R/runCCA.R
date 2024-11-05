@@ -619,9 +619,9 @@ setMethod("addRDA", "SingleCellExperiment",
         homogeneity.test = "permanova", full = FALSE, ...){
     # Check homogeneity.test
     if( !(.is_a_string(homogeneity.test) &&
-          homogeneity.test %in% c("permanova", "anova", "tukeyhsd")) ){
+            homogeneity.test %in% c("permanova", "anova", "tukeyhsd")) ){
         stop("'homogeneity.test' must be 'permanova', 'anova', or 'tukeyhsd'.",
-             call. = FALSE)
+            call. = FALSE)
     }
     # Check full parameter
     if( !.is_a_bool(full) ){
