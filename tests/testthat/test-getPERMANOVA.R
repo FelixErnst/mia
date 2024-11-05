@@ -5,7 +5,7 @@ tse <- GlobalPatterns
 tse <- transformAssay(tse, method = "relabundance")
 
 test_that("getPERMANOVA works on SummarizedExperiment", {
-    # Basic PERMANOVA test without homogeneity
+    # Test basic PERMANOVA without homogeneity check
     res <- getPERMANOVA(
         tse, assay.type = "relabundance",
         formula = x ~ SampleType,
@@ -14,7 +14,7 @@ test_that("getPERMANOVA works on SummarizedExperiment", {
     )
     expect_s3_class(res, "anova.cca")
     
-    # PERMANOVA with homogeneity test enabled
+    # Test PERMANOVA with homogeneity check enabled
     res <- getPERMANOVA(
         tse, assay.type = "relabundance",
         formula = x ~ SampleType,
@@ -27,7 +27,7 @@ test_that("getPERMANOVA works on SummarizedExperiment", {
     expect_s3_class(res$permanova, "anova.cca")
     expect_s3_class(res$homogeneity, "data.frame")
     
-    # Full results with nested structure validation
+    # Test full results with nested structure validation for detailed outputs
     res <- getPERMANOVA(
         tse, assay.type = "relabundance",
         formula = x ~ SampleType,
@@ -41,6 +41,7 @@ test_that("getPERMANOVA works on SummarizedExperiment", {
 })
 
 test_that("addPERMANOVA stores results in metadata", {
+    # Test that addPERMANOVA saves results in metadata as expected
     tse_with_meta <- addPERMANOVA(
         tse, assay.type = "relabundance",
         formula = x ~ SampleType,
@@ -55,23 +56,23 @@ test_that("addPERMANOVA stores results in metadata", {
 })
 
 test_that("getPERMANOVA input validations", {
-    # Nonexistent assay type
+    # Check error handling for a nonexistent assay type
     expect_error(
         getPERMANOVA(tse, assay.type = "nonexistent", formula = x ~ SampleType)
     )
-    # Incorrect formula type
+    # Check that an incorrect formula type raises an error
     expect_error(
         getPERMANOVA(tse, assay.type = "relabundance", formula = "SampleType"),
         "'formula' must be formula or NULL."
     )
-    # Non-matching dimensions between matrix and covariate data
+    # Check that dimension mismatches between matrix and covariate data raise an error
     expect_error(
         getPERMANOVA(
             assay(tse[, 1:10]), formula = x ~ SampleType, data = colData(tse)
         ),
         "Number of columns in 'x' should match with number of rows in 'data'"
     )
-    # Invalid homogeneity test setting
+    # Check that invalid homogeneity test settings raise an error
     expect_error(
         getPERMANOVA(
             tse, assay.type = "relabundance",
@@ -80,10 +81,44 @@ test_that("getPERMANOVA input validations", {
         ),
         "'test.homogeneity' must be TRUE or FALSE"
     )
+    
+    # Invalid assay type (non-existent type)
+    expect_error(
+        getPERMANOVA(tse, assay.type = "nonexistent", formula = x ~ SampleType)
+    )
+    
+    # Invalid variable
+    expect_error(
+        getPERMANOVA(tse, assay.type = "relabundance", col.var = "invalid")
+    )
+    
+    # Incorrect permutations
+    expect_error(
+        getPERMANOVA(
+            tse, assay.type = "relabundance", formula = x ~ SampleType, 
+            permutations = -10
+        )
+    )
+    
+    # Incorrect 'by' parameter
+    expect_error(
+        getPERMANOVA(
+            tse, assay.type = "relabundance", formula = x ~ SampleType, 
+            by = "invalid_option"
+        )
+    )
+    
+    # Missing or incorrect 'homogeneity.test' option
+    expect_error(
+        getPERMANOVA(
+            tse, assay.type = "relabundance", formula = x ~ SampleType, 
+            homogeneity.test = "unsupported_test"
+        )
+    )
 })
 
 test_that("getPERMANOVA works on SingleCellExperiment", {
-    # Convert tse to SingleCellExperiment format
+    # Convert tse to SingleCellExperiment format and test getPERMANOVA functionality
     sce <- as(tse, "SingleCellExperiment")
     res <- getPERMANOVA(
         sce, assay.type = "relabundance",
@@ -95,14 +130,14 @@ test_that("getPERMANOVA works on SingleCellExperiment", {
 })
 
 test_that("getPERMANOVA 'by' and 'homogeneity.test' options", {
-    # 'by' parameter set to 'terms'
+    # Test 'by' parameter with 'terms' for PERMANOVA
     res_by_terms <- getPERMANOVA(
         tse, assay.type = "relabundance",
         formula = x ~ SampleType, by = "terms"
     )
     expect_s3_class(res_by_terms$permanova, "anova.cca")
     
-    # Homogeneity with ANOVA
+    # Test homogeneity test with ANOVA option
     res_anova <- getPERMANOVA(
         tse, assay.type = "relabundance",
         formula = x ~ SampleType,
@@ -110,7 +145,7 @@ test_that("getPERMANOVA 'by' and 'homogeneity.test' options", {
     )
     expect_s3_class(res_anova$homogeneity, "data.frame")
     
-    # Homogeneity with Tukey HSD and full results
+    # Test homogeneity test with Tukey HSD and full results
     res_tukey <- getPERMANOVA(
         tse, assay.type = "relabundance",
         formula = x ~ SampleType,
@@ -122,10 +157,10 @@ test_that("getPERMANOVA 'by' and 'homogeneity.test' options", {
 })
 
 test_that("getPERMANOVA handles edge cases", {
-    # Missing formula
+    # Test handling of a missing formula (default behavior)
     expect_no_error(getPERMANOVA(tse, assay.type = "relabundance"))
     
-    # Zero permutations count
+    # Test for error when permutations count is zero
     expect_error(
         getPERMANOVA(
             tse, assay.type = "relabundance",
@@ -133,10 +168,10 @@ test_that("getPERMANOVA handles edge cases", {
         )
     )
     
-    # Null input matrix
+    # Test for error when input matrix is NULL
     expect_error(getPERMANOVA(NULL, formula = x ~ SampleType))
     
-    # Minimal input with only one level
+    # Test for warning when only one level exists in the factor variable
     tse_subset <- tse[, tse$SampleType == "Soil"]
     expect_warning(
         getPERMANOVA(
@@ -147,7 +182,7 @@ test_that("getPERMANOVA handles edge cases", {
 })
 
 test_that("getPERMANOVA matches direct calculations", {
-    # Directly perform PERMANOVA and homogeneity tests
+    # Perform direct calculations with vegan package for comparison
     permanova_direct <- vegan::adonis2(
         t(assay(tse, "relabundance")) ~ SampleType,
         data = colData(tse),
@@ -158,7 +193,7 @@ test_that("getPERMANOVA matches direct calculations", {
         group = tse$SampleType
     )
     
-    # Run the function and compare results
+    # Run the getPERMANOVA function and compare results
     res <- getPERMANOVA(
         tse, assay.type = "relabundance",
         formula = x ~ SampleType,
@@ -167,9 +202,10 @@ test_that("getPERMANOVA matches direct calculations", {
         permutations = 99
     )
     
-    # Compare permanova and homogeneity results
+    # Verify permanova results match
     expect_equal(res$permanova$aov.tab, permanova_direct$aov.tab)
+    
+    # Verify homogeneity results match
     expect_equal(
         res[[2]][[2]][[1]][[1]]$distances, homogeneity_direct$distances)
 })
-                              
