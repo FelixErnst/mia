@@ -278,11 +278,11 @@ setMethod("agglomerateByRank", signature = c(x = "SummarizedExperiment"),
         # Convert to factors. Use na.rm so that NA values are not preserved.
         # i.e. they are not converted into character values.
         # NA values are handled earlier in this function.
-        tax_factors <- .norm_f(nrow(x), tax_factors, na.rm = TRUE)
+        tax_factors <- .norm_f(nrow(x), tax_factors, group.na.rm = TRUE)
 
         # merge taxa
         x <- agglomerateByVariable(
-            x, by = "rows", group = tax_factors, na.rm = TRUE, ...)
+            x, by = "rows", group = tax_factors, group.na.rm = TRUE, ...)
 
         # "Empty" the values to the right of the rank, using NA_character_.
         if( col < length(taxonomyRanks(x)) ){
