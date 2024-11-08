@@ -312,8 +312,7 @@ setMethod("agglomerateByRank", signature = c(x = "SummarizedExperiment"),
 setMethod("agglomerateByVariable", signature = c(x = "SummarizedExperiment"),
             function(x, by, group = f, f, ...){
                 by <- .check_MARGIN(by)
-                FUN <- switch(by, .merge_rows, .merge_cols)
-                x <- FUN(x, group, ...)
+                x <- .merge_rows_or_cols(x, group, by, ...)
                 return(x)
             }
 )

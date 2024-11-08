@@ -45,20 +45,20 @@ test_that("merge", {
     actual <- mia:::.get_element_pos(f, archetype = c(2,1))
     expect_equal(actual,c(a = 2, b = 4))
 
-    # .merge_rows
+    # .merge_rows_or_cols
     mat <- matrix(1:60, nrow = 6)
     gr <- GRanges("chr1",rep("1-6",6))
     df <- DataFrame(n = c(1:6))
     mcols(gr) <- df
     grl <- splitAsList(gr,1:6)
-    expect_error(mia:::.merge_rows(),
+    expect_error(mia:::.merge_rows_or_cols(by = 1L),
                  'argument "f" is missing')
     x <- SummarizedExperiment(assays = list(mat = mat))
     xr <- SummarizedExperiment(assays = list(mat = mat),
                                rowRanges = gr)
     xrl <- SummarizedExperiment(assays = list(mat = mat),
                                 rowRanges = unname(grl))
-    expect_error(mia:::.merge_rows(x),
+    expect_error(mia:::.merge_rows_or_cols(x, by = 1L),
                  'argument "f" is missing')
     FUN_check_x <- function(x,archetype=1){
         actual <- agglomerateByVariable(x, by = "rows", f, archetype)
@@ -84,6 +84,106 @@ test_that("merge", {
     }
     lapply(list(xtse),FUN_check_x)
     lapply(list(xtse),FUN_check_x,archetype=2)
+    
+    # Check that average works as expected. average parameter controls whether
+    # to calculate mean or sum. Check that mean is correctly calculated when
+    # there are NAs
+    #
+    # Calculate average and sum for each row group
+    summary_FUN_rows <- function(x, col.var){
+        # Loop through groups and calculate statistics
+        groups <- unique(rowData(x)[[col.var]]) |> sort()
+        res <- lapply(groups, function(group) {
+            mat_sub <- assay(x[rowData(x)[[col.var]] == group, ])
+            list(
+                sum = colSums(mat_sub, na.rm = FALSE),
+                sum_na = colSums(mat_sub, na.rm = TRUE),
+                mean = colMeans(mat_sub, na.rm = FALSE),
+                mean_na = colMeans(mat_sub, na.rm = TRUE)
+            )
+        })
+        # Combine results for each statistic across groups
+        res <- lapply(c("sum", "sum_na", "mean", "mean_na"), function(stat) {
+            do.call(rbind, lapply(res, `[[`, stat))
+        })
+        names(res) <- c("sum", "sum_na", "mean", "mean_na")
+        return(res)
+    }
+    # Generate data
+    tse <- mockSCE()
+    assayNames(tse) <- "counts"
+    rowData(tse)[["group"]] <- sample(LETTERS, nrow(tse), replace = TRUE)
+    colData(tse)[["group"]] <- sample(LETTERS, ncol(tse), replace=TRUE)
+    # Create a data with NAs
+    n_value <- nrow(tse)*ncol(tse)
+    prob <- runif(1, 0, 0.1)
+    tse_na <- tse
+    assay(tse_na)[c(1, 5, 3, 6)] <- NA
+    # Test without NAs
+    res_sum <- agglomerateByVariable(tse, by = 1, group = "group", average = FALSE, na.rm = FALSE)
+    res_sum_na <- agglomerateByVariable(tse, by = 1, group = "group", average = FALSE, na.rm = TRUE)
+    res_mean <- agglomerateByVariable(tse, by = 1, group = "group", average = TRUE, na.rm = FALSE)
+    res_mean_na <- agglomerateByVariable(tse, by = 1, group = "group", average = TRUE, na.rm = TRUE)
+    ref <- summary_FUN_rows(tse, "group")
+    #
+    expect_equal(assay(res_sum), ref[["sum"]], check.attributes = FALSE)
+    expect_equal(assay(res_sum_na), ref[["sum_na"]], check.attributes = FALSE)
+    expect_equal(assay(res_mean), ref[["mean"]], check.attributes = FALSE)
+    expect_equal(assay(res_mean_na), ref[["mean_na"]], check.attributes = FALSE)
+    # Test with NAs
+    res_sum <- agglomerateByVariable(tse_na, by = 1, group = "group", average = FALSE, na.rm = FALSE)
+    res_sum_na <- agglomerateByVariable(tse_na, by = 1, group = "group", average = FALSE, na.rm = TRUE)
+    res_mean <- agglomerateByVariable(tse_na, by = 1, group = "group", average = TRUE, na.rm = FALSE)
+    res_mean_na <- agglomerateByVariable(tse_na, by = 1, group = "group", average = TRUE, na.rm = TRUE)
+    ref <- summary_FUN_rows(tse_na, "group")
+    #
+    expect_equal(assay(res_sum), ref[["sum"]], check.attributes = FALSE)
+    expect_equal(assay(res_sum_na), ref[["sum_na"]], check.attributes = FALSE)
+    expect_equal(assay(res_mean), ref[["mean"]], check.attributes = FALSE)
+    expect_equal(assay(res_mean_na), ref[["mean_na"]], check.attributes = FALSE)
+    # Calculate average and sum for each column group
+    summary_FUN_cols <- function(x, col.var){
+        # Loop through groups and calculate statistics
+        groups <- unique(colData(x)[[col.var]]) |> sort()
+        res <- lapply(groups, function(group){
+            mat_sub <- assay(x[, colData(x)[[col.var]] == group ])
+            list(
+                sum = rowSums(mat_sub, na.rm = FALSE),
+                sum_na = rowSums(mat_sub, na.rm = TRUE),
+                mean = rowMeans(mat_sub, na.rm = FALSE),
+                mean_na = rowMeans(mat_sub, na.rm = TRUE)
+            )
+        })
+        # Combine results for each statistic across groups
+        res <- lapply(c("sum", "sum_na", "mean", "mean_na"), function(stat){
+            do.call(cbind, lapply(res, `[[`, stat))
+        })
+        names(res) <- c("sum", "sum_na", "mean", "mean_na")
+        return(res)
+    }
+    # Test without NAs
+    res_sum <- agglomerateByVariable(tse, by = 2, group = "group", average = FALSE, na.rm = FALSE)
+    res_sum_na <- agglomerateByVariable(tse, by = 2, group = "group", average = FALSE, na.rm = TRUE)
+    res_mean <- agglomerateByVariable(tse, by = 2, group = "group", average = TRUE, na.rm = FALSE)
+    res_mean_na <- agglomerateByVariable(tse, by = 2, group = "group", average = TRUE, na.rm = TRUE)
+    ref <- summary_FUN_cols(tse, "group")
+    #
+    expect_equal(assay(res_sum), ref[["sum"]], check.attributes = FALSE)
+    expect_equal(assay(res_sum_na), ref[["sum_na"]], check.attributes = FALSE)
+    expect_equal(assay(res_mean), ref[["mean"]], check.attributes = FALSE)
+    expect_equal(assay(res_mean_na), ref[["mean_na"]], check.attributes = FALSE)
+    # Test with NAs
+    res_sum <- agglomerateByVariable(tse_na, by = 2, group = "group", average = FALSE, na.rm = FALSE)
+    res_sum_na <- agglomerateByVariable(tse_na, by = 2, group = "group", average = FALSE, na.rm = TRUE)
+    res_mean <- agglomerateByVariable(tse_na, by = 2, group = "group", average = TRUE, na.rm = FALSE)
+    res_mean_na <- agglomerateByVariable(tse_na, by = 2, group = "group", average = TRUE, na.rm = TRUE)
+    ref <- summary_FUN_cols(tse_na, "group")
+    #
+    expect_equal(assay(res_sum), ref[["sum"]], check.attributes = FALSE)
+    expect_equal(assay(res_sum_na), ref[["sum_na"]], check.attributes = FALSE)
+    expect_equal(assay(res_mean), ref[["mean"]], check.attributes = FALSE)
+    expect_equal(assay(res_mean_na), ref[["mean_na"]], check.attributes = FALSE)
+    
     # Check multiple rowTrees
     data(esophagus, package="mia")
     data(GlobalPatterns, package="mia")

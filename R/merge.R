@@ -1,6 +1,9 @@
-.norm_f <- function(i, f, dim.type = c("rows","columns"), na.rm = FALSE, ...){
-    if(!.is_a_bool(na.rm)){
-        stop("'na.rm' must be TRUE or FALSE.", call. = FALSE)
+# This function can be used to unify the group id vector. It can be any
+# kind of vector, but this converts it to factor.
+.norm_f <- function(
+        i, f, dim.type = c("rows","columns"), group.na.rm = FALSE, ...){
+    if(!.is_a_bool(group.na.rm)){
+        stop("'group.na.rm' must be TRUE or FALSE.", call. = FALSE)
     }
     dim.type <- match.arg(dim.type)
     if(!is.character(f) && !is.factor(f)){
@@ -13,7 +16,7 @@
             call. = FALSE)
     }
     # This is done otherwise we lose NA values
-    if( !na.rm && any(is.na(f)) ){
+    if( !group.na.rm && any(is.na(f)) ){
         f <- as.character(f)
         f[ is.na(f) ] <- "NA"
     }
@@ -23,6 +26,9 @@
     f
 }
 
+# When we merge rows or columns, first member of group is kept as default
+# (in colData or rowData). This function controls this and allows user to
+# specify some other element than the first one.
 .norm_archetype <- function(f, archetype){
     if(length(archetype) > 1L){
         if(length(levels(f)) != length(archetype)){
@@ -49,6 +55,8 @@
     archetype
 }
 
+# This function returns the index/position of rows/columns that are kept
+# after merging.
 #' @importFrom S4Vectors splitAsList
 .get_element_pos <- function(f, archetype){
     archetype <- as.list(archetype)
@@ -58,13 +66,12 @@
     f_pos
 }
 
+# This function merges assays and row/colData.
 #' @importFrom S4Vectors SimpleList
 #' @importFrom scuttle sumCountsAcrossFeatures
-.merge_rows <- function(x, f, archetype = 1L,
-                        average = FALSE,
-                        BPPARAM = SerialParam(),
-                        check.assays = TRUE,
-                        ...){
+.merge_rows_or_cols <- function(
+        x, f, by, archetype = 1L, average = FALSE, BPPARAM = SerialParam(),
+        check.assays = TRUE, na.rm = FALSE, ...){
     # input check
     if( !.is_a_bool(average) ){
         stop("'average' must be TRUE or FALSE.", call. = FALSE)
@@ -72,95 +79,128 @@
     if( !.is_a_bool(check.assays) ){
         stop("'check.assays' must be TRUE or FALSE.", call. = FALSE)
     }
-    if( .is_a_string(f) && f %in% colnames(rowData(x)) ){
-        f <- rowData(x)[[ f ]]
+    if( !.is_a_bool(na.rm) ){
+        stop("'na.rm' must be TRUE or FALSE.", call. = FALSE)
     }
-    f <- .norm_f(nrow(x), f, ...)
-    if(length(levels(f)) == nrow(x)){
+    #
+    # Get correct functions based on whether we agglomerate rows or cols
+    rowData_FUN <- switch(by, rowData, colData)
+    nrow_FUN <- switch(by, nrow, ncol)
+    rownames_FUN <- switch(by, rownames, colnames)
+    rownames_ass_FUN <- switch(by, `rownames<-`, `colnames<-`)
+    # If user specified column name from row/colData, get the values
+    if( .is_a_string(f) && f %in% colnames(rowData_FUN(x)) ){
+        f <- rowData_FUN(x)[[ f ]]
+    }
+    # Check that the group ID vector is specifying groups for each element
+    f <- .norm_f(nrow_FUN(x), f, ...)
+    # If the data is already agglomerated at each group
+    if(length(levels(f)) == nrow_FUN(x)){
         return(x)
     }
-
+    # In merging, first element of certain group is kept by default. archetype,
+    # can control this behavior; it can specify the preserved rows for every
+    # group or index.
     archetype <- .norm_archetype(f, archetype)
-    # merge assays
+    
+    # Get assays
     assays <- assays(x)
+    # We check whether the assays include values that cannot be summed. For
+    # instance, summing negative values do not make sense.
     if( check.assays ){
-        mapply(.check_assays_for_merge, names(assays), assays)
+        temp <- lapply(seq_len(length(assays)), function(i)
+            .check_assays_for_merge(names(assays)[[i]], assays[[i]]))
     }
-    assays <- S4Vectors::SimpleList(lapply(assays,
-                                            scuttle::sumCountsAcrossFeatures,
-                                            ids = f,
-                                            subset.row = NULL,
-                                            subset.col = NULL,
-                                            average = average,
-                                            BPPARAM = BPPARAM))
-    names(assays) <- names(assays(x))
-    # merge to result
-    x <- x[.get_element_pos(f, archetype = archetype),]
+    # If the user wants to calculate an average but has also set na.rm to TRUE:
+    # sumCountAcrossFeatures and summarizeAssayByGroup do not support an na.rm 
+    # parameter directly. Therefore, we handle missing values manually by first
+    # replacing NA values with 0, then later calculating the average by dividing
+    # the summed values by the count of non-NA features.
+    temp_table <- "temporary_pa_table"
+    if( na.rm ){
+        # Check if there are NA values
+        any_na <- lapply(assays, function(mat) any(is.na(mat)) ) |>
+            unlist() |> any()
+        # Create a table with number of non-NA values and disable mean
+        # calculation in scuttle functions
+        if( any_na && average ){
+            assays[[temp_table]] <- .apply_transformation_from_vegan(
+                assays[[1]]+1, method = "pa", MARGIN = 1L)
+            
+            average <- FALSE
+        }
+        # Replace NA values with 0
+        if( any_na ){
+            assays <- lapply(assays, function(mat){
+                mat[is.na(mat)] <- 0
+                return(mat)
+            })
+        }
+    }
+    
+    # Transpose if we are merging columns
+    if( by == 2L ){
+        assays <- lapply(assays, function(mat) t(mat))
+    }
+    # Agglomerate assays
+    assays <- lapply(
+        assays, sumCountsAcrossFeatures, average = average, ids = f,
+        BPPARAM = BPPARAM)
+    # Transpose back to original orientation
+    if( by == 2L ){
+        assays <- lapply(assays, function(mat) t(mat))
+    }
+    # If we disabled average calculation because of na.rm was enabled, calculate
+    # mean now.
+    if( temp_table %in% names(assays) ){
+        # Get pa table. Replace zeroes with 1 so that values are not divided
+        # by 0. This does not affect the results: 0/1=0.
+        pa_tab <- assays[[temp_table]]
+        pa_tab[pa_tab == 0] <- 1
+        # Remove temporary pa table
+        assays <- assays[ !names(assays) %in% temp_table ]
+        # Loop through abundance tables and calculate mean
+        assays <- lapply(assays, function(mat) mat / pa_tab )
+    }
+    # Convert to SimpleList
+    assays <- assays |> SimpleList()
+    
+    # Now we have agglomerated assays, but TreeSE has still the original form.
+    # We take specified rows/columns from the TreeSE.
+    idx <- .get_element_pos(f, archetype = archetype)
+    if( by == 1L ){
+        x <- x[idx, ]
+    } else{
+        x <- x[ , idx]
+    }
+    
+    # Add assays back to TreeSE
     assays(x, withDimnames = FALSE) <- assays
-    # Change rownames to group names
-    rownames(x) <- rownames(assays[[1]])
-    x
+    # Change row/colnames. Currently, they have same names as in original data
+    # but just certain rows. Change them to represent groups
+    x <- rownames_ass_FUN(x, rownames_FUN(assays[[1]]))
+    return(x)
 }
 
-#' @importFrom scuttle sumCountsAcrossFeatures
+# This functions checks if assay has negative or binary values. It does not
+# make sense to sum them, so we give warning to user.
 .check_assays_for_merge <- function(assay.type, assay){
     # Check if assays include binary or negative values
     if( all(assay == 0 | assay == 1) ){
-        warning("'",assay.type,"'", " includes binary values.",
+        warning("'", assay.type, "'", " includes binary values.",
                 "\nAgglomeration of it might lead to meaningless values.",
                 "\nCheck the assay, and consider doing transformation again",
                 "manually with agglomerated data.",
                 call. = FALSE)
     }
     if( !all( assay >= 0 | is.na(assay) ) ){
-        warning("'",assay.type,"'", " includes negative values.",
+        warning("'", assay.type, "'", " includes negative values.",
                 "\nAgglomeration of it might lead to meaningless values.",
                 "\nCheck the assay, and consider doing transformation again",
                 "manually with agglomerated data.",
                 call. = FALSE)
     }
-}
-
-#' @importFrom S4Vectors SimpleList
-#' @importFrom scuttle summarizeAssayByGroup
-.merge_cols <- function(x, f, archetype = 1L, ...){
-    # input check
-    if( .is_a_string(f) && f %in% colnames(colData(x)) ){
-      f <- colData(x)[[ f ]]
-    }
-    f <- .norm_f(ncol(x), f, "columns", ...)
-    
-    if(length(levels(f)) == ncol(x)){
-        return(x)
-    }
-    archetype <- .norm_archetype(f, archetype)
-    # merge col data
-    element_pos <- .get_element_pos(f, archetype = archetype)
-    col_data <- colData(x)[element_pos,,drop=FALSE]
-    # merge assays
-    assays <- assays(x)
-    mapply(.check_assays_for_merge, names(assays), assays)
-    FUN <- function(mat, ...){
-        temp <- scuttle::summarizeAssayByGroup(mat,
-                                                statistics = "sum",
-                                                ...)
-        # "sum" includes agglomerated (summed up) data
-        mat <- assay(temp, "sum")
-        return(mat)
-    }
-    assays <- S4Vectors::SimpleList(lapply(assays,
-                                            FUN = FUN,
-                                            ids = f,
-                                            subset.row = NULL,
-                                            subset.col = NULL,
-                                            ...))
-    names(assays) <- names(assays(x))
-    # merge to result
-    x <- x[,.get_element_pos(f, archetype = archetype)]
-    assays(x, withDimnames = FALSE) <- assays
-    # Change colnames to group names
-    colnames(x) <- colnames(assays[[1]])
-    x
+    return(assay)
 }
 
 #' @importFrom Biostrings DNAStringSetList
@@ -203,7 +243,7 @@
         refSeq <- referenceSeq(x)
     }
     #
-    x <- .merge_rows(x, f, archetype = 1L, ...)
+    x <- .merge_rows_or_cols(x, f, by = 1L, archetype = 1L, ...)
     # optionally merge rowTree
     if( update.tree ){
         x <- .agglomerate_trees(x, 1, ...)
@@ -221,7 +261,7 @@
         stop("'update.tree' must be TRUE or FALSE.", call. = FALSE)
     }
     #
-    x <- .merge_cols(x, f, archetype = 1L, ...)
+    x <- .merge_rows_or_cols(x, f, by = 2L, archetype = 1L, ...)
     # optionally merge colTree
     if( update.tree ){
         x <- .agglomerate_trees(x, 2, ...)
