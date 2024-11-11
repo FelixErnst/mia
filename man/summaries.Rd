@@ -55,8 +55,8 @@ assay used in calculation. (Default: \code{"counts"})}
 
 \item{assay_name}{Deprecated. Use \code{assay.type} instead.}
 
-\item{na.rm}{\code{Logical scalar}. Should NA values be omitted when calculating
-prevalence? (Default: \code{TRUE})}
+\item{na.rm}{\code{Logical scalar}. Should NA values be omitted?
+(Default: \code{TRUE})}
 
 \item{...}{Additional arguments passed on to \code{agglomerateByRank()} when
 \code{rank} is specified for \code{summarizeDominance}.}

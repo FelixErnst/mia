@@ -140,8 +140,8 @@ detection and prevalence cutoffs be included? (Default: \code{FALSE})}
 \item{sort}{\code{Logical scalar}. Should the result be sorted by prevalence?
 (Default: \code{FALSE})}
 
-\item{na.rm}{\code{Logical scalar}. Should NA values be omitted when calculating
-prevalence? (Default: \code{TRUE})}
+\item{na.rm}{\code{Logical scalar}. Should NA values be omitted?
+(Default: \code{TRUE})}
 
 \item{assay.type}{\code{Character scalar}. Specifies which assay to use for
 calculation. (Default: \code{"counts"})}
