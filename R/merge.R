@@ -112,7 +112,7 @@
             .check_assays_for_merge(names(assays)[[i]], assays[[i]]))
     }
     # If the user wants to calculate an average but has also set na.rm to TRUE:
-    # sumCountAcrossFeatures and summarizeAssayByGroup do not support an na.rm 
+    # sumCountAcrossFeatures does not support an na.rm 
     # parameter directly. Therefore, we handle missing values manually by first
     # replacing NA values with 0, then later calculating the average by dividing
     # the summed values by the count of non-NA features.
