@@ -22,6 +22,10 @@
 #' @param empty.fields \code{Character vector}. Defines which values should be
 #'   regarded as empty. (Default: \code{c(NA, "", " ", "\t")}). They will be
 #'   removed if \code{na.rm = TRUE} before agglomeration.
+#'   
+#' @param empty.rows.rm \code{Logical scalar}. Defines whether rows including
+#' \code{empty.fields} in specified \code{rank} will be excluded.
+#' (Default: \code{TRUE})
 #'
 #' @param agglomerateTree Deprecated. Use \code{update.tree} instead.
 #' 
@@ -37,28 +41,36 @@
 #'        \item \code{empty.ranks.rm}: \code{Logical scalar}. Determines
 #'        whether to remove those columns of rowData that include only NAs after
 #'        agglomeration. (Default: \code{FALSE})
+#'        
+#'        \item \code{group.rm}: \code{Logical scalar}. Determines
+#'        whether to remove rows that do not belong to any group, i.e., that
+#'        have \code{NA} value. (Default: \code{FALSE})
+#'        
 #'        \item \code{make.unique}: \code{Logical scalar}. Determines
 #'        whether to make rownames unique. (Default: \code{TRUE})
+#'        
 #'        \item \code{detection}: The threshold value for determining presence
 #'        or absence. A value in \code{x} must exceed this threshold to be
 #'        considered present.
+#'        
 #'        \item \code{assay.type}: \code{Character scalar}. Specifies the assay
-#'        used to
-#'        calculate prevalence. (Default: \code{"counts"})
+#'        used to calculate prevalence. (Default: \code{"counts"})
+#'        
 #'        \item \code{prevalence}: Prevalence threshold (in 0 to 1). The
 #'        required prevalence is strictly greater by default. To include the
 #'        limit, set \code{include.lowest} to \code{TRUE}.
+#'        
 #'        \item \code{update.refseq}: \code{Logical scalar}. Should a
 #'        consensus sequence be calculated? If set to \code{FALSE}, the result
 #'        from \code{archetype} is returned; If set to \code{TRUE} the result
 #'        from
 #'        \code{\link[DECIPHER:ConsensusSequence]{DECIPHER::ConsensusSequence}}
 #'        is returned. (Default: \code{FALSE})
+#'        
 #'        \item \code{archetype} Of each level of \code{group}, which element
-#'        should
-#'        be regarded as the archetype and metadata in the columns or rows kept,
-#'        while merging? This can be single integer value or an integer vector
-#'        of the same length as \code{levels(group)}. (Default:
+#'        should be regarded as the archetype and metadata in the columns or
+#'        rows kept, while merging? This can be single integer value or an
+#'        integer vector of the same length as \code{levels(group)}. (Default:
 #'        \code{1L}, which means the first element encountered per
 #'        factor level will be kept)
 #'    }
@@ -158,9 +170,9 @@
 #' tse <- agglomerateByRank(tse, rank = "Genus")
 #' tse <- transformAssay(tse, method = "pa")
 #'
-#' # removing empty labels by setting na.rm = TRUE
+#' # removing empty labels by setting empty.rows.rm = TRUE
 #' sum(is.na(rowData(GlobalPatterns)$Family))
-#' x3 <- agglomerateByRank(GlobalPatterns, rank="Family", na.rm = TRUE)
+#' x3 <- agglomerateByRank(GlobalPatterns, rank="Family", empty.rows.rm = TRUE)
 #' nrow(x3) # different from x2
 #'
 #' # Because all the rownames are from the same rank, rownames do not include
@@ -234,7 +246,7 @@ setGeneric("agglomerateByVariable",
 #'
 #' @export
 setMethod("agglomerateByRank", signature = c(x = "SummarizedExperiment"),
-    function(x, rank = taxonomyRanks(x)[1], na.rm = TRUE,
+    function(x, rank = taxonomyRanks(x)[1], empty.rows.rm = TRUE,
         empty.fields = c(NA, "", " ", "\t", "-", "_"), ...){
         # input check
         if(nrow(x) == 0L){
@@ -245,8 +257,8 @@ setMethod("agglomerateByRank", signature = c(x = "SummarizedExperiment"),
             stop("'rank' must be a non-empty single character value",
                 call. = FALSE)
         }
-        if(!.is_a_bool(na.rm)){
-            stop("'na.rm' must be TRUE or FALSE.", call. = FALSE)
+        if(!.is_a_bool(empty.rows.rm)){
+            stop("'empty.rows.rm' must be TRUE or FALSE.", call. = FALSE)
         }
         if(ncol(rowData(x)) == 0L){
             stop("taxonomyData needs to be populated.", call. = FALSE)
@@ -259,9 +271,9 @@ setMethod("agglomerateByRank", signature = c(x = "SummarizedExperiment"),
         col <- which( taxonomyRanks(x) %in% rank )
         tax_cols <- .get_tax_cols_from_se(x)
 
-        # if na.rm is TRUE, remove the empty, white-space, NA values from
+        # if empty.rows.rm is TRUE, remove the empty, white-space, NA values from
         # tree will be pruned later, if update.tree = TRUE
-        if( na.rm ){
+        if( empty.rows.rm ){
             x <- .remove_with_empty_taxonomic_info(x, tax_cols[col],
                                                     empty.fields)
         }
@@ -275,14 +287,17 @@ setMethod("agglomerateByRank", signature = c(x = "SummarizedExperiment"),
 
         # get groups of taxonomy entries
         tax_factors <- .get_tax_groups(x, col = col, ...)
-        # Convert to factors. Use na.rm so that NA values are not preserved.
+        # Convert to factors. Use group.rm so that NA values are not preserved.
         # i.e. they are not converted into character values.
         # NA values are handled earlier in this function.
-        tax_factors <- .norm_f(nrow(x), tax_factors, group.na.rm = TRUE)
+        tax_factors <- .norm_f(nrow(x), tax_factors, group.rm = TRUE)
 
         # merge taxa
-        x <- agglomerateByVariable(
-            x, by = "rows", group = tax_factors, group.na.rm = TRUE, ...)
+        args <- c(list(
+            x, by = "rows", group = tax_factors, group.rm = TRUE),
+            list(...)[ !names(list(...)) %in% c("group.rm") ]
+            )
+        x <- do.call(agglomerateByVariable, args)
 
         # "Empty" the values to the right of the rank, using NA_character_.
         if( col < length(taxonomyRanks(x)) ){
@@ -303,6 +318,7 @@ setMethod("agglomerateByRank", signature = c(x = "SummarizedExperiment"),
 
         # Order the data in alphabetical order
         x <- x[ order(rownames(x)), ]
+        return(x)
     }
 )
 

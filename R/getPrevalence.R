@@ -26,8 +26,8 @@
 #' @param rank \code{Character scalar}. Defines a taxonomic rank. Must be a value of
 #'   \code{taxonomyRanks()} function.
 #'
-#' @param na.rm \code{Logical scalar}. Should NA values be omitted when calculating
-#' prevalence? (Default: \code{TRUE})
+#' @param na.rm \code{Logical scalar}. Should NA values be omitted?
+#' (Default: \code{TRUE})
 #' 
 #' @param update.tree \code{Logical scalar}. Should
 #' \code{rowTree()} also be agglomerated? (Default: \code{FALSE})
