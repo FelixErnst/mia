@@ -309,7 +309,7 @@ setMethod("agglomerateByRank", signature = c(x = "SummarizedExperiment"),
         col_idx <- which( taxonomyRanks(x) %in% rank )
         # Get the indices of detected rank columns
         tax_cols <- .get_tax_cols_from_se(x)
-
+        
         # if empty.rows.rm is TRUE, remove those rows that have empty,
         # white-space, NA values in rank information. I.e., they do not have
         # taxonomy information in specified taxonomy level.
@@ -318,42 +318,44 @@ setMethod("agglomerateByRank", signature = c(x = "SummarizedExperiment"),
         }
         # If rank is the only rank that is available and this data is unique,
         # then the data is already 'aggregated' and no further operations
-        # are needed. Continue agglomerating if data is not aggregated.
-        if( !length(taxonomyRanks(x)) == 1L &&
+        # are needed.
+        if( length(taxonomyRanks(x)) == 1L &&
                 !anyDuplicated(rowData(x)[,taxonomyRanks(x)]) ){
-            # Get groups of taxonomy entries, i.e., get the specified rank
-            # column from rowData
-            tax_factors <- .get_tax_groups(x, col = col_idx, ...)
-            # Convert to factors. Use group.rm so that NA values are not
-            # preserved. i.e. they are not converted into character values.
-            # NA values are handled earlier in this function.
-            tax_factors <- .norm_f(nrow(x), tax_factors, group.rm = TRUE)
-            
-            # Agglomerate data by utilizing agglomerateByVariable
-            args <- c(list(
-                x, by = "rows", group = tax_factors, group.rm = TRUE),
-                list(...)[ !names(list(...)) %in% c("group.rm") ]
-            )
-            x <- do.call(agglomerateByVariable, args)
-            
-            # Replace the values to the right of the rank with NA_character_.
-            # These columns no longer represent the agglomerated data, as they
-            # previously corresponded to specific lower taxonomic ranks that are
-            # now aggregated at the current level.
-            badcolumns <- tax_cols[seq_along(tax_cols) > col_idx]
-            if( length(badcolumns) > 0L ){
-                rowData(x)[, badcolumns] <- NA_character_
-            }
-            # Adjust rownames
-            rownames(x) <- getTaxonomyLabels(
-                x, empty.fields, with.rank = FALSE, resolve.loops = FALSE, ...)
-            # Remove those columns from rowData that include only NAs
-            x <- .remove_NA_cols_from_rowdata(x, ...)
-            # Add agglomeration info to metadata
-            x <- .add_values_to_metadata(x, "agglomerated_by_rank", rank)
-            # Order the data in alphabetical order
-            x <- x[ order(rownames(x)), ]
+            return(x)
         }
+        
+        # Get groups of taxonomy entries, i.e., get the specified rank
+        # column from rowData
+        tax_factors <- .get_tax_groups(x, col = col_idx, ...)
+        # Convert to factors. Use group.rm so that NA values are not
+        # preserved. i.e. they are not converted into character values.
+        # NA values are handled earlier in this function.
+        tax_factors <- .norm_f(nrow(x), tax_factors, group.rm = TRUE)
+        
+        # Agglomerate data by utilizing agglomerateByVariable
+        args <- c(list(
+            x, by = "rows", group = tax_factors, group.rm = TRUE),
+            list(...)[ !names(list(...)) %in% c("group.rm") ]
+        )
+        x <- do.call(agglomerateByVariable, args)
+        
+        # Replace the values to the right of the rank with NA_character_.
+        # These columns no longer represent the agglomerated data, as they
+        # previously corresponded to specific lower taxonomic ranks that are
+        # now aggregated at the current level.
+        badcolumns <- tax_cols[seq_along(tax_cols) > col_idx]
+        if( length(badcolumns) > 0L ){
+            rowData(x)[, badcolumns] <- NA_character_
+        }
+        # Adjust rownames
+        rownames(x) <- getTaxonomyLabels(
+            x, empty.fields, with.rank = FALSE, resolve.loops = FALSE, ...)
+        # Remove those columns from rowData that include only NAs
+        x <- .remove_NA_cols_from_rowdata(x, ...)
+        # Add agglomeration info to metadata
+        x <- .add_values_to_metadata(x, "agglomerated_by_rank", rank)
+        # Order the data in alphabetical order
+        x <- x[ order(rownames(x)), ]
         return(x)
     }
 )

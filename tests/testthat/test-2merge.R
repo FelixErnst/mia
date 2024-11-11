@@ -184,9 +184,49 @@ test_that("merge", {
     expect_equal(assay(res_mean), ref[["mean"]], check.attributes = FALSE)
     expect_equal(assay(res_mean_na), ref[["mean_na"]], check.attributes = FALSE)
     
+    # Check that agglomerateByRank and agglomerateByVariable work correctly
+    # with na.rm
+    data(GlobalPatterns, package="mia")
+    tse <- GlobalPatterns
+    col_idx <- sample(seq_len(ncol(tse)), 1)
+    row_idx <- sample(seq_len(nrow(tse)), 1)
+    tse_mod <- tse
+    assay(tse_mod)[row_idx, col_idx] <- NA
+    group <- colData(tse)[col_idx, "SampleType"]
+    # na.rm = FALSE
+    tse_sub <- agglomerateByVariable(tse_mod, by = "cols", group = "SampleType", na.rm = FALSE)
+    test_mat <- tse_sub |> assay()
+    # na.rm = TRUE
+    tse_sub <- agglomerateByVariable(tse_mod, by = "cols", group = "SampleType", na.rm = TRUE)
+    ref_mat <- tse_sub |> assay()
+    group_idx <- which(colnames(tse_sub) == group)
+    expect_true( is.na(test_mat[row_idx, group_idx]) )
+    expect_true( !is.na(ref_mat[row_idx, group_idx]) )
+    expect_equal(test_mat[-row_idx, -group_idx], ref_mat[-row_idx, -group_idx])
+    #
+    # na.rm = FALSE
+    group <- rowData(tse)[row_idx, "Kingdom"]
+    tse_sub <- agglomerateByVariable(tse_mod, by = "rows", group = "Kingdom", na.rm = FALSE)
+    test_mat <- tse_sub |> assay()
+    # na.rm = TRUE
+    tse_sub <- agglomerateByVariable(tse_mod, by = "rows", group = "Kingdom", na.rm = TRUE)
+    ref_mat <- tse_sub |> assay()
+    group_idx <- which(rownames(tse_sub) == group)
+    expect_true( is.na(test_mat[group_idx, col_idx]) )
+    expect_true( !is.na(ref_mat[group_idx, col_idx]) )
+    expect_equal(test_mat[-group_idx, -col_idx], ref_mat[-group_idx, -col_idx])
+    #
+    # na.rm = FALSE
+    tse_sub <- agglomerateByRank(tse_mod, rank = "Kingdom", na.rm = FALSE)
+    test_mat2 <- tse_sub |> assay()
+    # na.rm = TRUE
+    tse_sub <- agglomerateByRank(tse_mod, rank = "Kingdom", na.rm = TRUE)
+    ref_mat2 <- tse_sub |> assay()
+    expect_equal(test_mat, test_mat2)
+    expect_equal(ref_mat, ref_mat2)
+    
     # Check multiple rowTrees
     data(esophagus, package="mia")
-    data(GlobalPatterns, package="mia")
     # Add arbitrary groups
     rowData(esophagus)$group <- c(rep(c("A", "B", "C"), each = nrow(esophagus)/3),
                                   rep("A", nrow(esophagus)-round(nrow(esophagus)/3)*3) )
