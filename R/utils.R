@@ -521,13 +521,12 @@
 
 ################################################################################
 # internal wrappers for agglomerateByRank/agglomerateByVariable
-.merge_features <- function(x, merge.by, ...) {
+.merge_features <- function(x, merge.by = rank, rank = NULL, ...) {
     # Check if merge.by parameter belongs to taxonomyRanks
-    if (is.character(merge.by) && length(merge.by) == 1 &&
-        merge.by %in% taxonomyRanks(x)) {
+    if( .is_a_string(merge.by) && merge.by %in% taxonomyRanks(x) ){
         # Merge using agglomerateByRank
         x <- agglomerateByRank(x, rank = merge.by, ...)
-    } else {
+    } else if( !is.null(merge.by) ){
         # Merge using agglomerateByVariable
         x <- agglomerateByVariable(x, by = "rows", group = merge.by, ...)
     }

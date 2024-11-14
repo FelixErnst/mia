@@ -224,16 +224,6 @@ setMethod("getPrevalence", signature = c(x = "ANY"), function(
     }
 )
 
-# This function controls whether agglomerateByRank is called. If rank is
-# is specified, we agglomerate by rank.
-.agg_for_prevalence <- function(x, rank = NULL, ...){
-    #
-    if(!is.null(rank)){
-        x <- agglomerateByRank(x, rank = rank, ...)
-    }
-    return(x)
-}
-
 #' @rdname getPrevalence
 #' @export
 setMethod("getPrevalence", signature = c(x = "SummarizedExperiment"),
@@ -241,7 +231,7 @@ setMethod("getPrevalence", signature = c(x = "SummarizedExperiment"),
             rank = NULL, ...){
         # check assay
         .check_assay_present(assay.type, x)
-        x <- .agg_for_prevalence(x, rank = rank, ...)
+        x <- .merge_features(x, rank = rank, ...)
         mat <- assay(x, assay.type)
         # Calculate abundance
         mat <- .to_rel_abund(mat, ...)
@@ -313,7 +303,7 @@ setGeneric("getPrevalent", signature = "x",
 
 .get_prevalent_taxa <- function(x, rank = NULL, ...){
     if(is(x,"SummarizedExperiment")){
-        x <- .agg_for_prevalence(x, rank = rank, ...)
+        x <- .merge_features(x, rank = rank, ...)
     }
     indices <- .get_prevalent_indices(x, ...)
     # If named input return named output
@@ -371,7 +361,7 @@ setGeneric("getRare", signature = "x",
 
 .get_rare_taxa <- function(x, rank = NULL, ...){
     if(is(x,"SummarizedExperiment")){
-        x <- .agg_for_prevalence(x, rank = rank, ...)
+        x <- .merge_features(x, rank = rank, ...)
     }
     indices <- .get_rare_indices(x, ...)
     #
@@ -417,7 +407,7 @@ setGeneric("subsetByPrevalent", signature = "x",
 #' @export
 setMethod("subsetByPrevalent", signature = c(x = "SummarizedExperiment"),
     function(x, rank = NULL, ...){
-        x <- .agg_for_prevalence(x, rank = rank, ...)
+        x <- .merge_features(x, rank = rank, ...)
         prevalent_indices <- .get_prevalent_indices(x, ...)
         x[prevalent_indices, ]
     }
@@ -453,7 +443,7 @@ setGeneric("subsetByRare", signature = "x",
 #' @export
 setMethod("subsetByRare", signature = c(x = "SummarizedExperiment"),
     function(x, rank = NULL, ...){
-        x <- .agg_for_prevalence(x, rank = rank, ...)
+        x <- .merge_features(x, rank = rank, ...)
         rare_indices <- .get_rare_indices(x, ...)
         x[rare_indices, ]
     }
@@ -578,7 +568,7 @@ setMethod("agglomerateByPrevalence", signature = c(x = "SummarizedExperiment"),
         # Check assays that they can be merged safely
         temp <- mapply(.check_assays_for_merge, assayNames(x), assays(x))
         #
-        x <- .agg_for_prevalence(x, rank, check.assays = FALSE, ...)
+        x <- .merge_features(x, rank, check.assays = FALSE, ...)
         pr <- getPrevalent(x, rank = NULL, ...)
         f <- rownames(x) %in% pr
         if(any(!f)){
@@ -623,7 +613,7 @@ setMethod("agglomerateByPrevalence",
         # sequences are only subsetted without finding consensus sequences.
         if( merge_refseq && !is.null(referenceSeq(x))  ){
             # If user wants to agglomerate based on rank
-            x <- .agg_for_prevalence(x, rank, check.assays = FALSE, ...)
+            x <- .merge_features(x, rank, check.assays = FALSE, ...)
             # Find groups that will be used to agglomerate the data
             f <- rownames(x)[ match(rownames(x), rownames(res)) ]
             f[ is.na(f) ] <- other.name
