@@ -233,7 +233,7 @@ setGeneric("agglomerateByRank", signature = "x", function(x, ...)
 #' @export
 setMethod(
     "agglomerateByRank", signature = c(x = "TreeSummarizedExperiment"),
-    function(x, update.tree = agglomerateTree,
+    function(x, rank = taxonomyRanks(x)[1], update.tree = agglomerateTree,
         agglomerate.tree = agglomerateTree, agglomerateTree = FALSE, ...){
         # Input check
         if(!.is_a_bool(update.tree)){
@@ -249,7 +249,7 @@ setMethod(
             x <- .order_based_on_trees(x)
         }
         # Agglomerate data by using SCE method
-        x <- callNextMethod(x, update.tree = update.tree, ...)
+        x <- callNextMethod(x, rank = rank, update.tree = update.tree, ...)
         return(x)
     }
 )
@@ -259,8 +259,8 @@ setMethod(
 #' @export
 setMethod(
     "agglomerateByRank", signature = c(x = "SingleCellExperiment"),
-    function(x, altexp = NULL, altexp.rm = strip_altexp, strip_altexp = TRUE,
-        ...){
+    function(x, rank = taxonomyRanks(x)[1], altexp = NULL,
+        altexp.rm = strip_altexp, strip_altexp = TRUE, ...){
         # Input check
         if(!.is_a_bool(altexp.rm)){
             stop("'altexp.rm' must be TRUE or FALSE.", call. = FALSE)
@@ -276,7 +276,7 @@ setMethod(
             altExps(x) <- NULL
         }
         # Agglomerate the data by using SE method
-        x <- callNextMethod(x, ...)
+        x <- callNextMethod(x, rank = rank, ...)
         return(x)
     }
 )
@@ -314,7 +314,8 @@ setMethod("agglomerateByRank", signature = c(x = "SummarizedExperiment"),
         # white-space, NA values in rank information. I.e., they do not have
         # taxonomy information in specified taxonomy level.
         if( empty.rows.rm ){
-            x <- .remove_with_empty_taxonomic_info(x, col_idx, empty.fields)
+            x <- .remove_with_empty_taxonomic_info(
+                x, tax_cols[col_idx], empty.fields)
         }
         # If rank is the only rank that is available and this data is unique,
         # then the data is already 'aggregated' and no further operations
