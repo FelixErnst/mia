@@ -111,56 +111,21 @@
         temp <- lapply(seq_len(length(assays)), function(i)
             .check_assays_for_merge(names(assays)[[i]], assays[[i]]))
     }
-    # If the user wants to calculate an average but has also set na.rm to TRUE:
-    # sumCountAcrossFeatures does not support an na.rm 
-    # parameter directly. Therefore, we handle missing values manually by first
-    # replacing NA values with 0, then later calculating the average by dividing
-    # the summed values by the count of non-NA features.
-    temp_table <- "temporary_pa_table"
-    if( na.rm ){
-        # Check if there are NA values
-        any_na <- lapply(assays, function(mat) any(is.na(mat)) ) |>
-            unlist() |> any()
-        # Create a table with number of non-NA values and disable mean
-        # calculation in scuttle functions
-        if( any_na && average ){
-            assays[[temp_table]] <- .apply_transformation_from_vegan(
-                assays[[1]]+1, method = "pa", MARGIN = 1L)
-            
-            average <- FALSE
-        }
-        # Replace NA values with 0
-        if( any_na ){
-            assays <- lapply(assays, function(mat){
-                mat[is.na(mat)] <- 0
-                return(mat)
-            })
-        }
-    }
     
     # Transpose if we are merging columns
     if( by == 2L ){
         assays <- lapply(assays, function(mat) t(mat))
     }
+    # Get the aggregate function based on whether user wants to exclude NAs and
+    # if there are any NAs. scuttle::sumCountsAcrossFeatures cannot handle NAs
+    # so if user wants to exclude them, we use own implementation.
+    FUN <- if( na.rm && anyNA(assays[[1]])) .sum_counts_accross_features_na else
+        sumCountsAcrossFeatures
     # Agglomerate assays
-    assays <- lapply(
-        assays, sumCountsAcrossFeatures, average = average, ids = f,
-        BPPARAM = BPPARAM)
+    assays <- lapply(assays, FUN, average = average, ids = f, BPPARAM = BPPARAM)
     # Transpose back to original orientation
     if( by == 2L ){
         assays <- lapply(assays, function(mat) t(mat))
-    }
-    # If we disabled average calculation because of na.rm was enabled, calculate
-    # mean now.
-    if( temp_table %in% names(assays) ){
-        # Get pa table. Replace zeroes with 1 so that values are not divided
-        # by 0. This does not affect the results: 0/1=0.
-        pa_tab <- assays[[temp_table]]
-        pa_tab[pa_tab == 0] <- 1
-        # Remove temporary pa table
-        assays <- assays[ !names(assays) %in% temp_table ]
-        # Loop through abundance tables and calculate mean
-        assays <- lapply(assays, function(mat) mat / pa_tab )
     }
     # Convert to SimpleList
     assays <- assays |> SimpleList()
@@ -179,6 +144,21 @@
     # Change row/colnames. Currently, they have same names as in original data
     # but just certain rows. Change them to represent groups
     x <- rownames_ass_FUN(x, rownames_FUN(assays[[1]]))
+    return(x)
+}
+
+# This function works similarly to scuttle::sumCountsAcrossFeatures but this
+# excludes NAs from the data. The scuttle function cannot handle NAs.
+#' @importFrom DelayedArray DelayedArray type rowsum
+.sum_counts_accross_features_na <- function(x, average, ids, ...){
+    # x <- DelayedArray(x) # avoid copy of data on is.na(), type coercion.
+    is_not_na <- !is.na(x)
+    type(is_not_na) <- "integer"
+    x <- rowsum(x, ids, na.rm = TRUE)
+    # Calculate average if specified
+    if( average ){
+        x <- x/rowsum(is_not_na, ids)
+    }
     return(x)
 }
 

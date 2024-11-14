@@ -111,31 +111,17 @@ test_that("merge", {
     }
     # Generate data
     tse <- mockSCE()
-    assayNames(tse) <- "counts"
     rowData(tse)[["group"]] <- sample(LETTERS, nrow(tse), replace = TRUE)
     colData(tse)[["group"]] <- sample(LETTERS, ncol(tse), replace=TRUE)
     # Create a data with NAs
     n_value <- nrow(tse)*ncol(tse)
-    prob <- runif(1, 0, 0.1)
-    tse_na <- tse
-    assay(tse_na)[c(1, 5, 3, 6)] <- NA
-    # Test without NAs
+    assay(tse)[c(1, 5, 3, 6)] <- NA
+    # Test with NAs
     res_sum <- agglomerateByVariable(tse, by = 1, group = "group", average = FALSE, na.rm = FALSE)
     res_sum_na <- agglomerateByVariable(tse, by = 1, group = "group", average = FALSE, na.rm = TRUE)
     res_mean <- agglomerateByVariable(tse, by = 1, group = "group", average = TRUE, na.rm = FALSE)
     res_mean_na <- agglomerateByVariable(tse, by = 1, group = "group", average = TRUE, na.rm = TRUE)
     ref <- summary_FUN_rows(tse, "group")
-    #
-    expect_equal(assay(res_sum), ref[["sum"]], check.attributes = FALSE)
-    expect_equal(assay(res_sum_na), ref[["sum_na"]], check.attributes = FALSE)
-    expect_equal(assay(res_mean), ref[["mean"]], check.attributes = FALSE)
-    expect_equal(assay(res_mean_na), ref[["mean_na"]], check.attributes = FALSE)
-    # Test with NAs
-    res_sum <- agglomerateByVariable(tse_na, by = 1, group = "group", average = FALSE, na.rm = FALSE)
-    res_sum_na <- agglomerateByVariable(tse_na, by = 1, group = "group", average = FALSE, na.rm = TRUE)
-    res_mean <- agglomerateByVariable(tse_na, by = 1, group = "group", average = TRUE, na.rm = FALSE)
-    res_mean_na <- agglomerateByVariable(tse_na, by = 1, group = "group", average = TRUE, na.rm = TRUE)
-    ref <- summary_FUN_rows(tse_na, "group")
     #
     expect_equal(assay(res_sum), ref[["sum"]], check.attributes = FALSE)
     expect_equal(assay(res_sum_na), ref[["sum_na"]], check.attributes = FALSE)
@@ -161,23 +147,12 @@ test_that("merge", {
         names(res) <- c("sum", "sum_na", "mean", "mean_na")
         return(res)
     }
-    # Test without NAs
+    # Test with NAs
     res_sum <- agglomerateByVariable(tse, by = 2, group = "group", average = FALSE, na.rm = FALSE)
     res_sum_na <- agglomerateByVariable(tse, by = 2, group = "group", average = FALSE, na.rm = TRUE)
     res_mean <- agglomerateByVariable(tse, by = 2, group = "group", average = TRUE, na.rm = FALSE)
     res_mean_na <- agglomerateByVariable(tse, by = 2, group = "group", average = TRUE, na.rm = TRUE)
     ref <- summary_FUN_cols(tse, "group")
-    #
-    expect_equal(assay(res_sum), ref[["sum"]], check.attributes = FALSE)
-    expect_equal(assay(res_sum_na), ref[["sum_na"]], check.attributes = FALSE)
-    expect_equal(assay(res_mean), ref[["mean"]], check.attributes = FALSE)
-    expect_equal(assay(res_mean_na), ref[["mean_na"]], check.attributes = FALSE)
-    # Test with NAs
-    res_sum <- agglomerateByVariable(tse_na, by = 2, group = "group", average = FALSE, na.rm = FALSE)
-    res_sum_na <- agglomerateByVariable(tse_na, by = 2, group = "group", average = FALSE, na.rm = TRUE)
-    res_mean <- agglomerateByVariable(tse_na, by = 2, group = "group", average = TRUE, na.rm = FALSE)
-    res_mean_na <- agglomerateByVariable(tse_na, by = 2, group = "group", average = TRUE, na.rm = TRUE)
-    ref <- summary_FUN_cols(tse_na, "group")
     #
     expect_equal(assay(res_sum), ref[["sum"]], check.attributes = FALSE)
     expect_equal(assay(res_sum_na), ref[["sum_na"]], check.attributes = FALSE)
