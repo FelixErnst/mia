@@ -18,7 +18,7 @@ SummarizedExperiment-class object."><!-- mathjax --><script src="https://cdnjs.c
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mia</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.15.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.15.4</span>
       </span>
     </div>
 
@@ -45,7 +45,7 @@ SummarizedExperiment-class object."><!-- mathjax --><script src="https://cdnjs.c
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Calculation prevalence information for features across samples</h1>
-    <small class="dont-index">Source: <a href="https://github.com/microbiome/mia/blob/permanova/R/getPrevalence.R" class="external-link"><code>R/getPrevalence.R</code></a></small>
+    <small class="dont-index">Source: <a href="https://github.com/microbiome/mia/blob/merge_narm/R/getPrevalence.R" class="external-link"><code>R/getPrevalence.R</code></a></small>
     <div class="hidden name"><code>getPrevalence.Rd</code></div>
     </div>
 
@@ -165,9 +165,7 @@ SummarizedExperiment-class object."><!-- mathjax --><script src="https://cdnjs.c
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
 <dd><p>additional arguments</p><ul><li><p>If <code>!is.null(rank)</code> arguments are passed on to
 <code><a href="agglomerate-methods.html">agglomerateByRank</a></code>. See
-<code><a href="agglomerate-methods.html">?agglomerateByRank</a></code> for more details.
-Note that you can specify whether to remove empty ranks with
-<code>agg.na.rm</code> instead of <code>na.rm</code>. (default: <code>FALSE</code>)</p></li>
+<code><a href="agglomerate-methods.html">?agglomerateByRank</a></code> for more details.</p></li>
 <li><p>for <code>getPrevalent</code>, <code>getRare</code>, <code>subsetByPrevalent</code>
 and <code>subsetByRare</code> additional parameters passed to
 <code>getPrevalence</code></p></li>
@@ -177,8 +175,8 @@ and <code>subsetByRare</code> additional parameters passed to
 
 
 <dt id="arg-detection">detection<a class="anchor" aria-label="anchor" href="#arg-detection"></a></dt>
-<dd><p><code>Numeric scalar</code>. Detection threshold for absence/presence.
-If <code>as_relative = FALSE</code>,
+<dd><p><code>Numeric scalar</code>. Detection threshold for
+absence/presence. If <code>as_relative = FALSE</code>,
 it sets the counts threshold for a taxon to be considered present.
 If <code>as_relative = TRUE</code>, it sets the relative abundance threshold
 for a taxon to be considered present. (Default: <code>0</code>)</p></dd>
@@ -199,8 +197,8 @@ detection and prevalence cutoffs be included? (Default: <code>FALSE</code>)</p><
 
 
 <dt id="arg-na-rm">na.rm<a class="anchor" aria-label="anchor" href="#arg-na-rm"></a></dt>
-<dd><p><code>Logical scalar</code>. Should NA values be omitted when calculating
-prevalence? (Default: <code>TRUE</code>)</p></dd>
+<dd><p><code>Logical scalar</code>. Should NA values be omitted?
+(Default: <code>TRUE</code>)</p></dd>
 
 
 <dt id="arg-assay-type">assay.type<a class="anchor" aria-label="anchor" href="#arg-assay-type"></a></dt>
@@ -213,8 +211,8 @@ calculation. (Default: <code>"counts"</code>)</p></dd>
 
 
 <dt id="arg-rank">rank<a class="anchor" aria-label="anchor" href="#arg-rank"></a></dt>
-<dd><p><code>Character scalar</code>. Defines a taxonomic rank. Must be a value of
-<code><a href="taxonomy-methods.html">taxonomyRanks()</a></code> function.</p></dd>
+<dd><p><code>Character scalar</code>. Defines a taxonomic rank. Must be a
+value of <code><a href="taxonomy-methods.html">taxonomyRanks()</a></code> function.</p></dd>
 
 
 <dt id="arg-prevalence">prevalence<a class="anchor" aria-label="anchor" href="#arg-prevalence"></a></dt>

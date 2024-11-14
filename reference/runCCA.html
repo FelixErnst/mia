@@ -18,7 +18,7 @@ in a SummarizedExperiment."><!-- mathjax --><script src="https://cdnjs.cloudflar
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mia</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.15.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.15.4</span>
       </span>
     </div>
 
@@ -45,7 +45,7 @@ in a SummarizedExperiment."><!-- mathjax --><script src="https://cdnjs.cloudflar
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Canonical Correspondence Analysis and Redundancy Analysis</h1>
-    <small class="dont-index">Source: <a href="https://github.com/microbiome/mia/blob/permanova/R/runCCA.R" class="external-link"><code>R/runCCA.R</code></a></small>
+    <small class="dont-index">Source: <a href="https://github.com/microbiome/mia/blob/merge_narm/R/runCCA.R" class="external-link"><code>R/runCCA.R</code></a></small>
     <div class="hidden name"><code>runCCA.Rd</code></div>
     </div>
 
@@ -121,27 +121,25 @@ in a <code>SummarizedExperiment</code>.</p>
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
 <dd><p>additional arguments passed to vegan::cca or vegan::dbrda and
 other internal functions.</p><ul><li><p><code>method</code> a dissimilarity measure to be applied in dbRDA and
-possible following homogeneity test. (Default: <code>"euclidean"</code>)</p></li>
+possible following homogeneity test. (By default:
+<code>method="euclidean"</code>)</p></li>
 <li><p><code>scale</code>: <code>Logical scalar</code>. Should the expression values be
 standardized? <code>scale</code> is disabled when using <code>*RDA</code> functions.
 Please scale before performing RDA. (Default: <code>TRUE</code>)</p></li>
 <li><p><code>na.action</code>: <code>function</code>. Action to take when missing
 values for any of the variables in <code>formula</code> are encountered.
 (Default: <code>na.fail</code>)</p></li>
-<li><p><code>full</code> <code>Logical scalar</code>. Should all the results from the
-significance calculations be returned. When <code>FALSE</code>, only
+<li><p><code>full</code> <code>Logical scalar</code>. should all the results from the
+significance calculations be returned. When <code>full=FALSE</code>, only
 summary tables are returned. (Default: <code>FALSE</code>)</p></li>
 <li><p><code>homogeneity.test</code>: <code>Character scalar</code>. Specifies
-the significance test used to analyse
-<code><a href="https://rdrr.io/pkg/vegan/man/betadisper.html" class="external-link">vegan::betadisper</a></code> results.
-Options include 'permanova'
-(<code><a href="https://rdrr.io/pkg/vegan/man/anova.cca.html" class="external-link">vegan::permutest</a></code>), 'anova'
-(<code><a href="https://rdrr.io/r/stats/anova.html" class="external-link">stats::anova</a></code>) and 'tukeyhsd'
-(<code><a href="https://rdrr.io/r/stats/TukeyHSD.html" class="external-link">stats::TukeyHSD</a></code>).
-(Default: <code>"permanova"</code>)</p></li>
+the significance test used to analyse <code><a href="https://rdrr.io/pkg/vegan/man/betadisper.html" class="external-link">vegan::betadisper</a></code> results.
+Options include 'permanova' (<code><a href="https://rdrr.io/pkg/vegan/man/anova.cca.html" class="external-link">vegan::permutest</a></code>), 'anova'
+(<code><a href="https://rdrr.io/r/stats/anova.html" class="external-link">stats::anova</a></code>) and 'tukeyhsd' (<code><a href="https://rdrr.io/r/stats/TukeyHSD.html" class="external-link">stats::TukeyHSD</a></code>).
+(By default: <code>homogeneity.test="permanova"</code>)</p></li>
 <li><p><code>permutations</code> a numeric value specifying the number of
 permutations for significance testing in <code><a href="https://rdrr.io/pkg/vegan/man/anova.cca.html" class="external-link">vegan::anova.cca</a></code>.
-(Default: <code>999</code>)</p></li>
+(By default: <code>permutations=999</code>)</p></li>
 </ul></dd>
 
 
@@ -166,7 +164,7 @@ from <code>colData</code>.</p></dd>
 
 
 <dt id="arg-variables">variables<a class="anchor" aria-label="anchor" href="#arg-variables"></a></dt>
-<dd><p>Deprecated. Use <code>col.var</code> instead.</p></dd>
+<dd><p>Deprecated. Use <code>"col.var"</code> instead.</p></dd>
 
 
 <dt id="arg-test-signif">test.signif<a class="anchor" aria-label="anchor" href="#arg-test-signif"></a></dt>
@@ -194,8 +192,8 @@ alternative experiment containing the input data.</p></dd>
 
 
 <dt id="arg-name">name<a class="anchor" aria-label="anchor" href="#arg-name"></a></dt>
-<dd><p><code>Character scalar</code>. A name for the <code><a href="https://rdrr.io/pkg/SingleCellExperiment/man/reducedDims.html" class="external-link">reducedDim()</a></code>
-where results will be stored. (Default: <code>"CCA"</code>)</p></dd>
+<dd><p><code>Character scalar</code>. A name for the column of the
+<code>colData</code> where results will be stored. (Default: <code>"CCA"</code>)</p></dd>
 
 </dl></div>
     <div id="value">
@@ -215,8 +213,7 @@ is equivalent to RDA. <code>col.var</code> and <code>formula</code> can be missi
 which turns the CCA analysis into a CA analysis and dbRDA into PCoA/MDS.</p>
 <p>Significance tests are done with <code>vegan:anova.cca</code> (PERMANOVA). Group
 dispersion, i.e., homogeneity within groups is analyzed with
-<code><a href="https://rdrr.io/pkg/vegan/man/betadisper.html" class="external-link">vegan::betadisper</a></code>
-(multivariate homogeneity of groups dispersions
+<code>vegan:betadisper</code> (multivariate homogeneity of groups dispersions
 (variances)) and statistical significance of homogeneity is tested with a
 test specified by <code>homogeneity.test</code> parameter.</p>
     </div>
