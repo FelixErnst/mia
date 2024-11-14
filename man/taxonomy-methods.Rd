@@ -71,8 +71,8 @@ IdTaxaToDataFrame(from)
 \arguments{
 \item{x}{\code{\link[TreeSummarizedExperiment:TreeSummarizedExperiment-class]{TreeSummarizedExperiment}}.}
 
-\item{rank}{\code{Character scalar}. Defines a taxonomic rank. Must be a value of
-\code{taxonomyRanks()} function.}
+\item{rank}{\code{Character scalar}. Defines a taxonomic rank. Must be a
+value of \code{taxonomyRanks()} function.}
 
 \item{empty.fields}{\code{Character vector}. Defines which values should be
 regarded as empty. (Default: \code{c(NA, "", " ", "\t")}). They will be

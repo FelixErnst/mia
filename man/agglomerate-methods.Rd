@@ -23,6 +23,7 @@ agglomerateByRank(x, ...)
 
 \S4method{agglomerateByRank}{TreeSummarizedExperiment}(
   x,
+  rank = taxonomyRanks(x)[1],
   update.tree = agglomerateTree,
   agglomerate.tree = agglomerateTree,
   agglomerateTree = FALSE,
@@ -31,6 +32,7 @@ agglomerateByRank(x, ...)
 
 \S4method{agglomerateByRank}{SingleCellExperiment}(
   x,
+  rank = taxonomyRanks(x)[1],
   altexp = NULL,
   altexp.rm = strip_altexp,
   strip_altexp = TRUE,
@@ -112,6 +114,9 @@ unsplitByRanks(x, ...)
 \code{SummarizedExperiment} objects and other functions.
 See \code{\link[=agglomerate-methods]{agglomerateByRank}} for more details.}
 
+\item{rank}{\code{Character scalar}. Defines a taxonomic rank. Must be a
+value of \code{taxonomyRanks()} function.}
+
 \item{update.tree}{\code{Logical scalar}. Should
 \code{rowTree()} also be merged? (Default: \code{FALSE})}
 
@@ -128,9 +133,6 @@ nested alternative experiments by default. (Default:
 \code{TRUE})}
 
 \item{strip_altexp}{Deprecated. Use \code{altexp.rm} instead.}
-
-\item{rank}{\code{Character scalar}. Defines a taxonomic rank. Must be a value of
-\code{taxonomyRanks()} function.}
 
 \item{empty.rows.rm}{\code{Logical scalar}. Defines whether rows including
 \code{empty.fields} in specified \code{rank} will be excluded.

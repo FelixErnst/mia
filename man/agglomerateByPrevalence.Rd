@@ -32,8 +32,8 @@ agglomerateByPrevalence(x, ...)
 \code{SummarizedExperiment} objects and other functions.
 See \code{\link[=agglomerate-methods]{agglomerateByRank}} for more details.}
 
-\item{rank}{\code{Character scalar}. Defines a taxonomic rank. Must be a value of
-\code{taxonomyRanks()} function.}
+\item{rank}{\code{Character scalar}. Defines a taxonomic rank. Must be a
+value of \code{taxonomyRanks()} function.}
 
 \item{other.name}{\code{Character scalar}. Used as the label for the
 summary of non-prevalent taxa. (default: \code{"Other"})}
