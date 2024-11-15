@@ -160,7 +160,7 @@
 #' tse <- agglomerateByRank(tse, rank = "Genus")
 #' tse <- transformAssay(tse, method = "pa")
 #'
-#' # removing empty labels by setting empty.rm = TRUE
+#' # Removing empty labels by setting empty.rm = TRUE
 #' sum(is.na(rowData(GlobalPatterns)$Family))
 #' x3 <- agglomerateByRank(GlobalPatterns, rank="Family", empty.rm = TRUE)
 #' nrow(x3) # different from x2
@@ -174,8 +174,8 @@
 #' print(rownames(x3[1:3,]))
 #'
 #' # use 'empty.ranks.rm' to remove columns that include only NAs
-#' x4 <- agglomerateByRank(GlobalPatterns, rank="Phylum",
-#'                         empty.ranks.rm = TRUE)
+#' x4 <- agglomerateByRank(
+#'     GlobalPatterns, rank="Phylum", empty.ranks.rm = TRUE)
 #' head(rowData(x4))
 #'
 #' # If the assay contains NAs, you might want to specify na.rm=TRUE,
@@ -200,17 +200,17 @@
 #' data(esophagus)
 #' esophagus
 #' plot(rowTree(esophagus))
-#' # get a factor for merging
+#' # Get a factor for merging
 #' f <- factor(regmatches(rownames(esophagus),
-#'                        regexpr("^[0-9]*_[0-9]*",rownames(esophagus))))
-#' merged <- agglomerateByVariable(esophagus, by = "rows", f,
-#'                                 update.tree = TRUE)
+#'     regexpr("^[0-9]*_[0-9]*",rownames(esophagus))))
+#' merged <- agglomerateByVariable(
+#'     esophagus, by = "rows", f, update.tree = TRUE)
 #' plot(rowTree(merged))
 #' #
 #' data(GlobalPatterns)
 #' GlobalPatterns
-#' merged <- agglomerateByVariable(GlobalPatterns, by = "cols",
-#'                                 colData(GlobalPatterns)$SampleType)
+#' merged <- agglomerateByVariable(
+#'     GlobalPatterns, by = "cols", colData(GlobalPatterns)$SampleType)
 #' merged
 #' 
 #' @seealso
