@@ -415,7 +415,7 @@ the <code>colData</code> of the base object is kept.</p>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> Check the assay, and consider doing transformation againmanually with agglomerated data.</span>
 <span class="r-in"><span><span class="va">tse</span> <span class="op">&lt;-</span> <span class="fu"><a href="transformAssay.html">transformAssay</a></span><span class="op">(</span><span class="va">tse</span>, method <span class="op">=</span> <span class="st">"pa"</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># removing empty labels by setting empty.rm = TRUE</span></span></span>
+<span class="r-in"><span><span class="co"># Removing empty labels by setting empty.rm = TRUE</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="fu">rowData</span><span class="op">(</span><span class="va">GlobalPatterns</span><span class="op">)</span><span class="op">$</span><span class="va">Family</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 5603</span>
 <span class="r-in"><span><span class="va">x3</span> <span class="op">&lt;-</span> <span class="fu">agglomerateByRank</span><span class="op">(</span><span class="va">GlobalPatterns</span>, rank<span class="op">=</span><span class="st">"Family"</span>, empty.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
@@ -433,8 +433,8 @@ the <code>colData</code> of the base object is kept.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Family:125ds10" "Family:211ds20" "Family:5B-12"  </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># use 'empty.ranks.rm' to remove columns that include only NAs</span></span></span>
-<span class="r-in"><span><span class="va">x4</span> <span class="op">&lt;-</span> <span class="fu">agglomerateByRank</span><span class="op">(</span><span class="va">GlobalPatterns</span>, rank<span class="op">=</span><span class="st">"Phylum"</span>,</span></span>
-<span class="r-in"><span>                        empty.ranks.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">x4</span> <span class="op">&lt;-</span> <span class="fu">agglomerateByRank</span><span class="op">(</span></span></span>
+<span class="r-in"><span>    <span class="va">GlobalPatterns</span>, rank<span class="op">=</span><span class="st">"Phylum"</span>, empty.ranks.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">rowData</span><span class="op">(</span><span class="va">x4</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> DataFrame with 6 rows and 2 columns</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                     Kingdom          Phylum</span>
@@ -503,11 +503,11 @@ the <code>colData</code> of the base object is kept.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> colTree: NULL</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu">rowTree</span><span class="op">(</span><span class="va">esophagus</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="agglomerate-methods-1.png" alt="" width="700" height="433"></span>
-<span class="r-in"><span><span class="co"># get a factor for merging</span></span></span>
+<span class="r-in"><span><span class="co"># Get a factor for merging</span></span></span>
 <span class="r-in"><span><span class="va">f</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/regmatches.html" class="external-link">regmatches</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">esophagus</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>                       <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">regexpr</a></span><span class="op">(</span><span class="st">"^[0-9]*_[0-9]*"</span>,<span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">esophagus</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">merged</span> <span class="op">&lt;-</span> <span class="fu">agglomerateByVariable</span><span class="op">(</span><span class="va">esophagus</span>, by <span class="op">=</span> <span class="st">"rows"</span>, <span class="va">f</span>,</span></span>
-<span class="r-in"><span>                                update.tree <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-in"><span>    <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">regexpr</a></span><span class="op">(</span><span class="st">"^[0-9]*_[0-9]*"</span>,<span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">esophagus</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">merged</span> <span class="op">&lt;-</span> <span class="fu">agglomerateByVariable</span><span class="op">(</span></span></span>
+<span class="r-in"><span>    <span class="va">esophagus</span>, by <span class="op">=</span> <span class="st">"rows"</span>, <span class="va">f</span>, update.tree <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu">rowTree</span><span class="op">(</span><span class="va">merged</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="agglomerate-methods-2.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span><span class="co">#</span></span></span>
@@ -528,8 +528,8 @@ the <code>colData</code> of the base object is kept.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> rowTree: 1 phylo tree(s) (19216 leaves)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> colLinks: NULL</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> colTree: NULL</span>
-<span class="r-in"><span><span class="va">merged</span> <span class="op">&lt;-</span> <span class="fu">agglomerateByVariable</span><span class="op">(</span><span class="va">GlobalPatterns</span>, by <span class="op">=</span> <span class="st">"cols"</span>,</span></span>
-<span class="r-in"><span>                                <span class="fu">colData</span><span class="op">(</span><span class="va">GlobalPatterns</span><span class="op">)</span><span class="op">$</span><span class="va">SampleType</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">merged</span> <span class="op">&lt;-</span> <span class="fu">agglomerateByVariable</span><span class="op">(</span></span></span>
+<span class="r-in"><span>    <span class="va">GlobalPatterns</span>, by <span class="op">=</span> <span class="st">"cols"</span>, <span class="fu">colData</span><span class="op">(</span><span class="va">GlobalPatterns</span><span class="op">)</span><span class="op">$</span><span class="va">SampleType</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">merged</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> class: TreeSummarizedExperiment </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> dim: 19216 9 </span>
