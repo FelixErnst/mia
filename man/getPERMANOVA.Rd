@@ -103,6 +103,17 @@ PERMANOVA. For homogeneity testing,
 with \code{\link[vegan:permutest]{vegan::permutest}} are utilized by default,
 which allow testing for equal dispersion across groups and validate the
 homogeneity assumption.
+
+PERMANOVA and distance-based redundancy analysis (dbRDA) are closely related
+methods for analyzing multivariate data. PERMANOVA is non-parametric, making
+fewer assumptions about the data. In contrast, dbRDA assumes a linear
+relationship when constructing the ordination space, although it also
+employs a PERMANOVA-like approach to test the significance of predictors
+within this space. dbRDA offers a broader scope overall, as it provides
+visualization of the constrained ordination, which can reveal patterns and
+relationships. However, when the underlying data structure is non-linear,
+the results from the two methods can differ significantly due to dbRDA's
+reliance on linear assumptions.
 }
 \examples{
 
@@ -121,6 +132,13 @@ tse <- addPERMANOVA(
     )
 # The results are stored to metadata
 metadata(tse)[["permanova"]]
+
+# Calculate dbRDA
+rda_res <- getRDA(
+    tse, assay.type = "relabundance", method = "bray",
+    formula = x ~ SampleType, permutations = 99)
+# Significance results are similar to PERMANOVA
+attr(rda_res, "significance")
 
 }
 \seealso{
