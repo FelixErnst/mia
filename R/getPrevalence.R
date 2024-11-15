@@ -9,11 +9,11 @@
 #' 
 #' @param assay_name Deprecated. Use \code{assay.type} instead.
 #'
-#' @param detection \code{Numeric scalar}. Detection threshold for absence/presence. 
-#'    If \code{as_relative = FALSE},
-#'    it sets the counts threshold for a taxon to be considered present.
-#'    If \code{as_relative = TRUE}, it sets the relative abundance threshold
-#'    for a taxon to be considered present. (Default: \code{0})
+#' @param detection \code{Numeric scalar}. Detection threshold for
+#' absence/presence. If \code{as_relative = FALSE},
+#' it sets the counts threshold for a taxon to be considered present.
+#' If \code{as_relative = TRUE}, it sets the relative abundance threshold
+#' for a taxon to be considered present. (Default: \code{0})
 #'
 #' @param include.lowest \code{Logical scalar}. Should the lower boundary of the
 #'   detection and prevalence cutoffs be included? (Default: \code{FALSE})
@@ -23,11 +23,11 @@
 #' @param sort \code{Logical scalar}. Should the result be sorted by prevalence?
 #'   (Default: \code{FALSE})
 #'
-#' @param rank \code{Character scalar}. Defines a taxonomic rank. Must be a value of
-#'   \code{taxonomyRanks()} function.
+#' @param rank \code{Character scalar}. Defines a taxonomic rank. Must be a
+#' value of \code{taxonomyRanks()} function.
 #'
-#' @param na.rm \code{Logical scalar}. Should NA values be omitted when calculating
-#' prevalence? (Default: \code{TRUE})
+#' @param na.rm \code{Logical scalar}. Should NA values be omitted?
+#' (Default: \code{TRUE})
 #' 
 #' @param update.tree \code{Logical scalar}. Should
 #' \code{rowTree()} also be agglomerated? (Default: \code{FALSE})
@@ -37,8 +37,6 @@
 #'   \item If \code{!is.null(rank)} arguments are passed on to
 #'   \code{\link[=agglomerate-methods]{agglomerateByRank}}. See
 #'   \code{\link[=agglomerate-methods]{?agglomerateByRank}} for more details.
-#'   Note that you can specify whether to remove empty ranks with
-#'   \code{agg.na.rm} instead of \code{na.rm}. (default: \code{FALSE})
 #'
 #'   \item for \code{getPrevalent}, \code{getRare}, \code{subsetByPrevalent}
 #'   and \code{subsetByRare} additional parameters passed to
@@ -175,8 +173,8 @@ NULL
 #' @rdname getPrevalence
 #' @export
 setGeneric("getPrevalence", signature = "x",
-           function(x, ...)
-               standardGeneric("getPrevalence"))
+    function(x, ...)
+    standardGeneric("getPrevalence"))
 
 #' @rdname getPrevalence
 #' @export
@@ -186,8 +184,7 @@ setMethod("getPrevalence", signature = c(x = "ANY"), function(
         # input check
         if (!.is_numeric_string(detection)) {
             stop("'detection' must be a single numeric value or coercible to ",
-                 "one.",
-                 call. = FALSE)
+                "one.", call. = FALSE)
         }
         #
         if(!.is_a_bool(na.rm)){
@@ -227,36 +224,6 @@ setMethod("getPrevalence", signature = c(x = "ANY"), function(
     }
 )
 
-.agg_for_prevalence <- function(
-        x, rank, relabel = FALSE, make.unique = TRUE, na.rm = FALSE,
-        agg.na.rm = TRUE, ...){
-    # Check na.rm. It is not used in this function, it is only caught so that
-    # it can be passed to getPrevalence(matrix) and not use it here in
-    # agglomerateByRank function.
-    if(!.is_a_bool(na.rm)){
-        stop("'na.rm' must be TRUE or FALSE.", call. = FALSE)
-    }
-    #
-    # Check drop.empty.rank
-    if(!.is_a_bool(agg.na.rm)){
-        stop("'agg.na.rm' must be TRUE or FALSE.", call. = FALSE)
-    }
-    #
-    if(!is.null(rank)){
-        .check_taxonomic_rank(rank, x)
-        args <- c(list(x = x, rank = rank, na.rm = agg.na.rm), list(...))
-        argNames <- c(
-            "x","rank","ignore.taxonomy","na.rm","empty.fields", "archetype",
-            "update.tree","average","BPPARAM", "update.refseq")
-        args <- args[names(args) %in% argNames]
-        x <- do.call(agglomerateByRank, args)
-        if(relabel){
-            rownames(x) <- getTaxonomyLabels(x, make.unique = make.unique)
-        }
-    }
-    x
-}
-
 #' @rdname getPrevalence
 #' @export
 setMethod("getPrevalence", signature = c(x = "SummarizedExperiment"),
@@ -264,7 +231,7 @@ setMethod("getPrevalence", signature = c(x = "SummarizedExperiment"),
             rank = NULL, ...){
         # check assay
         .check_assay_present(assay.type, x)
-        x <- .agg_for_prevalence(x, rank = rank, ...)
+        x <- .merge_features(x, rank = rank, ...)
         mat <- assay(x, assay.type)
         # Calculate abundance
         mat <- .to_rel_abund(mat, ...)
@@ -286,8 +253,8 @@ setMethod("getPrevalence", signature = c(x = "SummarizedExperiment"),
 #'
 #' @export
 setGeneric("getPrevalent", signature = "x",
-           function(x, ...)
-               standardGeneric("getPrevalent"))
+    function(x, ...)
+    standardGeneric("getPrevalent"))
 
 .norm_rownames <- function(x){
     if(is.null(rownames(x))){
@@ -303,8 +270,7 @@ setGeneric("getPrevalent", signature = "x",
     # input check
     if (!.is_numeric_string(prevalence)) {
         stop("'prevalence' must be a single numeric value or coercible to ",
-             "one.",
-             call. = FALSE)
+            "one.", call. = FALSE)
     }
 
     prevalence <- as.numeric(prevalence)
@@ -337,7 +303,7 @@ setGeneric("getPrevalent", signature = "x",
 
 .get_prevalent_taxa <- function(x, rank = NULL, ...){
     if(is(x,"SummarizedExperiment")){
-        x <- .agg_for_prevalence(x, rank = rank, ...)
+        x <- .merge_features(x, rank = rank, ...)
     }
     indices <- .get_prevalent_indices(x, ...)
     # If named input return named output
@@ -381,8 +347,8 @@ setMethod("getPrevalent", signature = c(x = "SummarizedExperiment"),
 #'
 #' @export
 setGeneric("getRare", signature = "x",
-           function(x, ...)
-               standardGeneric("getRare"))
+    function(x, ...)
+    standardGeneric("getRare"))
 
 .get_rare_indices <- function(x, ...){
     indices <- .get_prevalent_indices(x = x, ...)
@@ -395,7 +361,7 @@ setGeneric("getRare", signature = "x",
 
 .get_rare_taxa <- function(x, rank = NULL, ...){
     if(is(x,"SummarizedExperiment")){
-        x <- .agg_for_prevalence(x, rank = rank, ...)
+        x <- .merge_features(x, rank = rank, ...)
     }
     indices <- .get_rare_indices(x, ...)
     #
@@ -434,14 +400,14 @@ setMethod("getRare", signature = c(x = "SummarizedExperiment"),
 #' @rdname getPrevalence
 #' @export
 setGeneric("subsetByPrevalent", signature = "x",
-           function(x, ...)
-               standardGeneric("subsetByPrevalent"))
+    function(x, ...)
+    standardGeneric("subsetByPrevalent"))
 
 #' @rdname getPrevalence
 #' @export
 setMethod("subsetByPrevalent", signature = c(x = "SummarizedExperiment"),
     function(x, rank = NULL, ...){
-        x <- .agg_for_prevalence(x, rank = rank, ...)
+        x <- .merge_features(x, rank = rank, ...)
         prevalent_indices <- .get_prevalent_indices(x, ...)
         x[prevalent_indices, ]
     }
@@ -470,14 +436,14 @@ setMethod("subsetByPrevalent", signature = c(x = "TreeSummarizedExperiment"),
 #' @rdname getPrevalence
 #' @export
 setGeneric("subsetByRare", signature = "x",
-           function(x, ...)
-               standardGeneric("subsetByRare"))
+    function(x, ...)
+    standardGeneric("subsetByRare"))
 
 #' @rdname getPrevalence
 #' @export
 setMethod("subsetByRare", signature = c(x = "SummarizedExperiment"),
     function(x, rank = NULL, ...){
-        x <- .agg_for_prevalence(x, rank = rank, ...)
+        x <- .merge_features(x, rank = rank, ...)
         rare_indices <- .get_rare_indices(x, ...)
         x[rare_indices, ]
     }
@@ -506,8 +472,8 @@ setMethod("subsetByRare", signature = c(x = "TreeSummarizedExperiment"),
 #' @rdname getPrevalence
 #' @export
 setGeneric("getPrevalentAbundance", signature = "x",
-           function(x, assay.type = assay_name, assay_name = "relabundance", ...)
-               standardGeneric("getPrevalentAbundance"))
+    function(x, assay.type = assay_name, assay_name = "relabundance", ...)
+    standardGeneric("getPrevalentAbundance"))
 
 #' @rdname getPrevalence
 #' @export
@@ -517,9 +483,8 @@ setMethod("getPrevalentAbundance", signature = c(x = "ANY"),
         cm <- getPrevalent(x, ...)
         if (length(cm) == 0) {
             stop("With the given abundance and prevalence thresholds, no taxa ",
-                 "were found. Try to change detection and prevalence ",
-                 "parameters.",
-                 call. = FALSE)
+                "were found. Try to change detection and prevalence ",
+                "parameters.", call. = FALSE)
         }
         colSums(x[cm, ,drop=FALSE])
     }
@@ -586,23 +551,24 @@ setMethod("getPrevalentAbundance", signature = c(x = "SummarizedExperiment"),
 #'
 #' @export
 setGeneric("agglomerateByPrevalence", signature = "x",
-           function(x, ...)
-               standardGeneric("agglomerateByPrevalence"))
+    function(x, ...)
+    standardGeneric("agglomerateByPrevalence"))
 
 #' @rdname agglomerateByPrevalence
 #' @export
 setMethod("agglomerateByPrevalence", signature = c(x = "SummarizedExperiment"),
-    function(x, rank = NULL, other.name = other_label, other_label = "Other", ...){
+    function(x, rank = NULL, other.name = other_label, other_label = "Other",
+        ...){
         # input check
         if(!.is_a_string(other.name)){
             stop("'other.name' must be a single character value.",
-                 call. = FALSE)
+                call. = FALSE)
         }
         #
         # Check assays that they can be merged safely
-        mapply(.check_assays_for_merge, assayNames(x), assays(x))
+        temp <- mapply(.check_assays_for_merge, assayNames(x), assays(x))
         #
-        x <- .agg_for_prevalence(x, rank, check.assays = FALSE, ...)
+        x <- .merge_features(x, rank, check.assays = FALSE, ...)
         pr <- getPrevalent(x, rank = NULL, ...)
         f <- rownames(x) %in% pr
         if(any(!f)){
@@ -624,12 +590,12 @@ setMethod("agglomerateByPrevalence", signature = c(x = "SummarizedExperiment"),
 #' @rdname agglomerateByPrevalence
 #' @export
 setMethod("agglomerateByPrevalence", 
-          signature = c(x = "TreeSummarizedExperiment"),
+    signature = c(x = "TreeSummarizedExperiment"),
     function(x, rank = NULL, other.name = other_label, other_label = "Other",
             update.tree = FALSE, ...){
         # input check
         if(!.is_a_bool(update.tree)){
-          stop("'update.tree' must be TRUE or FALSE.", call. = FALSE)
+            stop("'update.tree' must be TRUE or FALSE.", call. = FALSE)
         }
         # update.refseq is a hidden parameter as for all other agglomeration
         # methods from the agglomerate-methods man page.
@@ -647,7 +613,7 @@ setMethod("agglomerateByPrevalence",
         # sequences are only subsetted without finding consensus sequences.
         if( merge_refseq && !is.null(referenceSeq(x))  ){
             # If user wants to agglomerate based on rank
-            x <- .agg_for_prevalence(x, rank, check.assays = FALSE, ...)
+            x <- .merge_features(x, rank, check.assays = FALSE, ...)
             # Find groups that will be used to agglomerate the data
             f <- rownames(x)[ match(rownames(x), rownames(res)) ]
             f[ is.na(f) ] <- other.name
@@ -661,7 +627,7 @@ setMethod("agglomerateByPrevalence",
             res <- .agglomerate_trees(res, 1)
         }
         return(res)
-      }
+    }
 )
 
 # Get abundance. Determines if relative abundance is calculated or not.

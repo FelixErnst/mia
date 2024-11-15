@@ -27,27 +27,27 @@ test_that("agglomerate", {
     expect_equal(assays(actual)$mat[2,1],c(b = 36))
     expect_equal(assays(actual)$mat[3,1],c(c = 24))
     #
-    expect_error(agglomerateByRank(xtse,"",na.rm=FALSE),
+    expect_error(agglomerateByRank(xtse,"",empty.rm=FALSE),
                  "'rank' must be a non-empty single character value")
-    expect_error(agglomerateByRank(xtse,"Family",na.rm=""),
-                 "'na.rm' must be TRUE or FALSE")
+    expect_error(agglomerateByRank(xtse,"Family",empty.rm=""),
+                 "'empty.rm' must be TRUE or FALSE")
     expect_error(
-        agglomerateByRank(xtse,"Family",na.rm=FALSE,update.tree=""),
+        agglomerateByRank(xtse,"Family",empty.rm=FALSE,update.tree=""),
         "'update.tree' must be TRUE or FALSE")
     xtse2 <- xtse
     rowData(xtse2) <- NULL
-    expect_error(agglomerateByRank(xtse2,"Family",na.rm=FALSE),
+    expect_error(agglomerateByRank(xtse2,"Family",empty.rm=FALSE),
                  "taxonomyData needs to be populated")
     #
-    actual <- agglomerateByRank(xtse,"Family",na.rm=FALSE)
+    actual <- agglomerateByRank(xtse,"Family",empty.rm=FALSE)
     expect_equivalent(rowData(actual),rowData(actual_family))
-    actual <- agglomerateByRank(xtse,"Phylum",na.rm=FALSE)
+    actual <- agglomerateByRank(xtse,"Phylum",empty.rm=FALSE)
     expect_equivalent(rowData(actual),rowData(actual_phylum))
     #
-    actual <- agglomerateByRank(xtse,"Family", ignore.taxonomy = FALSE, na.rm = TRUE)
+    actual <- agglomerateByRank(xtse,"Family", ignore.taxonomy = FALSE, empty.rm = TRUE)
     expect_equal(dim(actual),c(6,10))
     expect_equal(rowData(actual)$Family,c("c","d","e","f","g","h"))
-    actual <- agglomerateByRank(xtse,"Family", ignore.taxonomy = FALSE, na.rm = FALSE) # the default
+    actual <- agglomerateByRank(xtse,"Family", ignore.taxonomy = FALSE, empty.rm = FALSE)
     expect_equal(dim(actual),c(8,10))
     expect_equal(rowData(actual)$Family,c("c","d","e","f","g","h",NA,NA))
     actual <- agglomerateByRank(xtse,"Phylum")
@@ -63,22 +63,22 @@ test_that("agglomerate", {
     data(enterotype, package="mia")
     expect_equal(length(unique(rowData(enterotype)[,"Genus"])),
                  nrow(agglomerateByRank(enterotype,"Genus", ignore.taxonomy = FALSE, 
-                 na.rm = FALSE)))
+                 empty.rm = FALSE)))
 
     # agglomeration in all its forms
     data(GlobalPatterns, package="mia")
     se <- GlobalPatterns
     actual <- agglomerateByRank(se, rank = "Family", 
-        ignore.taxonomy = FALSE, na.rm = FALSE)
+        ignore.taxonomy = FALSE, empty.rm = FALSE)
     expect_equal(dim(actual),c(603,26))
     expect_equal(length(rowTree(actual)$tip.label),
                  length(rowTree(se)$tip.label))
     actual <- agglomerateByRank(se, rank = "Family", 
-        ignore.taxonomy = FALSE, na.rm = FALSE, update.tree = TRUE)
+        ignore.taxonomy = FALSE, empty.rm = FALSE, update.tree = TRUE)
     expect_equal(dim(actual),c(603,26))
     expect_equal(length(rowTree(actual)$tip.label), 603)
     actual <- agglomerateByRank(se, rank = "Family", 
-        ignore.taxonomy = FALSE, na.rm = FALSE, update.tree = TRUE)
+        ignore.taxonomy = FALSE, empty.rm = FALSE, update.tree = TRUE)
     expect_equal(dim(actual),c(603,26))
     expect_equal(length(rowTree(actual)$tip.label), nrow(actual))
     # Test that warning occurs when assay contian binary or negative values
@@ -92,30 +92,30 @@ test_that("agglomerate", {
     data(GlobalPatterns, package="mia")
     tse <- GlobalPatterns
 
-    # Check that na.rm works
+    # Check that empty.rm works
     # Get all phyla
     all_phyla <- unique( rowData(tse)$Phylum )
     
-    # When na.rm = FALSE, then phyla should also include NA --> one extra row
-    test0 <- agglomerateByVariable(tse, by = 1, group = "Phylum", na.rm = FALSE)
-    test1 <- agglomerateByRank(tse, rank = "Phylum", na.rm = FALSE)
+    # When empty.rm = FALSE, then phyla should also include NA --> one extra row
+    test0 <- agglomerateByVariable(tse, by = 1, group = "Phylum", empty.rm = FALSE)
+    test1 <- agglomerateByRank(tse, rank = "Phylum", empty.rm = FALSE)
     
     # Test that dimentionality is the same for merging object by agglomerateByRank
     # and agglomerateByVariable.
     expect_equal(nrow(test0), length(all_phyla))
     expect_equal(nrow(test1), length(all_phyla))
     
-    # When na.rm = TRUE, there should be as many rows as there are non-NA phyla
-    test0 <- agglomerateByVariable(tse, by = 1, group = "Phylum", na.rm = TRUE)
-    test1 <- agglomerateByRank(tse, rank = "Phylum", na.rm = TRUE)
+    # When empty.rm = TRUE, there should be as many rows as there are non-NA phyla
+    test0 <- agglomerateByVariable(tse, by = 1, group = "Phylum", empty.rm = TRUE)
+    test1 <- agglomerateByRank(tse, rank = "Phylum", empty.rm = TRUE)
     
-    # Test that dimentionality is the same when NA values are removed.
+    # Test that dimensionality is the same when NA values are removed.
     expect_equal(nrow(test0), length( all_phyla[!is.na(all_phyla)] ))
     expect_equal(nrow(test1), length( all_phyla[!is.na(all_phyla)] ))
     
     # Check that there are more taxa when agglomeration is to "Species" level
-    test0 <- agglomerateByVariable(tse, by = 1, group = "Species", na.rm = FALSE)
-    test1 <- agglomerateByRank(tse, rank = "Species", na.rm = FALSE)
+    test0 <- agglomerateByVariable(tse, by = 1, group = "Species", empty.rm = FALSE)
+    test1 <- agglomerateByRank(tse, rank = "Species", empty.rm = FALSE)
     expect_equal(nrow(test0), 945)
     expect_equal(nrow(test1), 2307)
     
@@ -143,9 +143,9 @@ test_that("agglomerate", {
     expect_equal(rd1[, cols], rd2[, cols])
     expect_true( ncol(rd1) > ncol(rd2) )
     # Test that make.unique work
-    uniq <- agglomerateByRank(tse, rank = "Species", na.rm = FALSE)
+    uniq <- agglomerateByRank(tse, rank = "Species", empty.rm = FALSE)
     not_uniq <- agglomerateByRank(
-        tse, rank = "Species", make.unique = FALSE, na.rm = FALSE)
+        tse, rank = "Species", make.unique = FALSE, empty.rm = FALSE)
     expect_true( !any( duplicated(rownames(uniq)) ) )
     expect_true( any( duplicated(rownames(not_uniq)) ) )
     

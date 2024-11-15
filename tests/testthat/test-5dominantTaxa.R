@@ -21,8 +21,6 @@ test_that("getDominant", {
         expect_equal(getDominant(tse)[1:15], exp.vals.one)
 
         # Test at taxonomic level for values are passed to agglomerateRanks
-        getDominant(tse, rank = "Genus", na.rm = FALSE)
-
         exp.vals.two <- c("Genus:CandidatusSolibacter", "Genus:MC18",
                           "Class:Chloracidobacteria", "Genus:Bacteroides",
                           "Genus:Bacteroides", "Genus:Streptococcus",
@@ -31,21 +29,17 @@ test_that("getDominant", {
                           "Genus:Dolichospermum", "Family:ACK-M1",
                           "Order:Stramenopiles","Order:Stramenopiles","Order:Stramenopiles")
         names(exp.vals.two) <- exp.names.one
-        expect_equal(getDominant(tse,
-                                           rank = "Genus",
-                                           ignore.taxonomy = FALSE,
-                                           na.rm = FALSE)[1:15],
-                     exp.vals.two)
+        expect_equal(
+            getDominant(tse, rank = "Genus", ignore.taxonomy = FALSE, empty.rm = FALSE)[1:15],
+            exp.vals.two)
 
         # Check if DominantTaxa is added to coldata
-        expect_equal(colData(addDominant(tse,
-                                            name="dominant"))$dominant[1:15],
-                     exp.vals.one)
-        expect_equal(colData(addDominant(tse,
-                                            rank = "Genus",
-                                            na.rm = FALSE,
-                                            name="dominant"))$dominant[1:15],
-                     exp.vals.two)
+        expect_equal(
+            colData(addDominant(tse, name="dominant"))$dominant[1:15],
+            exp.vals.one)
+        expect_equal(
+            colData(addDominant(tse,rank = "Genus", empty.rm = FALSE, name="dominant"))$dominant[1:15],
+            exp.vals.two)
         
         # Check if DominantTaxa is added when factor is passed
         exp.vals.three <- c(
@@ -57,10 +51,9 @@ test_that("getDominant", {
         names(exp.vals.three) <- exp.names.one
         test <- tse
         rowData(test)$group <- rowData(tse)$Genus
-        expect_equal(colData(addDominant(test, rank = "group", na.rm = TRUE,
-                                         name="dominant"))$dominant[1:15],
-                     exp.vals.three)
-        
+        expect_equal(
+            colData(addDominant(test, rank = "group", empty.rm = TRUE, name = "dominant"))$dominant[1:15],
+            exp.vals.three)
         
         tse1 <- tse
         # Now data contains 2 dominant taxa in one sample

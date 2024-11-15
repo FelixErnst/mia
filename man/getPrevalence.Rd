@@ -115,8 +115,6 @@ getPrevalentAbundance(
 \item If \code{!is.null(rank)} arguments are passed on to
 \code{\link[=agglomerate-methods]{agglomerateByRank}}. See
 \code{\link[=agglomerate-methods]{?agglomerateByRank}} for more details.
-Note that you can specify whether to remove empty ranks with
-\code{agg.na.rm} instead of \code{na.rm}. (default: \code{FALSE})
 
 \item for \code{getPrevalent}, \code{getRare}, \code{subsetByPrevalent}
 and \code{subsetByRare} additional parameters passed to
@@ -126,8 +124,8 @@ and \code{subsetByRare} additional parameters passed to
 \code{getPrevalent}
 }}
 
-\item{detection}{\code{Numeric scalar}. Detection threshold for absence/presence.
-If \code{as_relative = FALSE},
+\item{detection}{\code{Numeric scalar}. Detection threshold for
+absence/presence. If \code{as_relative = FALSE},
 it sets the counts threshold for a taxon to be considered present.
 If \code{as_relative = TRUE}, it sets the relative abundance threshold
 for a taxon to be considered present. (Default: \code{0})}
@@ -140,16 +138,16 @@ detection and prevalence cutoffs be included? (Default: \code{FALSE})}
 \item{sort}{\code{Logical scalar}. Should the result be sorted by prevalence?
 (Default: \code{FALSE})}
 
-\item{na.rm}{\code{Logical scalar}. Should NA values be omitted when calculating
-prevalence? (Default: \code{TRUE})}
+\item{na.rm}{\code{Logical scalar}. Should NA values be omitted?
+(Default: \code{TRUE})}
 
 \item{assay.type}{\code{Character scalar}. Specifies which assay to use for
 calculation. (Default: \code{"counts"})}
 
 \item{assay_name}{Deprecated. Use \code{assay.type} instead.}
 
-\item{rank}{\code{Character scalar}. Defines a taxonomic rank. Must be a value of
-\code{taxonomyRanks()} function.}
+\item{rank}{\code{Character scalar}. Defines a taxonomic rank. Must be a
+value of \code{taxonomyRanks()} function.}
 
 \item{prevalence}{Prevalence threshold (in 0 to 1). The
 required prevalence is strictly greater by default. To include the

@@ -137,13 +137,13 @@ becomes very easy.
 altExp(tse, "family") <- x2
 ```
 
-Keep in mind, that if you set `na.rm = TRUE`, rows with `NA` or similar value
+Keep in mind, that if you set `empty.rm = TRUE`, rows with `NA` or similar value
 (defined via the `empty.fields` argument) will be removed. Depending on these
 settings different number of rows will be returned.
 
 ```{r}
-x1 <- agglomerateByRank(tse, rank = "Species", na.rm = TRUE)
-altExp(tse,"species") <- agglomerateByRank(tse, rank = "Species", na.rm = FALSE)
+x1 <- agglomerateByRank(tse, rank = "Species", empty.rm = TRUE)
+altExp(tse,"species") <- agglomerateByRank(tse, rank = "Species", empty.rm = FALSE)
 dim(x1)
 dim(altExp(tse,"species"))
 ```

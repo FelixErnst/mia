@@ -106,16 +106,16 @@ test_that("getPrevalence", {
     remove <- c(15, 200)
     assay(tse, "counts")[remove, ] <- NA
     # Check that agglomeration works
-    tse_agg <- agglomerateByRank(tse, ignore.taxonomy = FALSE, na.rm = FALSE, rank = rank)
+    tse_agg <- agglomerateByRank(tse, ignore.taxonomy = FALSE, empty.rm = FALSE, rank = rank)
     expect_warning(ref <- getPrevalence(tse_agg, na.rm = FALSE))
-    expect_warning(res <- getPrevalence(tse, rank = "Genus", agg.na.rm = FALSE))
+    expect_warning(res <- getPrevalence(tse, rank = "Genus", empty.rm = FALSE))
     expect_true( all(res == ref, na.rm = TRUE) )
     #
     tse_agg <- agglomerateByRank(
-        tse, ignore.taxonomy = FALSE, na.rm = TRUE, rank = rank)
+        tse, ignore.taxonomy = FALSE, empty.rm = TRUE, rank = rank)
     ref <- getPrevalence(tse_agg, na.rm = TRUE)
     res <- getPrevalence(
-        tse, na.rm = TRUE, rank = "Genus", agg.na.rm = TRUE)
+        tse, na.rm = TRUE, rank = "Genus", empty.rm = TRUE)
     expect_true( all(res == ref, na.rm = TRUE) )
 })
 

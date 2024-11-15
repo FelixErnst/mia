@@ -1,5 +1,10 @@
-#' Agglomerate or merge data using taxonomic information
-#'
+#' @name
+#' agglomerate-methods
+#' 
+#' @title
+#' Agglomerate data using taxonomic information or other grouping
+#' 
+#' @description
 #' Agglomeration functions can be used to sum-up data based on specific criteria
 #' such as taxonomic ranks, variables or prevalence.
 #'
@@ -16,12 +21,38 @@
 #' \code{\link[SummarizedExperiment:SummarizedExperiment-class]{assay}} are
 #' agglomerated, i.e. summed up. If the assay contains values other than counts
 #' or absolute values, this can lead to meaningless values being produced.
+#' 
+#' @details
+#' Agglomeration sums up the values of assays at the specified taxonomic level.
+#' With certain assays, e.g. those that include binary or negative values, this
+#' summing can produce meaningless values. In those cases, consider performing
+#' agglomeration first, and then applying the transformation afterwards.
+#'
+#' \code{agglomerateByVariable} works similarly to
+#' \code{\link[scuttle:sumCountsAcrossFeatures]{sumCountsAcrossFeatures}}.
+#' However, additional support for \code{TreeSummarizedExperiment} was added and
+#' science field agnostic names were used. In addition the \code{archetype}
+#' argument lets the user select how to preserve row or column data.
+#'
+#' For merge data of assays the function from \code{scuttle} are used.
+#'
+#' @return
+#' \code{agglomerateByRank} returns a taxonomically-agglomerated,
+#' optionally-pruned object of the same class as \code{x}.
+#' \code{agglomerateByVariable} returns an object of the same class as \code{x}
+#' with the specified entries merged into one entry in all relevant components.
+#' \code{agglomerateByRank} returns a taxonomically-agglomerated,
+#' optionally-pruned object of the same class as \code{x}.
 #'  
 #' @inheritParams getPrevalence
 #'
 #' @param empty.fields \code{Character vector}. Defines which values should be
 #'   regarded as empty. (Default: \code{c(NA, "", " ", "\t")}). They will be
 #'   removed if \code{na.rm = TRUE} before agglomeration.
+#'   
+#' @param empty.rm \code{Logical scalar}. Defines whether rows including
+#' \code{empty.fields} in specified \code{rank} will be excluded.
+#' (Default: \code{TRUE})
 #'
 #' @param agglomerateTree Deprecated. Use \code{update.tree} instead.
 #' 
@@ -37,28 +68,36 @@
 #'        \item \code{empty.ranks.rm}: \code{Logical scalar}. Determines
 #'        whether to remove those columns of rowData that include only NAs after
 #'        agglomeration. (Default: \code{FALSE})
+#'        
+#'        \item \code{empty.rm}: \code{Logical scalar}. Determines
+#'        whether to remove rows that do not belong to any group, i.e., that
+#'        have \code{NA} value. (Default: \code{FALSE})
+#'        
 #'        \item \code{make.unique}: \code{Logical scalar}. Determines
 #'        whether to make rownames unique. (Default: \code{TRUE})
+#'        
 #'        \item \code{detection}: The threshold value for determining presence
 #'        or absence. A value in \code{x} must exceed this threshold to be
 #'        considered present.
+#'        
 #'        \item \code{assay.type}: \code{Character scalar}. Specifies the assay
-#'        used to
-#'        calculate prevalence. (Default: \code{"counts"})
+#'        used to calculate prevalence. (Default: \code{"counts"})
+#'        
 #'        \item \code{prevalence}: Prevalence threshold (in 0 to 1). The
 #'        required prevalence is strictly greater by default. To include the
 #'        limit, set \code{include.lowest} to \code{TRUE}.
+#'        
 #'        \item \code{update.refseq}: \code{Logical scalar}. Should a
 #'        consensus sequence be calculated? If set to \code{FALSE}, the result
 #'        from \code{archetype} is returned; If set to \code{TRUE} the result
 #'        from
 #'        \code{\link[DECIPHER:ConsensusSequence]{DECIPHER::ConsensusSequence}}
 #'        is returned. (Default: \code{FALSE})
+#'        
 #'        \item \code{archetype} Of each level of \code{group}, which element
-#'        should
-#'        be regarded as the archetype and metadata in the columns or rows kept,
-#'        while merging? This can be single integer value or an integer vector
-#'        of the same length as \code{levels(group)}. (Default:
+#'        should be regarded as the archetype and metadata in the columns or
+#'        rows kept, while merging? This can be single integer value or an
+#'        integer vector of the same length as \code{levels(group)}. (Default:
 #'        \code{1L}, which means the first element encountered per
 #'        factor level will be kept)
 #'    }
@@ -92,43 +131,6 @@
 #' 
 #' @param mergeTree Deprecated. Use \code{update.tree} instead.
 #'
-#' @details
-#' 
-#' Agglomeration sums up the values of assays at the specified taxonomic level.
-#' With
-#' certain assays, e.g. those that include binary or negative values, this
-#' summing
-#' can produce meaningless values. In those cases, consider performing
-#' agglomeration
-#' first, and then applying the transformation afterwards.
-#'
-#' \code{agglomerateByVariable} works similarly to
-#' \code{\link[scuttle:sumCountsAcrossFeatures]{sumCountsAcrossFeatures}}.
-#' However, additional support for \code{TreeSummarizedExperiment} was added and
-#' science field agnostic names were used. In addition the \code{archetype}
-#' argument lets the user select how to preserve row or column data.
-#'
-#' For merge data of assays the function from \code{scuttle} are used.
-#'
-#' @return
-#' \code{agglomerateByRank} returns a taxonomically-agglomerated,
-#' optionally-pruned object of the same class as \code{x}.
-#' \code{agglomerateByVariable} returns an object of the same class as \code{x}
-#' with the specified entries merged into one entry in all relevant components.
-#' \code{agglomerateByRank} returns a taxonomically-agglomerated,
-#' optionally-pruned object of the same class as \code{x}.
-#'
-#' @name agglomerate-methods
-#'
-#' @seealso
-#' \code{\link[=splitOn]{splitOn}}
-#' \code{\link[=unsplitOn]{unsplitOn}}
-#' \code{\link[=agglomerate-methods]{agglomerateByVariable}},
-#' \code{\link[scuttle:sumCountsAcrossFeatures]{sumCountsAcrossFeatures}},
-#' \code{\link[=agglomerate-methods]{agglomerateByRank}},
-#' \code{\link[SingleCellExperiment:altExps]{altExps}},
-#' \code{\link[SingleCellExperiment:splitAltExps]{splitAltExps}}
-#'
 #' @examples
 #'
 #' ### Agglomerate data based on taxonomic information
@@ -158,9 +160,9 @@
 #' tse <- agglomerateByRank(tse, rank = "Genus")
 #' tse <- transformAssay(tse, method = "pa")
 #'
-#' # removing empty labels by setting na.rm = TRUE
+#' # Removing empty labels by setting empty.rm = TRUE
 #' sum(is.na(rowData(GlobalPatterns)$Family))
-#' x3 <- agglomerateByRank(GlobalPatterns, rank="Family", na.rm = TRUE)
+#' x3 <- agglomerateByRank(GlobalPatterns, rank="Family", empty.rm = TRUE)
 #' nrow(x3) # different from x2
 #'
 #' # Because all the rownames are from the same rank, rownames do not include
@@ -172,20 +174,19 @@
 #' print(rownames(x3[1:3,]))
 #'
 #' # use 'empty.ranks.rm' to remove columns that include only NAs
-#' x4 <- agglomerateByRank(GlobalPatterns, rank="Phylum",
-#'                         empty.ranks.rm = TRUE)
+#' x4 <- agglomerateByRank(
+#'     GlobalPatterns, rank="Phylum", empty.ranks.rm = TRUE)
 #' head(rowData(x4))
 #'
-#' # If the assay contains NAs, you might want to consider replacing them,
+#' # If the assay contains NAs, you might want to specify na.rm=TRUE,
 #' # since summing-up NAs lead to NA
 #' x5 <- GlobalPatterns
 #' # Replace first value with NA
 #' assay(x5)[1,1] <- NA
 #' x6 <- agglomerateByRank(x5, "Kingdom")
 #' head( assay(x6) )
-#' # Replace NAs with 0. This is justified when we are summing-up counts.
-#' assay(x5)[ is.na(assay(x5)) ] <- 0
-#' x6 <- agglomerateByRank(x5, "Kingdom")
+#' # Use na.rm=TRUE
+#' x6 <- agglomerateByRank(x5, "Kingdom", na.rm = TRUE)
 #' head( assay(x6) )
 #'
 #' ## Look at enterotype dataset...
@@ -199,44 +200,94 @@
 #' data(esophagus)
 #' esophagus
 #' plot(rowTree(esophagus))
-#' # get a factor for merging
+#' # Get a factor for merging
 #' f <- factor(regmatches(rownames(esophagus),
-#'                        regexpr("^[0-9]*_[0-9]*",rownames(esophagus))))
-#' merged <- agglomerateByVariable(esophagus, by = "rows", f,
-#'                                 update.tree = TRUE)
+#'     regexpr("^[0-9]*_[0-9]*",rownames(esophagus))))
+#' merged <- agglomerateByVariable(
+#'     esophagus, by = "rows", f, update.tree = TRUE)
 #' plot(rowTree(merged))
 #' #
 #' data(GlobalPatterns)
 #' GlobalPatterns
-#' merged <- agglomerateByVariable(GlobalPatterns, by = "cols",
-#'                                 colData(GlobalPatterns)$SampleType)
+#' merged <- agglomerateByVariable(
+#'     GlobalPatterns, by = "cols", colData(GlobalPatterns)$SampleType)
 #' merged
+#' 
+#' @seealso
+#' \code{\link[=splitOn]{splitOn}}
+#' \code{\link[=unsplitOn]{unsplitOn}}
+#' \code{\link[=agglomerate-methods]{agglomerateByVariable}},
+#' \code{\link[scuttle:sumCountsAcrossFeatures]{sumCountsAcrossFeatures}},
+#' \code{\link[=agglomerate-methods]{agglomerateByRank}},
+#' \code{\link[SingleCellExperiment:altExps]{altExps}},
+#' \code{\link[SingleCellExperiment:splitAltExps]{splitAltExps}}
+#' 
 NULL
 
 #' @rdname agglomerate-methods
 #' @export
-setGeneric("agglomerateByRank",
-            signature = "x",
-            function(x, ...)
-                standardGeneric("agglomerateByRank"))
+setGeneric("agglomerateByRank", signature = "x", function(x, ...)
+    standardGeneric("agglomerateByRank"))
 
 #' @rdname agglomerate-methods
-#' @aliases agglomerateByVariable
 #' @export
-setGeneric("agglomerateByVariable",
-            signature = "x",
-            function(x, ...)
-                standardGeneric("agglomerateByVariable"))
+setMethod(
+    "agglomerateByRank", signature = c(x = "TreeSummarizedExperiment"),
+    function(x, rank = taxonomyRanks(x)[1], update.tree = agglomerateTree,
+        agglomerate.tree = agglomerateTree, agglomerateTree = FALSE, ...){
+        # Input check
+        if(!.is_a_bool(update.tree)){
+            stop("'update.tree' must be TRUE or FALSE.", call. = FALSE)
+        }
+        #
+        # If there are multiple rowTrees, it might be that multiple
+        # trees are preserved after agglomeration even though the
+        # dataset could be presented with one tree.
+        # --> order the data so that the taxa are searched from one tree
+        # first.
+        if( length(rowTreeNames(x)) > 1 ){
+            x <- .order_based_on_trees(x)
+        }
+        # Agglomerate data by using SCE method
+        x <- callNextMethod(x, rank = rank, update.tree = update.tree, ...)
+        return(x)
+    }
+)
 
 #' @rdname agglomerate-methods
-#'
+#' @importFrom SingleCellExperiment altExp altExp<- altExps<-
+#' @export
+setMethod(
+    "agglomerateByRank", signature = c(x = "SingleCellExperiment"),
+    function(x, rank = taxonomyRanks(x)[1], altexp = NULL,
+        altexp.rm = strip_altexp, strip_altexp = TRUE, ...){
+        # Input check
+        if(!.is_a_bool(altexp.rm)){
+            stop("'altexp.rm' must be TRUE or FALSE.", call. = FALSE)
+        }
+        #
+        # Get altexp if specified
+        x <- .check_and_get_altExp(x, altexp)
+        # Remove altexps if user specified so. As we agglomerate data, they do
+        # not necessarily represent the "high-level" data anymore. I.e., usually
+        # altExp includes subsets of TreeSE, but that is not the case anymore.
+        # That is why we clear the altexp slot.
+        if( altexp.rm ){
+            altExps(x) <- NULL
+        }
+        # Agglomerate the data by using SE method
+        x <- callNextMethod(x, rank = rank, ...)
+        return(x)
+    }
+)
+
+#' @rdname agglomerate-methods
 #' @importFrom SummarizedExperiment rowData rowData<-
-#'
 #' @export
 setMethod("agglomerateByRank", signature = c(x = "SummarizedExperiment"),
-    function(x, rank = taxonomyRanks(x)[1], na.rm = TRUE,
+    function(x, rank = taxonomyRanks(x)[1], empty.rm = TRUE,
         empty.fields = c(NA, "", " ", "\t", "-", "_"), ...){
-        # input check
+        # Input check
         if(nrow(x) == 0L){
             stop("No data available in `x` ('x' has nrow(x) == 0L.)",
                 call. = FALSE)
@@ -245,8 +296,8 @@ setMethod("agglomerateByRank", signature = c(x = "SummarizedExperiment"),
             stop("'rank' must be a non-empty single character value",
                 call. = FALSE)
         }
-        if(!.is_a_bool(na.rm)){
-            stop("'na.rm' must be TRUE or FALSE.", call. = FALSE)
+        if(!.is_a_bool(empty.rm)){
+            stop("'empty.rm' must be TRUE or FALSE.", call. = FALSE)
         }
         if(ncol(rowData(x)) == 0L){
             stop("taxonomyData needs to be populated.", call. = FALSE)
@@ -254,55 +305,81 @@ setMethod("agglomerateByRank", signature = c(x = "SummarizedExperiment"),
         .check_taxonomic_rank(rank, x)
         .check_for_taxonomic_data_order(x)
         #
-
-        # Make a vector from the taxonomic data.
-        col <- which( taxonomyRanks(x) %in% rank )
+        # Get the index of which taxonomy rank is detected and used for
+        # agglomeration
+        col_idx <- which( taxonomyRanks(x) %in% rank )
+        # Get the indices of detected rank columns from rowData
         tax_cols <- .get_tax_cols_from_se(x)
-
-        # if na.rm is TRUE, remove the empty, white-space, NA values from
-        # tree will be pruned later, if update.tree = TRUE
-        if( na.rm ){
-            x <- .remove_with_empty_taxonomic_info(x, tax_cols[col],
-                                                    empty.fields)
+        
+        # if empty.rm is TRUE, remove those rows that have empty,
+        # white-space, NA values in rank information. I.e., they do not have
+        # taxonomy information in specified taxonomy level.
+        if( empty.rm ){
+            x <- .remove_with_empty_taxonomic_info(
+                x, tax_cols[col_idx], empty.fields)
         }
         # If rank is the only rank that is available and this data is unique,
         # then the data is already 'aggregated' and no further operations
         # are needed.
-        if (length(taxonomyRanks(x)) == 1L &&
-            !anyDuplicated(rowData(x)[,taxonomyRanks(x)])) {
+        if( length(taxonomyRanks(x)) == 1L &&
+                !anyDuplicated(rowData(x)[,taxonomyRanks(x)]) ){
             return(x)
         }
-
-        # get groups of taxonomy entries
-        tax_factors <- .get_tax_groups(x, col = col, ...)
-        # Convert to factors. Use na.rm so that NA values are not preserved.
-        # i.e. they are not converted into character values.
+        
+        # Get groups of taxonomy entries, i.e., get the specified rank
+        # column from rowData
+        tax_factors <- .get_tax_groups(x, col = col_idx, ...)
+        # Convert to factors. Use empty.rm so that NA values are not
+        # preserved. i.e. they are not converted into character values.
         # NA values are handled earlier in this function.
-        tax_factors <- .norm_f(nrow(x), tax_factors, na.rm = TRUE)
-
-        # merge taxa
-        x <- agglomerateByVariable(
-            x, by = "rows", group = tax_factors, na.rm = TRUE, ...)
-
-        # "Empty" the values to the right of the rank, using NA_character_.
-        if( col < length(taxonomyRanks(x)) ){
-            badcolumns <- tax_cols[seq_along(tax_cols) > col]
-            if(length(badcolumns) > 0L){
-                row_data <- rowData(x)
-                row_data[, badcolumns] <- NA_character_
-                rowData(x) <- row_data
-            }
+        tax_factors <- .norm_f(nrow(x), tax_factors, empty.rm = TRUE)
+        
+        # Agglomerate data by utilizing agglomerateByVariable
+        args <- c(list(
+            x, by = "rows", group = tax_factors, empty.rm = TRUE), list(...))
+        x <- do.call(agglomerateByVariable, args)
+        
+        # Replace the values to the right of the rank with NA_character_.
+        # These columns no longer represent the agglomerated data, as they
+        # previously corresponded to specific lower taxonomic ranks that are
+        # now aggregated at the current level.
+        badcolumns <- tax_cols[seq_along(tax_cols) > col_idx]
+        if( length(badcolumns) > 0L ){
+            rowData(x)[, badcolumns] <- NA_character_
         }
-        # adjust rownames
-        rownames(x) <- getTaxonomyLabels(x, empty.fields, ...,
-                                        with.rank = FALSE,
-                                        resolve.loops = FALSE)
+        # Adjust rownames
+        rownames(x) <- getTaxonomyLabels(
+            x, empty.fields, with.rank = FALSE, resolve.loops = FALSE, ...)
         # Remove those columns from rowData that include only NAs
         x <- .remove_NA_cols_from_rowdata(x, ...)
+        # Add agglomeration info to metadata
         x <- .add_values_to_metadata(x, "agglomerated_by_rank", rank)
-
         # Order the data in alphabetical order
         x <- x[ order(rownames(x)), ]
+        return(x)
+    }
+)
+
+#' @rdname agglomerate-methods
+#' @aliases agglomerateByVariable
+#' @export
+setGeneric("agglomerateByVariable", signature = "x", function(x, ...)
+    standardGeneric("agglomerateByVariable"))
+
+#' @rdname agglomerate-methods
+#' @aliases agglomerateByVariable
+#' @export
+setMethod("agglomerateByVariable",
+    signature = c(x = "TreeSummarizedExperiment"),
+    function(x, by, group = f, f, update.tree = mergeTree, mergeTree = FALSE,
+        ...){
+        # Check by
+        by <- .check_MARGIN(by)
+        # Get function based on by
+        FUN <- switch(by, .merge_rows_TSE, .merge_cols_TSE)
+        # Agglomerate
+        x <- FUN(x, group, update.tree = update.tree, ...)
+        return(x)
     }
 )
 
@@ -310,90 +387,28 @@ setMethod("agglomerateByRank", signature = c(x = "SummarizedExperiment"),
 #' @aliases agglomerateByVariable
 #' @export
 setMethod("agglomerateByVariable", signature = c(x = "SummarizedExperiment"),
-            function(x, by, group = f, f, ...){
-                by <- .check_MARGIN(by)
-                FUN <- switch(by, .merge_rows, .merge_cols)
-                x <- FUN(x, group, ...)
-                return(x)
-            }
-)
-
-#' @rdname agglomerate-methods
-#' @aliases agglomerateByVariable
-#' @export
-setMethod("agglomerateByVariable",
-            signature = c(x = "TreeSummarizedExperiment"),
-            function(x, by, group = f, f, update.tree = mergeTree,
-                    mergeTree = FALSE, ...){
-                # Check by
-                by <- .check_MARGIN(by)
-                # Get function based on by
-                FUN <- switch(by, .merge_rows_TSE, .merge_cols_TSE)
-                # Agglomerate
-                x <- FUN(x, group, update.tree = update.tree, ...)
-                return(x)
-            }
-)
-
-#' @rdname agglomerate-methods
-#' @importFrom SingleCellExperiment altExp altExp<- altExps<-
-#' @export
-setMethod("agglomerateByRank", signature = c(x = "SingleCellExperiment"),
-    function(x, ..., altexp = NULL, altexp.rm = strip_altexp,
-            strip_altexp = TRUE){
-        # input check
-        if(!.is_a_bool(altexp.rm)){
-            stop("'altexp.rm' mus be TRUE or FALSE.", call. = FALSE)
-        }
-        #
-        if (!is.null(altexp)) {
-            x <- altExp(x, altexp)
-        }
-        if(altexp.rm && is(x, "SingleCellExperiment")){
-            altExps(x) <- NULL
-        }
-        callNextMethod(x, ...)
+    function(x, by, group = f, f, ...){
+        # Check by
+        by <- .check_MARGIN(by)
+        # Agglomerate the data
+        x <- .merge_rows_or_cols(x, group, by, ...)
+        return(x)
     }
-)
-
-#' @rdname agglomerate-methods
-#' @export
-setMethod(
-    "agglomerateByRank", signature = c(x = "TreeSummarizedExperiment"),
-    function(
-        x, ..., update.tree = agglomerateTree,
-        agglomerate.tree = agglomerateTree, agglomerateTree = FALSE){
-                # input check
-                if(!.is_a_bool(update.tree)){
-                    stop("'update.tree' must be TRUE or FALSE.",
-                        call. = FALSE)
-                }
-                # If there are multipe rowTrees, it might be that multiple
-                # trees are preserved after agglomeration even though the
-                # dataset could be presented with one tree.
-                # --> order the data so that the taxa are searched from one tree
-                # first.
-                if( length(rowTreeNames(x)) > 1 ){
-                    x <- .order_based_on_trees(x)
-                }
-                # Agglomerate data
-                x <- callNextMethod(x, update.tree = update.tree, ...)
-                return(x)
-            }
 )
 
 ################################ HELP FUNCTIONS ################################
 
-.remove_with_empty_taxonomic_info <-
-    function(x, column, empty.fields = c(NA,""," ","\t","-","_"))
-        {
-        tax <- as.character(rowData(x)[,column])
-        f <- !(tax %in% empty.fields)
-        if(any(!f)){
-            x <- x[f, , drop=FALSE]
-        }
-        x
+# This functions subset the data so that rows that do not have taxonomy
+# information in specified rank are removed.
+.remove_with_empty_taxonomic_info <- function(
+        x, column, empty.fields = c(NA,""," ","\t","-","_")){
+    tax <- as.character(rowData(x)[,column])
+    f <- !(tax %in% empty.fields)
+    if(any(!f)){
+        x <- x[f, , drop=FALSE]
     }
+    return(x)
+}
 
 # This function removes empty rank columns from rowdata. (Those that include
 # only NA values)

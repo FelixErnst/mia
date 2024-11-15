@@ -3,12 +3,12 @@
 \name{agglomerate-methods}
 \alias{agglomerate-methods}
 \alias{agglomerateByRank}
-\alias{agglomerateByVariable}
-\alias{agglomerateByRank,SummarizedExperiment-method}
-\alias{agglomerateByVariable,SummarizedExperiment-method}
-\alias{agglomerateByVariable,TreeSummarizedExperiment-method}
-\alias{agglomerateByRank,SingleCellExperiment-method}
 \alias{agglomerateByRank,TreeSummarizedExperiment-method}
+\alias{agglomerateByRank,SingleCellExperiment-method}
+\alias{agglomerateByRank,SummarizedExperiment-method}
+\alias{agglomerateByVariable}
+\alias{agglomerateByVariable,TreeSummarizedExperiment-method}
+\alias{agglomerateByVariable,SummarizedExperiment-method}
 \alias{agglomerateByRanks}
 \alias{agglomerateByRanks,SummarizedExperiment-method}
 \alias{agglomerateByRanks,SingleCellExperiment-method}
@@ -17,21 +17,37 @@
 \alias{unsplitByRanks}
 \alias{unsplitByRanks,SingleCellExperiment-method}
 \alias{unsplitByRanks,TreeSummarizedExperiment-method}
-\title{Agglomerate or merge data using taxonomic information}
+\title{Agglomerate data using taxonomic information or other grouping}
 \usage{
 agglomerateByRank(x, ...)
 
-agglomerateByVariable(x, ...)
+\S4method{agglomerateByRank}{TreeSummarizedExperiment}(
+  x,
+  rank = taxonomyRanks(x)[1],
+  update.tree = agglomerateTree,
+  agglomerate.tree = agglomerateTree,
+  agglomerateTree = FALSE,
+  ...
+)
+
+\S4method{agglomerateByRank}{SingleCellExperiment}(
+  x,
+  rank = taxonomyRanks(x)[1],
+  altexp = NULL,
+  altexp.rm = strip_altexp,
+  strip_altexp = TRUE,
+  ...
+)
 
 \S4method{agglomerateByRank}{SummarizedExperiment}(
   x,
   rank = taxonomyRanks(x)[1],
-  na.rm = TRUE,
+  empty.rm = TRUE,
   empty.fields = c(NA, "", " ", "\\t", "-", "_"),
   ...
 )
 
-\S4method{agglomerateByVariable}{SummarizedExperiment}(x, by, group = f, f, ...)
+agglomerateByVariable(x, ...)
 
 \S4method{agglomerateByVariable}{TreeSummarizedExperiment}(
   x,
@@ -43,21 +59,7 @@ agglomerateByVariable(x, ...)
   ...
 )
 
-\S4method{agglomerateByRank}{SingleCellExperiment}(
-  x,
-  ...,
-  altexp = NULL,
-  altexp.rm = strip_altexp,
-  strip_altexp = TRUE
-)
-
-\S4method{agglomerateByRank}{TreeSummarizedExperiment}(
-  x,
-  ...,
-  update.tree = agglomerateTree,
-  agglomerate.tree = agglomerateTree,
-  agglomerateTree = FALSE
-)
+\S4method{agglomerateByVariable}{SummarizedExperiment}(x, by, group = f, f, ...)
 
 agglomerateByRanks(x, ...)
 
@@ -112,11 +114,29 @@ unsplitByRanks(x, ...)
 \code{SummarizedExperiment} objects and other functions.
 See \code{\link[=agglomerate-methods]{agglomerateByRank}} for more details.}
 
-\item{rank}{\code{Character scalar}. Defines a taxonomic rank. Must be a value of
-\code{taxonomyRanks()} function.}
+\item{rank}{\code{Character scalar}. Defines a taxonomic rank. Must be a
+value of \code{taxonomyRanks()} function.}
 
-\item{na.rm}{\code{Logical scalar}. Should NA values be omitted when calculating
-prevalence? (Default: \code{TRUE})}
+\item{update.tree}{\code{Logical scalar}. Should
+\code{rowTree()} also be merged? (Default: \code{FALSE})}
+
+\item{agglomerate.tree}{Deprecated. Use \code{update.tree} instead.}
+
+\item{agglomerateTree}{Deprecated. Use \code{update.tree} instead.}
+
+\item{altexp}{\code{Character scalar} or \code{integer scalar}.
+Specifies an alternative experiment containing the input data.}
+
+\item{altexp.rm}{\code{Logical scalar}. Should alternative
+experiments be removed prior to agglomeration? This prevents too many
+nested alternative experiments by default. (Default:
+\code{TRUE})}
+
+\item{strip_altexp}{Deprecated. Use \code{altexp.rm} instead.}
+
+\item{empty.rm}{\code{Logical scalar}. Defines whether rows including
+\code{empty.fields} in specified \code{rank} will be excluded.
+(Default: \code{TRUE})}
 
 \item{empty.fields}{\code{Character vector}. Defines which values should be
 regarded as empty. (Default: \code{c(NA, "", " ", "\t")}). They will be
@@ -136,27 +156,13 @@ returned unchanged.}
 
 \item{f}{Deprecated. Use \code{group} instead.}
 
-\item{update.tree}{\code{Logical scalar}. Should
-\code{rowTree()} also be merged? (Default: \code{FALSE})}
-
 \item{mergeTree}{Deprecated. Use \code{update.tree} instead.}
-
-\item{altexp}{\code{Character scalar} or \code{integer scalar}.
-Specifies an alternative experiment containing the input data.}
-
-\item{altexp.rm}{\code{Logical scalar}. Should alternative
-experiments be removed prior to agglomeration? This prevents too many
-nested alternative experiments by default. (Default:
-\code{TRUE})}
-
-\item{strip_altexp}{Deprecated. Use \code{altexp.rm} instead.}
-
-\item{agglomerate.tree}{Deprecated. Use \code{update.tree} instead.}
-
-\item{agglomerateTree}{Deprecated. Use \code{update.tree} instead.}
 
 \item{ranks}{\code{Character vector}. Defines taxonomic ranks. Must all be values
 of \code{taxonomyRanks()} function.}
+
+\item{na.rm}{\code{Logical scalar}. Should NA values be omitted?
+(Default: \code{TRUE})}
 
 \item{as.list}{\code{Logical scalar}. Should the list of
 \code{SummarizedExperiment} objects be returned by the function
@@ -194,14 +200,6 @@ and any existing \code{rowTree} is dropped as well, since existing
 Agglomeration functions can be used to sum-up data based on specific criteria
 such as taxonomic ranks, variables or prevalence.
 
-\code{agglomerateByRanks} takes a \code{SummarizedExperiment}, splits it along the
-taxonomic ranks, aggregates the data per rank, converts the input to a
-\code{SingleCellExperiment} objects and stores the aggregated data as
-alternative experiments. \code{unsplitByRanks} takes these alternative
-experiments and flattens them again into a single
-\code{SummarizedExperiment}.
-}
-\details{
 \code{agglomerateByRank} can be used to sum up data based on associations
 with certain taxonomic ranks, as defined in \code{rowData}. Only available
 \code{\link{taxonomyRanks}} can be used.
@@ -216,13 +214,18 @@ retained as defined by \code{archetype}.
 agglomerated, i.e. summed up. If the assay contains values other than counts
 or absolute values, this can lead to meaningless values being produced.
 
+\code{agglomerateByRanks} takes a \code{SummarizedExperiment}, splits it along the
+taxonomic ranks, aggregates the data per rank, converts the input to a
+\code{SingleCellExperiment} objects and stores the aggregated data as
+alternative experiments. \code{unsplitByRanks} takes these alternative
+experiments and flattens them again into a single
+\code{SummarizedExperiment}.
+}
+\details{
 Agglomeration sums up the values of assays at the specified taxonomic level.
-With
-certain assays, e.g. those that include binary or negative values, this
-summing
-can produce meaningless values. In those cases, consider performing
-agglomeration
-first, and then applying the transformation afterwards.
+With certain assays, e.g. those that include binary or negative values, this
+summing can produce meaningless values. In those cases, consider performing
+agglomeration first, and then applying the transformation afterwards.
 
 \code{agglomerateByVariable} works similarly to
 \code{\link[scuttle:sumCountsAcrossFeatures]{sumCountsAcrossFeatures}}.
@@ -277,9 +280,9 @@ tse <- transformAssay(GlobalPatterns, method = "pa")
 tse <- agglomerateByRank(tse, rank = "Genus")
 tse <- transformAssay(tse, method = "pa")
 
-# removing empty labels by setting na.rm = TRUE
+# Removing empty labels by setting empty.rm = TRUE
 sum(is.na(rowData(GlobalPatterns)$Family))
-x3 <- agglomerateByRank(GlobalPatterns, rank="Family", na.rm = TRUE)
+x3 <- agglomerateByRank(GlobalPatterns, rank="Family", empty.rm = TRUE)
 nrow(x3) # different from x2
 
 # Because all the rownames are from the same rank, rownames do not include
@@ -291,20 +294,19 @@ rownames(x3) <- getTaxonomyLabels(x3, with.rank = TRUE)
 print(rownames(x3[1:3,]))
 
 # use 'empty.ranks.rm' to remove columns that include only NAs
-x4 <- agglomerateByRank(GlobalPatterns, rank="Phylum",
-                        empty.ranks.rm = TRUE)
+x4 <- agglomerateByRank(
+    GlobalPatterns, rank="Phylum", empty.ranks.rm = TRUE)
 head(rowData(x4))
 
-# If the assay contains NAs, you might want to consider replacing them,
+# If the assay contains NAs, you might want to specify na.rm=TRUE,
 # since summing-up NAs lead to NA
 x5 <- GlobalPatterns
 # Replace first value with NA
 assay(x5)[1,1] <- NA
 x6 <- agglomerateByRank(x5, "Kingdom")
 head( assay(x6) )
-# Replace NAs with 0. This is justified when we are summing-up counts.
-assay(x5)[ is.na(assay(x5)) ] <- 0
-x6 <- agglomerateByRank(x5, "Kingdom")
+# Use na.rm=TRUE
+x6 <- agglomerateByRank(x5, "Kingdom", na.rm = TRUE)
 head( assay(x6) )
 
 ## Look at enterotype dataset...
@@ -318,18 +320,19 @@ taxonomyRanks(enterotype)
 data(esophagus)
 esophagus
 plot(rowTree(esophagus))
-# get a factor for merging
+# Get a factor for merging
 f <- factor(regmatches(rownames(esophagus),
-                       regexpr("^[0-9]*_[0-9]*",rownames(esophagus))))
-merged <- agglomerateByVariable(esophagus, by = "rows", f,
-                                update.tree = TRUE)
+    regexpr("^[0-9]*_[0-9]*",rownames(esophagus))))
+merged <- agglomerateByVariable(
+    esophagus, by = "rows", f, update.tree = TRUE)
 plot(rowTree(merged))
 #
 data(GlobalPatterns)
 GlobalPatterns
-merged <- agglomerateByVariable(GlobalPatterns, by = "cols",
-                                colData(GlobalPatterns)$SampleType)
+merged <- agglomerateByVariable(
+    GlobalPatterns, by = "cols", colData(GlobalPatterns)$SampleType)
 merged
+
 data(GlobalPatterns)
 # print the available taxonomic ranks
 taxonomyRanks(GlobalPatterns)
