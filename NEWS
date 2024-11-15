@@ -159,3 +159,4 @@ computation
 
 Changes in version 1.15.x
 + subsetBy*: added update.tree argument
++ agglomerateBy*: Add na.rm option for excluding NA counts
