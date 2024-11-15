@@ -117,7 +117,7 @@ experiments and flattens them again into a single
 <span><span class="fu">agglomerateByRank</span><span class="op">(</span></span>
 <span>  <span class="va">x</span>,</span>
 <span>  rank <span class="op">=</span> <span class="fu"><a href="taxonomy-methods.html">taxonomyRanks</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>,</span>
-<span>  empty.rows.rm <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  empty.rm <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  empty.fields <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="st">""</span>, <span class="st">" "</span>, <span class="st">"\t"</span>, <span class="st">"-"</span>, <span class="st">"_"</span><span class="op">)</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span>
@@ -238,7 +238,7 @@ nested alternative experiments by default. (Default:
 <dd><p>Deprecated. Use <code>altexp.rm</code> instead.</p></dd>
 
 
-<dt id="arg-empty-rows-rm">empty.rows.rm<a class="anchor" aria-label="anchor" href="#arg-empty-rows-rm"></a></dt>
+<dt id="arg-empty-rm">empty.rm<a class="anchor" aria-label="anchor" href="#arg-empty-rm"></a></dt>
 <dd><p><code>Logical scalar</code>. Defines whether rows including
 <code>empty.fields</code> in specified <code>rank</code> will be excluded.
 (Default: <code>TRUE</code>)</p></dd>
@@ -415,10 +415,10 @@ the <code>colData</code> of the base object is kept.</p>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> Check the assay, and consider doing transformation againmanually with agglomerated data.</span>
 <span class="r-in"><span><span class="va">tse</span> <span class="op">&lt;-</span> <span class="fu"><a href="transformAssay.html">transformAssay</a></span><span class="op">(</span><span class="va">tse</span>, method <span class="op">=</span> <span class="st">"pa"</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># removing empty labels by setting empty.rows.rm = TRUE</span></span></span>
+<span class="r-in"><span><span class="co"># removing empty labels by setting empty.rm = TRUE</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="fu">rowData</span><span class="op">(</span><span class="va">GlobalPatterns</span><span class="op">)</span><span class="op">$</span><span class="va">Family</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 5603</span>
-<span class="r-in"><span><span class="va">x3</span> <span class="op">&lt;-</span> <span class="fu">agglomerateByRank</span><span class="op">(</span><span class="va">GlobalPatterns</span>, rank<span class="op">=</span><span class="st">"Family"</span>, empty.rows.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">x3</span> <span class="op">&lt;-</span> <span class="fu">agglomerateByRank</span><span class="op">(</span><span class="va">GlobalPatterns</span>, rank<span class="op">=</span><span class="st">"Family"</span>, empty.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">x3</span><span class="op">)</span> <span class="co"># different from x2</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 341</span>
 <span class="r-in"><span></span></span>
