@@ -305,9 +305,10 @@ setMethod("agglomerateByRank", signature = c(x = "SummarizedExperiment"),
         .check_taxonomic_rank(rank, x)
         .check_for_taxonomic_data_order(x)
         #
-        # Get the index of rank column in rowData
+        # Get the index of which taxonomy rank is detected and used for
+        # agglomeration
         col_idx <- which( taxonomyRanks(x) %in% rank )
-        # Get the indices of detected rank columns
+        # Get the indices of detected rank columns from rowData
         tax_cols <- .get_tax_cols_from_se(x)
         
         # if empty.rows.rm is TRUE, remove those rows that have empty,

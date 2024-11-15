@@ -116,9 +116,9 @@
     if( by == 2L ){
         assays <- lapply(assays, function(mat) t(mat))
     }
-    # Get the aggregate function based on whether user wants to exclude NAs and
-    # if there are any NAs. scuttle::sumCountsAcrossFeatures cannot handle NAs
-    # so if user wants to exclude them, we use own implementation.
+    # Get the aggregation function based on whether user wants to exclude NAs
+    # and if there are any NAs. scuttle::sumCountsAcrossFeatures cannot handle
+    # NAs so if user wants to exclude them, we use own implementation.
     FUN <- if( na.rm && anyNA(assays[[1]])) .sum_counts_accross_features_na else
         sumCountsAcrossFeatures
     # Agglomerate assays
@@ -151,9 +151,10 @@
 # excludes NAs from the data. The scuttle function cannot handle NAs.
 #' @importFrom DelayedArray DelayedArray type rowsum
 .sum_counts_accross_features_na <- function(x, average, ids, ...){
-    # x <- DelayedArray(x) # avoid copy of data on is.na(), type coercion.
+    # Which cell is not NA?
     is_not_na <- !is.na(x)
     type(is_not_na) <- "integer"
+    # Aggregate data to certain groups
     x <- rowsum(x, ids, na.rm = TRUE)
     # Calculate average if specified
     if( average ){
