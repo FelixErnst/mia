@@ -30,7 +30,7 @@ test_that("getDominant", {
                           "Order:Stramenopiles","Order:Stramenopiles","Order:Stramenopiles")
         names(exp.vals.two) <- exp.names.one
         expect_equal(
-            getDominant(tse, rank = "Genus", ignore.taxonomy = FALSE, empty.rows.rm = FALSE)[1:15],
+            getDominant(tse, rank = "Genus", ignore.taxonomy = FALSE, empty.rm = FALSE)[1:15],
             exp.vals.two)
 
         # Check if DominantTaxa is added to coldata
@@ -38,7 +38,7 @@ test_that("getDominant", {
             colData(addDominant(tse, name="dominant"))$dominant[1:15],
             exp.vals.one)
         expect_equal(
-            colData(addDominant(tse,rank = "Genus", empty.rows.rm = FALSE, name="dominant"))$dominant[1:15],
+            colData(addDominant(tse,rank = "Genus", empty.rm = FALSE, name="dominant"))$dominant[1:15],
             exp.vals.two)
         
         # Check if DominantTaxa is added when factor is passed
@@ -52,7 +52,7 @@ test_that("getDominant", {
         test <- tse
         rowData(test)$group <- rowData(tse)$Genus
         expect_equal(
-            colData(addDominant(test, rank = "group", group.rm = TRUE, name = "dominant"))$dominant[1:15],
+            colData(addDominant(test, rank = "group", empty.rm = TRUE, name = "dominant"))$dominant[1:15],
             exp.vals.three)
         
         tse1 <- tse

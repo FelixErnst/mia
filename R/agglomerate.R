@@ -50,7 +50,7 @@
 #'   regarded as empty. (Default: \code{c(NA, "", " ", "\t")}). They will be
 #'   removed if \code{na.rm = TRUE} before agglomeration.
 #'   
-#' @param empty.rows.rm \code{Logical scalar}. Defines whether rows including
+#' @param empty.rm \code{Logical scalar}. Defines whether rows including
 #' \code{empty.fields} in specified \code{rank} will be excluded.
 #' (Default: \code{TRUE})
 #'
@@ -69,7 +69,7 @@
 #'        whether to remove those columns of rowData that include only NAs after
 #'        agglomeration. (Default: \code{FALSE})
 #'        
-#'        \item \code{group.rm}: \code{Logical scalar}. Determines
+#'        \item \code{empty.rm}: \code{Logical scalar}. Determines
 #'        whether to remove rows that do not belong to any group, i.e., that
 #'        have \code{NA} value. (Default: \code{FALSE})
 #'        
@@ -160,9 +160,9 @@
 #' tse <- agglomerateByRank(tse, rank = "Genus")
 #' tse <- transformAssay(tse, method = "pa")
 #'
-#' # removing empty labels by setting empty.rows.rm = TRUE
+#' # removing empty labels by setting empty.rm = TRUE
 #' sum(is.na(rowData(GlobalPatterns)$Family))
-#' x3 <- agglomerateByRank(GlobalPatterns, rank="Family", empty.rows.rm = TRUE)
+#' x3 <- agglomerateByRank(GlobalPatterns, rank="Family", empty.rm = TRUE)
 #' nrow(x3) # different from x2
 #'
 #' # Because all the rownames are from the same rank, rownames do not include
@@ -285,7 +285,7 @@ setMethod(
 #' @importFrom SummarizedExperiment rowData rowData<-
 #' @export
 setMethod("agglomerateByRank", signature = c(x = "SummarizedExperiment"),
-    function(x, rank = taxonomyRanks(x)[1], empty.rows.rm = TRUE,
+    function(x, rank = taxonomyRanks(x)[1], empty.rm = TRUE,
         empty.fields = c(NA, "", " ", "\t", "-", "_"), ...){
         # Input check
         if(nrow(x) == 0L){
@@ -296,8 +296,8 @@ setMethod("agglomerateByRank", signature = c(x = "SummarizedExperiment"),
             stop("'rank' must be a non-empty single character value",
                 call. = FALSE)
         }
-        if(!.is_a_bool(empty.rows.rm)){
-            stop("'empty.rows.rm' must be TRUE or FALSE.", call. = FALSE)
+        if(!.is_a_bool(empty.rm)){
+            stop("'empty.rm' must be TRUE or FALSE.", call. = FALSE)
         }
         if(ncol(rowData(x)) == 0L){
             stop("taxonomyData needs to be populated.", call. = FALSE)
@@ -311,10 +311,10 @@ setMethod("agglomerateByRank", signature = c(x = "SummarizedExperiment"),
         # Get the indices of detected rank columns from rowData
         tax_cols <- .get_tax_cols_from_se(x)
         
-        # if empty.rows.rm is TRUE, remove those rows that have empty,
+        # if empty.rm is TRUE, remove those rows that have empty,
         # white-space, NA values in rank information. I.e., they do not have
         # taxonomy information in specified taxonomy level.
-        if( empty.rows.rm ){
+        if( empty.rm ){
             x <- .remove_with_empty_taxonomic_info(
                 x, tax_cols[col_idx], empty.fields)
         }
@@ -329,16 +329,14 @@ setMethod("agglomerateByRank", signature = c(x = "SummarizedExperiment"),
         # Get groups of taxonomy entries, i.e., get the specified rank
         # column from rowData
         tax_factors <- .get_tax_groups(x, col = col_idx, ...)
-        # Convert to factors. Use group.rm so that NA values are not
+        # Convert to factors. Use empty.rm so that NA values are not
         # preserved. i.e. they are not converted into character values.
         # NA values are handled earlier in this function.
-        tax_factors <- .norm_f(nrow(x), tax_factors, group.rm = TRUE)
+        tax_factors <- .norm_f(nrow(x), tax_factors, empty.rm = TRUE)
         
         # Agglomerate data by utilizing agglomerateByVariable
         args <- c(list(
-            x, by = "rows", group = tax_factors, group.rm = TRUE),
-            list(...)[ !names(list(...)) %in% c("group.rm") ]
-        )
+            x, by = "rows", group = tax_factors, empty.rm = TRUE), list(...))
         x <- do.call(agglomerateByVariable, args)
         
         # Replace the values to the right of the rank with NA_character_.

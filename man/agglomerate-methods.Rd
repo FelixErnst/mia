@@ -42,7 +42,7 @@ agglomerateByRank(x, ...)
 \S4method{agglomerateByRank}{SummarizedExperiment}(
   x,
   rank = taxonomyRanks(x)[1],
-  empty.rows.rm = TRUE,
+  empty.rm = TRUE,
   empty.fields = c(NA, "", " ", "\\t", "-", "_"),
   ...
 )
@@ -134,7 +134,7 @@ nested alternative experiments by default. (Default:
 
 \item{strip_altexp}{Deprecated. Use \code{altexp.rm} instead.}
 
-\item{empty.rows.rm}{\code{Logical scalar}. Defines whether rows including
+\item{empty.rm}{\code{Logical scalar}. Defines whether rows including
 \code{empty.fields} in specified \code{rank} will be excluded.
 (Default: \code{TRUE})}
 
@@ -280,9 +280,9 @@ tse <- transformAssay(GlobalPatterns, method = "pa")
 tse <- agglomerateByRank(tse, rank = "Genus")
 tse <- transformAssay(tse, method = "pa")
 
-# removing empty labels by setting empty.rows.rm = TRUE
+# removing empty labels by setting empty.rm = TRUE
 sum(is.na(rowData(GlobalPatterns)$Family))
-x3 <- agglomerateByRank(GlobalPatterns, rank="Family", empty.rows.rm = TRUE)
+x3 <- agglomerateByRank(GlobalPatterns, rank="Family", empty.rm = TRUE)
 nrow(x3) # different from x2
 
 # Because all the rownames are from the same rank, rownames do not include

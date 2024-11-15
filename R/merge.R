@@ -1,9 +1,9 @@
 # This function can be used to unify the group id vector. It can be any
 # kind of vector, but this converts it to factor.
 .norm_f <- function(
-        i, f, dim.type = c("rows","columns"), group.rm = FALSE, ...){
-    if(!.is_a_bool(group.rm)){
-        stop("'group.rm' must be TRUE or FALSE.", call. = FALSE)
+        i, f, dim.type = c("rows","columns"), empty.rm = FALSE, ...){
+    if(!.is_a_bool(empty.rm)){
+        stop("'empty.rm' must be TRUE or FALSE.", call. = FALSE)
     }
     dim.type <- match.arg(dim.type)
     if(!is.character(f) && !is.factor(f)){
@@ -16,7 +16,7 @@
             call. = FALSE)
     }
     # This is done otherwise we lose NA values
-    if( !group.rm && any(is.na(f)) ){
+    if( !empty.rm && any(is.na(f)) ){
         f <- as.character(f)
         f[ is.na(f) ] <- "NA"
     }
