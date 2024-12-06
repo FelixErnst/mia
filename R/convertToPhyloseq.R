@@ -122,7 +122,7 @@ setMethod("convertToPhyloseq",
           signature = c(x = "TreeSummarizedExperiment"),
     function(x, tree.name = tree_name, tree_name = "phylo", ...){
         # If rowTrees exist, check tree.name
-        if( length(x@rowTree) > 0 ){
+        if( length(rowTreeNames(x)) > 0 ){
             .check_rowTree_present(tree.name, x)
             # Subset the data based on the tree
             x <- x[ rowLinks(x)$whichTree == tree.name, ]
