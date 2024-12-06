@@ -5,8 +5,8 @@
 #' package
 #'
 #' @param x a numeric matrix with samples as rows or a
-#'   \code{\link[SummarizedExperiment:SummarizedExperiment-class]{SummarizedExperiment}}
-#'   object.
+#' \code{\link[SummarizedExperiment:SummarizedExperiment-class]{SummarizedExperiment}}
+#' object.
 #'
 #' @param assay.type \code{Character scalar}. Specifies the name of the
 #'   assay used in calculation. (Default: \code{"counts"})
@@ -15,24 +15,24 @@
 #'   
 #' @param assay_name Deprecated. Use \code{assay.type} instead.
 #'
-#' @param k \code{Numeric scalar}. The number of Dirichlet components to fit. See
-#'   \code{\link[DirichletMultinomial:dmn]{dmn}}. (Default: \code{1})
+#' @param k \code{Numeric scalar}. The number of Dirichlet components to fit.
+#' See \code{\link[DirichletMultinomial:dmn]{dmn}}. (Default: \code{1})
 #'
 #' @param BPPARAM A
 #'   \code{\link[BiocParallel:BiocParallelParam-class]{BiocParallelParam}}
 #'   object specifying whether the calculation should be parallelized.
 #'
-#' @param transposed \code{Logical scalar}. Is \code{x} transposed with samples in rows?
-#' (Default: \code{FALSE})
+#' @param transposed \code{Logical scalar}. Is \code{x} transposed with samples
+#' in rows? (Default: \code{FALSE})
 #'
-#' @param type \code{Character scalar}. The type of measure used for the goodness of fit. One of
-#'   \sQuote{laplace}, \sQuote{AIC} or \sQuote{BIC}.
+#' @param type \code{Character scalar}. The type of measure used for the
+#' goodness of fit. One of \sQuote{laplace}, \sQuote{AIC} or \sQuote{BIC}.
 #'
 #' @param name \code{Character scalar}. The name to store the result in
-#'   \code{\link[SummarizedExperiment:RangedSummarizedExperiment-class]{metadata}}
+#' \code{\link[SummarizedExperiment:RangedSummarizedExperiment-class]{metadata}}
 #'
-#' @param variable \code{Character scalar}. A variable from \code{colData} to use as a 
-#'   grouping variable. Must be a character of factor.
+#' @param variable \code{Character scalar}. A variable from \code{colData} to
+#' use as a grouping variable. Must be a character of factor.
 #'
 #' @param seed \code{Numeric scalar}. Random number seed. See
 #'   \code{\link[DirichletMultinomial:dmn]{dmn}}

@@ -38,10 +38,10 @@
 #' 
 #' @param tree_name Deprecated. Use \code{tree.name} instead.
 #'   
-#' @param node.label NULL or a character vector specifying the links between rows and 
-#'   node labels of \code{tree}. If a certain row is not linked with the tree, missing 
-#'   instance should be noted as NA. When NULL, all the rownames should be found from
-#'   the tree. (By default: \code{node.label = NULL})
+#' @param node.label NULL or a character vector specifying the links between
+#' rows and node labels of \code{tree}. If a certain row is not linked with
+#' the tree, missing instance should be noted as NA. When NULL, all the rownames
+#' should be found from the tree. (By default: \code{node.label = NULL})
 #' 
 #' @param node_lab Deprecated. Use \code{node.label} instead.
 #'
@@ -304,7 +304,7 @@ NULL
     # Check that node.label is NULL or it specifies links between rownames and 
     # node labs
     if( !( is.null(node.label) || 
-           is.character(node.label) && length(node.label) == nrow(x) ) ){
+            is.character(node.label) && length(node.label) == nrow(x) ) ){
         stop(
             "'node.label' must be NULL or a vector specifying links between ",
             "rownames and node labs of 'tree'.",
