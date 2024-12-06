@@ -149,11 +149,6 @@ NULL
 
 #' @rdname getMediation
 #' @export
-setGeneric("addMediation", signature = c("x"),
-    function(x, ...) standardGeneric("addMediation"))
-
-#' @rdname getMediation
-#' @export
 #' @importFrom stats gaussian
 setMethod("addMediation", signature = c(x = "SummarizedExperiment"),
         function(x, outcome, treatment, name = "mediation",
@@ -172,11 +167,6 @@ setMethod("addMediation", signature = c(x = "SummarizedExperiment"),
             return(x)
         }
 )
-
-#' @rdname getMediation
-#' @export
-setGeneric("getMediation", signature = c("x"),
-    function(x, ...) standardGeneric("getMediation"))
 
 #' @rdname getMediation
 #' @export

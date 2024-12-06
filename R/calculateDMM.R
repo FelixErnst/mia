@@ -97,12 +97,6 @@
 #' bestModel@mixture$Weight
 NULL
 
-#' @rdname calculateDMN
-#' @export
-setGeneric("calculateDMN", signature = c("x"),
-    function(x, ...)
-            standardGeneric("calculateDMN"))
-
 #' @importFrom DirichletMultinomial dmn
 #' @importFrom stats runif
 .calculate_DMN <- function(x, k = 1, BPPARAM = SerialParam(),
@@ -190,12 +184,6 @@ runDMN <- function(x, name = "DMN", ...){
 }
 
 #' @rdname calculateDMN
-#' @export
-setGeneric("getDMN", signature = "x",
-            function(x, name = "DMN", ...)
-                standardGeneric("getDMN"))
-
-#' @rdname calculateDMN
 #' @importFrom DirichletMultinomial laplace AIC BIC
 #' @export
 setMethod("getDMN", signature = c(x = "SummarizedExperiment"),
@@ -215,12 +203,6 @@ setMethod("getDMN", signature = c(x = "SummarizedExperiment"),
 }
 
 #' @rdname calculateDMN
-#' @export
-setGeneric("bestDMNFit", signature = "x",
-            function(x, name = "DMN", type = c("laplace","AIC","BIC"), ...)
-                standardGeneric("bestDMNFit"))
-
-#' @rdname calculateDMN
 #' @importFrom DirichletMultinomial laplace AIC BIC
 #' @export
 setMethod("bestDMNFit", signature = c(x = "SummarizedExperiment"),
@@ -236,12 +218,6 @@ setMethod("bestDMNFit", signature = c(x = "SummarizedExperiment"),
                 .get_best_dmn_fit(dmn, fit_FUN)
             }
 )
-
-#' @rdname calculateDMN
-#' @export
-setGeneric("getBestDMNFit", signature = "x",
-            function(x, name = "DMN", type = c("laplace","AIC","BIC"), ...)
-                standardGeneric("getBestDMNFit"))
 
 #' @rdname calculateDMN
 #' @importFrom DirichletMultinomial laplace AIC BIC
@@ -260,12 +236,6 @@ setMethod("getBestDMNFit", signature = c(x = "SummarizedExperiment"),
 
 ################################################################################
 # DMN group
-
-#' @rdname calculateDMN
-#' @export
-setGeneric("calculateDMNgroup", signature = c("x"),
-            function(x, ...)
-                standardGeneric("calculateDMNgroup"))
 
 #' @importFrom DirichletMultinomial dmngroup
 #' @importFrom stats runif
@@ -307,12 +277,6 @@ setMethod("calculateDMNgroup", signature = c(x = "SummarizedExperiment"),
 
 ################################################################################
 # DMN group cross validations
-
-#' @rdname calculateDMN
-#' @export
-setGeneric("performDMNgroupCV", signature = c("x"),
-            function(x, ...)
-                standardGeneric("performDMNgroupCV"))
 
 #' @importFrom DirichletMultinomial cvdmngroup
 #' @importFrom stats runif

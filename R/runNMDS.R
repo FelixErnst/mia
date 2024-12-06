@@ -78,12 +78,6 @@
 #' reducedDims(esophagus)
 NULL
 
-
-#' @rdname runNMDS
-#' @export
-setGeneric("getNMDS", function(x, ...) standardGeneric("getNMDS"))
-
-
 .format_nmds_isoMDS <- function(nmds){
     ans <- nmds$points
     attr(ans, "Stress") <- nmds$stress

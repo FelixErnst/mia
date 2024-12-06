@@ -216,12 +216,6 @@ setMethod("isNotContaminant", signature = c(seqtab = "SummarizedExperiment"),
 
 #' @rdname isContaminant
 #' @export
-setGeneric("addContaminantQC", signature = c("x"),
-    function(x, name = "isContaminant", ...)
-    standardGeneric("addContaminantQC"))
-
-#' @rdname isContaminant
-#' @export
 setMethod("addContaminantQC", signature = c("SummarizedExperiment"),
     function(x, name = "isContaminant", ...){
         contaminant <- isContaminant(x, ...)
@@ -235,12 +229,6 @@ setMethod("addContaminantQC", signature = c("SummarizedExperiment"),
         x
     }
 )
-
-#' @rdname isContaminant
-#' @export
-setGeneric("addNotContaminantQC", signature = c("x"),
-    function(x, name = "isNotContaminant", ...)
-    standardGeneric("addNotContaminantQC"))
 
 #' @rdname isContaminant
 #' @export

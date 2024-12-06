@@ -158,12 +158,6 @@ NULL
 
 #' @rdname getDissimilarity
 #' @export
-setGeneric(
-    "addDissimilarity", signature = c("x"), function(x, method, ...)
-    standardGeneric("addDissimilarity"))
-
-#' @rdname getDissimilarity
-#' @export
 setMethod(
     "addDissimilarity", signature = c(x = "SummarizedExperiment"),
     function(x, method = "bray", name = method, ...){
@@ -174,12 +168,6 @@ setMethod(
     return(x)
     }
 )
-
-#' @rdname getDissimilarity
-#' @export
-setGeneric(
-    "getDissimilarity", signature = c("x"), function(x, method, ...)
-        standardGeneric("getDissimilarity"))
 
 #' @rdname getDissimilarity
 #' @export

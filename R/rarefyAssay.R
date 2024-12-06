@@ -69,14 +69,6 @@
 #' 
 NULL
 
-#' @rdname rarefyAssay
-#' @export
-setGeneric("rarefyAssay", signature = c("x"), function(
-        x, assay.type = assay_name, assay_name = "counts", 
-        sample = min_size, min_size = min(colSums2(assay(x))),
-        replace = TRUE, name = "subsampled", verbose = TRUE, ...)
-            standardGeneric("rarefyAssay"))
-
 #' @importFrom SummarizedExperiment assay assay<-
 #' @importFrom DelayedMatrixStats colSums2 rowSums2
 #' @rdname rarefyAssay

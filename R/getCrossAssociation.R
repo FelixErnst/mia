@@ -232,11 +232,6 @@ NULL
 
 #' @rdname getCrossAssociation
 #' @export
-setGeneric("getCrossAssociation", signature = c("x"),
-    function(x, ...) standardGeneric("getCrossAssociation"))
-
-#' @rdname getCrossAssociation
-#' @export
 setMethod("getCrossAssociation", signature = c(x = "MultiAssayExperiment"),
     function(
         x,

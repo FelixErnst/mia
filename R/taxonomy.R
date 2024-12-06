@@ -166,11 +166,6 @@ getTaxonomyRankPrefixes <- function() {
 TAXONOMY_RANKS <- names(.taxonomy_rank_prefixes)
 
 #' @rdname taxonomy-methods
-setGeneric("taxonomyRanks", signature = c("x"),
-            function(x)
-            standardGeneric("taxonomyRanks"))
-
-#' @rdname taxonomy-methods
 #'
 #' @importFrom SummarizedExperiment rowData
 #'
@@ -181,13 +176,6 @@ setMethod("taxonomyRanks", signature = c(x = "SummarizedExperiment"),
         ranks[.get_tax_cols(ranks)]
     }
 )
-
-#' @rdname taxonomy-methods
-setGeneric("taxonomyRankEmpty",
-            signature = "x",
-            function(x, rank = taxonomyRanks(x)[1L],
-                    empty.fields = c(NA, "", " ", "\t", "-", "_"))
-            standardGeneric("taxonomyRankEmpty"))
 
 #' @rdname taxonomy-methods
 #' @aliases taxonomyRankEmpty
@@ -216,12 +204,6 @@ setMethod("taxonomyRankEmpty", signature = c(x = "SummarizedExperiment"),
     rowData(x)[,rank] %in% empty.fields
     }
 )
-
-#' @rdname taxonomy-methods
-setGeneric("checkTaxonomy",
-            signature = "x",
-            function(x, ...)
-            standardGeneric("checkTaxonomy"))
 
 #' @rdname taxonomy-methods
 #' @aliases checkTaxonomy
@@ -302,13 +284,6 @@ getTaxonomyRanks <- function() {
             call. = FALSE)
     }
 }
-
-
-#' @rdname taxonomy-methods
-setGeneric("getTaxonomyLabels",
-            signature = "x",
-            function(x, ...)
-                standardGeneric("getTaxonomyLabels"))
 
 #' @rdname taxonomy-methods
 #' @aliases checkTaxonomy
@@ -487,12 +462,6 @@ setMethod("getTaxonomyLabels", signature = c(x = "SummarizedExperiment"),
 NULL
 
 #' @rdname hierarchy-tree
-setGeneric("getHierarchyTree",
-            signature = "x",
-            function(x, ...)
-                standardGeneric("getHierarchyTree"))
-
-#' @rdname hierarchy-tree
 #' @aliases getHierarchyTree
 #' @export
 #' @importFrom ape drop.tip
@@ -556,12 +525,6 @@ setMethod("getHierarchyTree", signature = c(x = "SummarizedExperiment"),
 )
 
 #' @rdname hierarchy-tree
-setGeneric("addHierarchyTree",
-            signature = "x",
-            function(x, ...)
-                standardGeneric("addHierarchyTree"))
-
-#' @rdname hierarchy-tree
 #' @export
 setMethod("addHierarchyTree", signature = c(x = "SummarizedExperiment"),
     function(x, ...){
@@ -578,12 +541,6 @@ setMethod("addHierarchyTree", signature = c(x = "SummarizedExperiment"),
         return(x)
     }
 )
-
-#' @rdname taxonomy-methods
-setGeneric("mapTaxonomy",
-            signature = "x",
-            function(x, ...)
-                standardGeneric("mapTaxonomy"))
 
 #' @importFrom BiocGenerics %in% grepl
 .get_taxa_row_match <- function(taxa, td, from, use.grepl = FALSE){

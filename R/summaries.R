@@ -40,7 +40,7 @@
 #' @seealso
 #' \code{\link[=getPrevalence]{getPrevalent}}
 #'
-#' @name summaries
+#' @name summary
 #'
 #' @examples
 #' data(GlobalPatterns)
@@ -88,14 +88,6 @@
 #'
 NULL
 
-#' @rdname summaries
-#' @export
-setGeneric("getTop", signature = "x",
-    function(
-        x, top= 5L, method = c("mean","sum","median"),
-        assay.type = assay_name, assay_name = "counts", na.rm = TRUE, ...)
-    standardGeneric("getTop"))
-
 .check_max_taxa <- function(x, top, assay.type){
     if(!is.numeric(top) || as.integer(top) != top){
         stop("'top' must be integer value", call. = FALSE)
@@ -105,7 +97,7 @@ setGeneric("getTop", signature = "x",
     }
 }
 
-#' @rdname summaries
+#' @rdname summary
 #'
 #' @importFrom DelayedMatrixStats rowSums2 rowMeans2 rowMedians
 #' @importFrom utils head
@@ -144,7 +136,7 @@ setMethod("getTop", signature = c(x = "SummarizedExperiment"),
     }
 )
 
-#' @rdname summaries
+#' @name summary
 #'
 #' @param rank \code{Character scalar}. Defines a taxonomic rank. Must be a
 #' value of the output of \code{taxonomyRanks()}. (Default: \code{NULl})
@@ -154,10 +146,9 @@ setMethod("getTop", signature = c(x = "SummarizedExperiment"),
 #' particular rank
 #' 
 #' @export
-setGeneric("getUnique", signature = c("x"),
-    function(x, ...) standardGeneric("getUnique"))
+NULL
 
-#' @rdname summaries
+#' @rdname summary
 #' @export
 setMethod("getUnique", signature = c(x = "SummarizedExperiment"),
     function(x, rank = NULL, ...){
@@ -169,7 +160,7 @@ setMethod("getUnique", signature = c(x = "SummarizedExperiment"),
     }
 )
 
-#' @rdname summaries
+#' @name summary
 #'
 #' @param group With group, it is possible to group the observations in an
 #'   overview. Must be one of the column names of \code{colData}.
@@ -194,12 +185,9 @@ setMethod("getUnique", signature = c(x = "SummarizedExperiment"),
 #' set.
 #' 
 #' @export
-setGeneric("summarizeDominance",signature = c("x"),
-    function(x, group = NULL, name = "dominant_taxa", ...)
-    standardGeneric("summarizeDominance"))
+NULL
 
-
-#' @rdname summaries
+#' @rdname summary
 #' @export
 setMethod("summarizeDominance", signature = c(x = "SummarizedExperiment"),
     function(x, group = NULL, name = "dominant_taxa", ...){
@@ -301,7 +289,7 @@ setMethod("summarizeDominance", signature = c(x = "SummarizedExperiment"),
     return(tallied_data)
 }
 
-#' @rdname summaries
+#' @rdname summary
 #'
 #' @param object A
 #' \code{\link[SummarizedExperiment:SummarizedExperiment-class]{SummarizedExperiment}}

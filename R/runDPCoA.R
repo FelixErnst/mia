@@ -79,11 +79,6 @@
 #' plotReducedDim(esophagus, "DPCoA")
 NULL
 
-#' @export
-#' @rdname runDPCoA
-setGeneric("getDPCoA", signature = c("x", "y"),
-    function(x, y, ...) standardGeneric("getDPCoA"))
-
 .calculate_dpcoa <- function(
         x, y, ncomponents = 2, ntop = NULL,
         subset.row = subset_row, subset_row = NULL, scale = FALSE,

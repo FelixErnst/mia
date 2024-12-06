@@ -61,16 +61,6 @@ NULL
 
 #' @rdname addCluster
 #' @export
-setGeneric("addCluster", signature = c("x"),
-    function(
-            x, BLUSPARAM, assay.type = assay_name, 
-            assay_name = "counts", by = MARGIN, MARGIN = "rows", full = FALSE, 
-            name = "clusters", clust.col = "clusters", ...)
-    standardGeneric("addCluster"))
-
-
-#' @rdname addCluster
-#' @export
 #' @importFrom bluster clusterRows
 setMethod("addCluster", signature = c(x = "SummarizedExperiment"),
     function(

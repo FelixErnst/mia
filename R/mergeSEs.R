@@ -137,16 +137,6 @@
 #' 
 NULL
 
-
-
-################################### Generic ####################################
-
-#' @rdname mergeSEs
-#' @export
-setGeneric("mergeSEs", signature = c("x"),
-        function(x, ... )
-            standardGeneric("mergeSEs"))
-
 ###################### Function for SimpleList of TreeSEs ######################
 
 #' @rdname mergeSEs

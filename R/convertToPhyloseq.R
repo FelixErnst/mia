@@ -27,7 +27,7 @@
 #' \code{convertToPhyloseq} returns an object of class 
 #' \code{\link[phyloseq:phyloseq-class]{phyloseq}}
 #'
-#' @rdname convertFromPhyloseq
+#' @name convertFromPhyloseq
 #' @export
 #'
 #' @examples
@@ -50,10 +50,7 @@
 #' phy2
 #' 
 #' @export
-setGeneric("convertToPhyloseq", signature = c("x"),
-    function(x, ...)
-    standardGeneric("convertToPhyloseq"))
-
+NULL
 
 #' @rdname convertFromPhyloseq
 #' @export

@@ -226,11 +226,6 @@ NULL
 
 #' @rdname agglomerate-methods
 #' @export
-setGeneric("agglomerateByRank", signature = "x", function(x, ...)
-    standardGeneric("agglomerateByRank"))
-
-#' @rdname agglomerate-methods
-#' @export
 setMethod(
     "agglomerateByRank", signature = c(x = "TreeSummarizedExperiment"),
     function(x, rank = taxonomyRanks(x)[1], update.tree = agglomerateTree,
@@ -359,12 +354,6 @@ setMethod("agglomerateByRank", signature = c(x = "SummarizedExperiment"),
         return(x)
     }
 )
-
-#' @rdname agglomerate-methods
-#' @aliases agglomerateByVariable
-#' @export
-setGeneric("agglomerateByVariable", signature = "x", function(x, ...)
-    standardGeneric("agglomerateByVariable"))
 
 #' @rdname agglomerate-methods
 #' @aliases agglomerateByVariable

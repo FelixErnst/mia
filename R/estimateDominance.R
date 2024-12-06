@@ -215,20 +215,6 @@
 #'
 NULL
 
-setGeneric(
-    ".estimate_dominance", signature = c("x"),
-    function(x, ...) standardGeneric(".estimate_dominance"))
-
-setGeneric(
-    ".estimate_dominance",signature = c("x"),
-    function(
-        x, assay.type = assay_name, assay_name = "counts",
-        index = c(
-            "absolute", "dbp", "core_abundance", "gini", "dmn", "relative",
-            "simpson_lambda"),
-        ntaxa = 1, aggregate = TRUE, name = index, BPPARAM = SerialParam(), ...)
-    standardGeneric(".estimate_dominance"))
-
 .estimate_dominance <- function(
         x, assay.type = assay_name, assay_name = "counts",
         index = c(

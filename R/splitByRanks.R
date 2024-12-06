@@ -81,11 +81,6 @@
 #'
 NULL
 
-#' @rdname agglomerate-methods
-#' @export
-setGeneric("agglomerateByRanks", signature = "x",
-    function(x, ...) standardGeneric("agglomerateByRanks"))
-
 .norm_args_for_split_by_ranks <- function(na.rm, ...){
     args <- list(...)
     if(missing(na.rm)){
@@ -166,12 +161,6 @@ splitByRanks <- function(x, ...){
 
 ################################################################################
 # unsplitByRanks
-
-#' @rdname agglomerate-methods
-#' @export
-setGeneric("unsplitByRanks", signature = "x",
-    function(x, ...) standardGeneric("unsplitByRanks"))
-
 
 #' @importFrom SingleCellExperiment reducedDims
 #' @importFrom SummarizedExperiment colData

@@ -164,23 +164,6 @@
 #'
 NULL
 
-#' @rdname runCCA
-setGeneric("getCCA", signature = c("x"), function(x, ...)
-    standardGeneric("getCCA"))
-
-#' @rdname runCCA
-setGeneric("addCCA", signature = c("x"), function(x, ...)
-    standardGeneric("addCCA"))
-
-#' @rdname runCCA
-setGeneric("getRDA", signature = c("x"), function(x, ...)
-    standardGeneric("getRDA"))
-
-#' @rdname runCCA
-setGeneric("addRDA", signature = c("x"), function(x, ...)
-    standardGeneric("addRDA"))
-
-
 ############################# Exported CCA methods #############################
 
 #' @export
