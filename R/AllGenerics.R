@@ -346,13 +346,11 @@ setGeneric("getBestDMNFit", signature = "x",
     standardGeneric("getBestDMNFit"))
 
 NULL
-setGeneric(
-    ".estimate_dominance", signature = c("x"),
+setGeneric(".estimate_dominance", signature = c("x"),
     function(x, ...) standardGeneric(".estimate_dominance"))
 
 NULL
-setGeneric(
-    ".estimate_dominance",signature = c("x"),
+setGeneric(".estimate_dominance",signature = c("x"),
     function(
         x, assay.type = assay_name, assay_name = "counts",
         index = c(
