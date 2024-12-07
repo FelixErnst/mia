@@ -172,14 +172,14 @@ importMetaPhlAn <- function(
                 file, header = TRUE, comment.char = "#", check.names = FALSE)
         },
         error = function(condition){
-            stop("Error while reading ", file,
+            stop("Cannot read the file: ", file,
                 "\nPlease check that the file is in merged Metaphlan file ",
                 "format.", call. = FALSE)
         }
     )
     # Check that file is in right format
     if( .check_metaphlan(table, rowdata_col) ){
-        stop("Error while reading ", file,
+        stop("Cannot read the file: ", file,
             "\nPlease check that the file is in merged Metaphlan file format.",
             call. = FALSE)
     }
@@ -216,7 +216,7 @@ importMetaPhlAn <- function(
     # ID in Metaphlan v2, > 2 clade_name
     col <- colnames(table) %in% c("clade_name", "ID")
     if( sum(col) != 1 ){
-        stop("Error in parsing Metaphlan file.", call. = FALSE)
+        stop("Cannot parse Metaphlan file.", call. = FALSE)
     }
     # Get the lowest level of each row
     
@@ -227,7 +227,7 @@ importMetaPhlAn <- function(
     # at specific rank
     tables <- split(table, levels)
     # Get the order
-    metaphlan_tax = names(.taxonomy_rank_prefixes)
+    metaphlan_tax <- names(.taxonomy_rank_prefixes)
     indices <- match(tolower(metaphlan_tax), tolower(names(tables)))
     # Remove NAs which occurs if rank is not included
     indices <- indices[!is.na(indices)]

@@ -78,7 +78,7 @@ setMethod("convertToPhyloseq", signature = c(x = "SummarizedExperiment"),
             rownames(x) <- getTaxonomyLabels(x)
         }
         # List of arguments
-        args = list()
+        args <- list()
         # Gets the abundance data from assay, and converts it to otu_table
         otu_table <- as.matrix(assay(x, assay.type))
         otu_table <- phyloseq::otu_table(otu_table, taxa_are_rows = TRUE)
@@ -138,7 +138,7 @@ setMethod("convertToPhyloseq", signature = c(x = "TreeSummarizedExperiment"),
         # and/or sample_data
         obj <- callNextMethod()
         # List of arguments
-        args = list()
+        args <- list()
         # Adds to the list of arguments, if 'obj' is not a phyloseq object
         # i.e. is an otu_table
         if(!is(obj,"phyloseq")){

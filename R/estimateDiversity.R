@@ -248,8 +248,7 @@ NULL
     index_string <- paste0(
         "'", paste0(supported_index, collapse = "', '"), "'")
     if ( !all(index %in% supported_index) || !(length(index) > 0)) {
-        stop("'", paste0(
-            "'index' must be from the following options: '", index_string),
+        stop("'index' must be from the following options: '", index_string,
             "'", call. = FALSE)
     }
     # Check name

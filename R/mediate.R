@@ -266,7 +266,7 @@ setMethod("getMediation", signature = c(x = "SummarizedExperiment"),
             }
             
             # Run mediation analysis for current mediator
-            med_out <- .run.mediate(
+            med_out <- .run_mediate(
                 x, outcome, treatment, mediator,
                 family = family, mat = mat,
                 covariates = covariates, ...
@@ -312,7 +312,8 @@ setMethod("getMediation", signature = c(x = "SummarizedExperiment"),
         length(unique((df[[treatment]]))) > 2 ) {
         
         ## if control and treat value are not specified
-        if( any(sapply(kwargs[c("control.value", "treat.value")], is.null)) ){
+        if( any(vapply(kwargs[c("control.value", "treat.value")],
+                is.null, logical(1))) ){
             stop(
                 "Too many treatment levels. Consider specifing a treat.value ",
                 "and a control.value", call. = FALSE
@@ -351,7 +352,7 @@ setMethod("getMediation", signature = c(x = "SummarizedExperiment"),
 # Run mediation analysis
 #' @importFrom mediation mediate
 #' @importFrom stats lm formula glm
-.run.mediate <- function(x, outcome, treatment, mediator = NULL, mat = NULL,
+.run_mediate <- function(x, outcome, treatment, mediator = NULL, mat = NULL,
                         family = gaussian(), covariates = NULL, ...) {
     
     # Create initial dataframe with outcome and treatment variables

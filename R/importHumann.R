@@ -114,7 +114,7 @@ importHUMAnN <- function(file, col.data = colData, colData = NULL, ...){
             read.delim(file, check.names = FALSE)
         },
         error = function(condition){
-            stop("Error while reading ", file,
+            stop("Cannot read the file: ", file,
                 "\nPlease check that the file is in merged HUMAnN file ",
                 "format.", call. = FALSE)
         }
@@ -131,7 +131,7 @@ importHUMAnN <- function(file, col.data = colData, colData = NULL, ...){
     rownames(table) <- table[, 1] 
     # Check that file is in right format
     if( .check_metaphlan(table, rowdata_col) ){
-        stop("Error while reading ", file,
+        stop("Cannot read the file: ", file,
             "\nPlease check that the file is in merged HUMAnN file format.",
             call. = FALSE)
     }
