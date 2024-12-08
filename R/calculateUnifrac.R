@@ -35,7 +35,8 @@
             "Incompatible tree and abundance table! Please try to provide ",
             "'node.label'.", call. = FALSE)
     }
-    # Merge rows, so that rows that are assigned to same tree node are agglomerated
+    # Merge rows, so that rows that are assigned to same tree node are
+    # agglomerated
     # together. If nodeLabs were provided, merge based on those. Otherwise merge
     # based on rownames
     if( is.null(node.label) ){
@@ -67,7 +68,8 @@
     return(res)
 }
 
-# Aggregate matrix based on nodeLabs. At the same time, rename rows based on node.label
+# Aggregate matrix based on nodeLabs. At the same time, rename rows based on
+# node.label
 # --> each row represent specific node of tree
 #' @importFrom scuttle sumCountsAcrossFeatures
 .merge_assay_by_rows <- function(x, node.label, average = FALSE, ...){

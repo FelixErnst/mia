@@ -108,8 +108,8 @@
         stop("'", name, "' must be a single non-empty character value.",
             call. = FALSE)
     }
-    if( !(tree.name %in% names(x@rowTree)) ){
-        stop("'", name, "' must specify a tree from 'x@rowTree'.",
+    if( !(tree.name %in% rowTreeNames(x)) ){
+        stop("'", name, "' must specify a tree from 'rowTreeNames(x)'.",
             call. = FALSE)
     }
 }
@@ -120,8 +120,8 @@
         stop("'", name, "' must be a single non-empty character value.",
             call. = FALSE)
     }
-    if( !(tree.name %in% names(x@colTree)) ){
-        stop("'", name, "' must specify a tree from 'x@colTree'.",
+    if( !(tree.name %in% colTreeNames(x)) ){
+        stop("'", name, "' must specify a tree from 'colTreeNames(x)'.",
             call. = FALSE)
     }
 }
@@ -505,7 +505,7 @@
     taxa_split <- taxa_split[taxa_prefixes_match]
     #
     if(length(unique(lengths(taxa_split))) != 1L){
-        stop("Internal error. Something went wrong while splitting taxonomic ",
+        stop("Something went wrong while splitting taxonomic ",
             "levels. Please check that 'sep' is correct.", call. = FALSE)
     }
     taxa_tab <- DataFrame(as.matrix(taxa_split))

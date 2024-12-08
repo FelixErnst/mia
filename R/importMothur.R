@@ -1,7 +1,7 @@
 #' Import Mothur results as a \code{TreeSummarizedExperiment}
 #' 
-#' This method creates a \code{TreeSummarizedExperiment} object from \code{Mothur}
-#' files provided as input. 
+#' This method creates a \code{TreeSummarizedExperiment} object from
+#' \code{Mothur} files provided as input. 
 #'
 #' @param assay.file \code{Character scalar}. Defines the file
 #'   path of the feature table to be imported. The File has to be in 
@@ -50,7 +50,8 @@
 #' # Abundance table
 #' counts <- system.file("extdata", "mothur_example.shared", package = "mia")
 #' # Taxa table (in "cons.taxonomy" or "taxonomy" format)
-#' taxa <- system.file("extdata", "mothur_example.cons.taxonomy", package = "mia")
+#' taxa <- system.file(
+#'     "extdata", "mothur_example.cons.taxonomy", package = "mia")
 #' #taxa <- system.file("extdata", "mothur_example.taxonomy", package = "mia")
 #' # Sample meta data
 #' meta <- system.file("extdata", "mothur_example.design", package = "mia")
@@ -112,9 +113,10 @@ importMothur <- function(assay.file = sharedFile,
         rownames(sample_meta) <- colnames(feature_tab)
     }
 
-    TreeSummarizedExperiment(assays = S4Vectors::SimpleList(counts = feature_tab),
-                            rowData = taxa_tab,
-                            colData = sample_meta)
+    TreeSummarizedExperiment(
+        assays = S4Vectors::SimpleList(counts = feature_tab),
+        rowData = taxa_tab,
+        colData = sample_meta)
 }
 
 # These extra information must be added to colData. Return list of assay and 
@@ -266,7 +268,7 @@ importMothur <- function(assay.file = sharedFile,
     data <- read.table(file, check.names=FALSE, header=TRUE,
                         sep="\t", stringsAsFactors=FALSE)
     
-    # If data contains column names, and "OTU" column that includes same taxa as 
+    # If data contains column names, and "OTU" column that includes same taxa as
     # feature_tab, 
     # then it is constaxonomy file
     if( identical(colnames(data), columns_that_must_be_found) && 
@@ -282,7 +284,7 @@ importMothur <- function(assay.file = sharedFile,
     data <- read.table(file, check.names=FALSE, header=TRUE,
                         sep="\t", stringsAsFactors=FALSE)
     
-    # If data contains "group" column that include sample names, then it is 
+    # If data contains "group" column that include sample names, then it is
     # design file
     if( identical(data$group, sample_names) ){
         result <- TRUE

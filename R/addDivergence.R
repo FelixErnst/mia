@@ -71,13 +71,6 @@ NULL
 
 #' @rdname addDivergence
 #' @export
-setGeneric(
-    "addDivergence",signature = c("x"),
-    function(x, name = "divergence", ...)
-    standardGeneric("addDivergence"))
-
-#' @rdname addDivergence
-#' @export
 setMethod("addDivergence", signature = c(x="SummarizedExperiment"),
     function(x, name = "divergence", ...){
         ################### Input check ###############
@@ -93,14 +86,6 @@ setMethod("addDivergence", signature = c(x="SummarizedExperiment"),
         return(x)
     }
 )
-
-#' @rdname addDivergence
-#' @export
-setGeneric("getDivergence", signature = c("x"),
-    function(
-        x, assay.type = assay_name, assay_name = "counts", reference = "median",
-        method = "bray", ...)
-    standardGeneric("getDivergence"))
 
 #' @rdname addDivergence
 #' @export

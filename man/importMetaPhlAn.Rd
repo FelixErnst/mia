@@ -24,8 +24,8 @@ path of the phylogenetic tree.
 
 \item{...}{additional arguments:
 \itemize{
-\item \code{assay.type}: \code{Character scalar}. Specifies the name of the assay
-used in calculation. (Default: \code{"counts"})
+\item \code{assay.type}: \code{Character scalar}. Specifies the name of
+the assay used in calculation. (Default: \code{"counts"})
 \item \code{prefix.rm}: \code{Logical scalar}. Should
 taxonomic prefixes be removed? (Default: \code{FALSE})
 \item \code{remove.suffix}: \code{Logical scalar}. Should
@@ -78,9 +78,10 @@ altExp(tse, "phylum")
 
 }
 \references{
-Beghini F, McIver LJ, Blanco-Míguez A, Dubois L, Asnicar F, Maharjan S, Mailyan A,
-Manghi P, Scholz M, Thomas AM, Valles-Colomer M, Weingart G, Zhang Y, Zolfo M,
-Huttenhower C, Franzosa EA, & Segata N (2021) Integrating taxonomic, functional,
+Beghini F, McIver LJ, Blanco-Míguez A, Dubois L, Asnicar F, Maharjan S,
+Mailyan A, Manghi P, Scholz M, Thomas AM, Valles-Colomer M, Weingart G,
+Zhang Y, Zolfo M, Huttenhower C, Franzosa EA, & Segata N (2021)
+Integrating taxonomic, functional,
 and strain-level profiling of diverse microbial communities with bioBakery 3.
 \emph{eLife}. 10:e65088. doi: 10.7554/eLife.65088
 }

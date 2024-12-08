@@ -9,5 +9,3 @@
     }
     return(list(rows = rows, columns = columns))
 }
-
-

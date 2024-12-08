@@ -18,10 +18,11 @@ bibliography: references.bib
 ---
 
 ```{r, echo=FALSE}
-knitr::opts_chunk$set(cache = FALSE,
-                      fig.width = 9,
-                      message = FALSE,
-                      warning = FALSE)
+knitr::opts_chunk$set(
+    cache = FALSE,
+    fig.width = 9,
+    message = FALSE,
+    warning = FALSE)
 ```
 
 `mia` implements tools for microbiome analysis based on the
@@ -143,14 +144,15 @@ settings different number of rows will be returned.
 
 ```{r}
 x1 <- agglomerateByRank(tse, rank = "Species", empty.rm = TRUE)
-altExp(tse,"species") <- agglomerateByRank(tse, rank = "Species", empty.rm = FALSE)
+altExp(tse,"species") <- agglomerateByRank(
+    tse, rank = "Species", empty.rm = FALSE)
 dim(x1)
 dim(altExp(tse,"species"))
 ```
 
-For convenience the function `agglomerateByRanks` is available, which agglomerates
-data on all `ranks` selected. By default all available ranks will be used.
-The output is compatible to be stored as alternative experiments.
+For convenience the function `agglomerateByRanks` is available, which
+agglomerates data on all `ranks` selected. By default all available ranks will
+be used. The output is compatible to be stored as alternative experiments.
 
 ```{r}
 tse <- agglomerateByRanks(tse)
@@ -170,9 +172,10 @@ taxa_res <- resolveLoop(as.data.frame(taxa))
 taxa_tree <- toTree(data = taxa_res)
 taxa_tree$tip.label <- getTaxonomyLabels(altExp(tse,"Species"))
 rowNodeLab <- getTaxonomyLabels(altExp(tse,"Species"), make.unique = FALSE)
-altExp(tse,"Species") <- changeTree(altExp(tse,"Species"),
-                                   rowTree = taxa_tree,
-                                   rowNodeLab = rowNodeLab)
+altExp(tse,"Species") <- changeTree(
+    altExp(tse,"Species"),
+    rowTree = taxa_tree,
+    rowNodeLab = rowNodeLab)
 ```
 
 ## Transformation of assay data
@@ -194,19 +197,24 @@ Sub-sampling to equal number of counts per sample. Also known as rarefying.
 ```{r}
 data(GlobalPatterns, package = "mia")
 
-tse.subsampled <- rarefyAssay(GlobalPatterns, 
-                                  sample = 60000, 
-                                  name = "subsampled",
-                                  replace = TRUE,
-                                  seed = 1938)
+tse.subsampled <- rarefyAssay(
+    GlobalPatterns, 
+    sample = 60000, 
+    name = "subsampled",
+    replace = TRUE,
+    seed = 1938)
 tse.subsampled
 
 ```
-Alternatively, one can save both original TreeSE and subsampled TreeSE within a MultiAssayExperiment object.  
+
+Alternatively, one can save both original TreeSE and subsampled TreeSE within a
+MultiAssayExperiment object.  
+
 ```{r}
 library(MultiAssayExperiment)
-mae <- MultiAssayExperiment(c("originalTreeSE" = GlobalPatterns,
-                              "subsampledTreeSE" = tse.subsampled))
+mae <- MultiAssayExperiment(
+    c("originalTreeSE" = GlobalPatterns,
+    "subsampledTreeSE" = tse.subsampled))
 mae
 ```
 
@@ -235,18 +243,19 @@ Beta diversity indices are used to describe inter-sample connections.
 Technically they are calculated as `dist` object and reduced dimensions can
 be extracted using `cmdscale`. This is wrapped up in the `runMDS` function
 of the `scater` package, but can be easily used to calculated beta diversity
-indices using the established functions from the `vegan` package or any other 
+indices using the established functions from the `vegan` package or any other
 package using comparable inputs.
 
 ```{r}
 library(scater)
-altExp(tse,"Genus") <- runMDS(altExp(tse,"Genus"), 
-                              FUN = vegan::vegdist,
-                              method = "bray",
-                              name = "BrayCurtis", 
-                              ncomponents = 5, 
-                              assay.type = "counts", 
-                              keep_dist = TRUE)
+altExp(tse,"Genus") <- runMDS(
+    altExp(tse,"Genus"), 
+    FUN = getDissimilarity,
+    method = "bray",
+    name = "BrayCurtis", 
+    ncomponents = 5, 
+    assay.type = "counts", 
+    keep_dist = TRUE)
 ```
 
 JSD and UniFrac are implemented in `mia` as well. `getJSD` can be used
@@ -306,10 +315,11 @@ assay(tse[,'CC1'], "counts") |> head()
 
 ```{r}
 data(esophagus, package = "mia")
-top_taxa <- getTop(esophagus,
-                    method = "mean",
-                    top = 5,
-                    assay.type = "counts")
+top_taxa <- getTop(
+    esophagus,
+    method = "mean",
+    top = 5,
+    assay.type = "counts")
 top_taxa
 ```
 
@@ -319,10 +329,11 @@ To generate tidy data as used and required in most of the tidyverse,
 `meltAssay` can be used. A `data.frame` in the long format will be returned.
 
 ```{r}
-molten_data <- meltAssay(tse,
-                         assay.type = "counts",
-                         add.row = TRUE,
-                         add.col = TRUE
+molten_data <- meltAssay(
+    tse,
+    assay.type = "counts",
+    add.row = TRUE,
+    add.col = TRUE
 )
 molten_data
 ```

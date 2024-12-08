@@ -20,8 +20,8 @@
 #'   
 #' @param ... additional arguments:
 #' \itemize{
-#'   \item \code{assay.type}: \code{Character scalar}. Specifies the name of the assay
-#'    used in calculation. (Default: \code{"counts"})
+#'   \item \code{assay.type}: \code{Character scalar}. Specifies the name of
+#'   the assay used in calculation. (Default: \code{"counts"})
 #'   \item \code{prefix.rm}: \code{Logical scalar}. Should
 #'     taxonomic prefixes be removed? (Default: \code{FALSE})
 #'   \item \code{remove.suffix}: \code{Logical scalar}. Should
@@ -63,9 +63,10 @@
 #' @export
 #' 
 #' @references
-#' Beghini F, McIver LJ, Blanco-Míguez A, Dubois L, Asnicar F, Maharjan S, Mailyan A, 
-#' Manghi P, Scholz M, Thomas AM, Valles-Colomer M, Weingart G, Zhang Y, Zolfo M, 
-#' Huttenhower C, Franzosa EA, & Segata N (2021) Integrating taxonomic, functional, 
+#' Beghini F, McIver LJ, Blanco-Míguez A, Dubois L, Asnicar F, Maharjan S,
+#' Mailyan A, Manghi P, Scholz M, Thomas AM, Valles-Colomer M, Weingart G,
+#' Zhang Y, Zolfo M, Huttenhower C, Franzosa EA, & Segata N (2021)
+#' Integrating taxonomic, functional, 
 #' and strain-level profiling of diverse microbial communities with bioBakery 3.
 #' \emph{eLife}. 10:e65088. doi: 10.7554/eLife.65088
 #'
@@ -91,7 +92,7 @@ importMetaPhlAn <- function(
         file, col.data = colData, colData = sample_meta,
         sample_meta = NULL, tree.file = phy_tree, phy_tree = NULL, ...){
     
-    ################################ Input check ################################
+    ################################ Input check ###############################
     if(!.is_non_empty_string(file)){
         stop("'file' must be a single character value.",
             call. = FALSE)
@@ -115,7 +116,8 @@ importMetaPhlAn <- function(
     rowdata_col <- c("clade_name", "ID", "_id", "taxonomy")
     # Read metaphlan data
     data <- .read_metaphlan(file, rowdata_col, ...)
-    # Parse data into separate tables, which include data at certain taxonomy rank
+    # Parse data into separate tables, which include data at certain taxonomy
+    # rank
     tables <- .parse_metaphlan(data, ...)
 
     # Create multiple SE objects at different rank from the data
@@ -166,17 +168,18 @@ importMetaPhlAn <- function(
     # Read the table. Catch error and give more informative message
     table <- tryCatch(
         {
-            read.table(file, header = TRUE, comment.char = "#", check.names = FALSE)
+            read.table(
+                file, header = TRUE, comment.char = "#", check.names = FALSE)
         },
         error = function(condition){
-            stop("Error while reading ", file,
-                "\nPlease check that the file is in merged Metaphlan file format.",
-                call. = FALSE)
+            stop("Cannot read the file: ", file,
+                "\nPlease check that the file is in merged Metaphlan file ",
+                "format.", call. = FALSE)
         }
     )
     # Check that file is in right format
     if( .check_metaphlan(table, rowdata_col) ){
-        stop("Error while reading ", file,
+        stop("Cannot read the file: ", file,
             "\nPlease check that the file is in merged Metaphlan file format.",
             call. = FALSE)
     }
@@ -197,8 +200,8 @@ importMetaPhlAn <- function(
     # Initialize result 
     result <- TRUE
     
-    # Check rowdata column names that they contain right information, and check that 
-    # rest of the columns represents abundances in samples.
+    # Check rowdata column names that they contain right information, and check
+    # that rest of the columns represents abundances in samples.
     # If these requirements are met, give FALSE. Otherwise, give TRUE.
     if( length(rowdata_id) > 0 &&
             all(unlist(lapply(assay_columns, is.numeric))) ){
@@ -207,13 +210,13 @@ importMetaPhlAn <- function(
     return(result)
 }
 
-# Get metaphlan table as input and return multiple tables which each include data at
-# certain taxonomy rank
+# Get metaphlan table as input and return multiple tables which each include
+# data at certain taxonomy rank
 .parse_metaphlan <- function(table, ...){
     # ID in Metaphlan v2, > 2 clade_name
     col <- colnames(table) %in% c("clade_name", "ID")
     if( sum(col) != 1 ){
-        stop("Error in parsing Metaphlan file.", call. = FALSE)
+        stop("Cannot parse Metaphlan file.", call. = FALSE)
     }
     # Get the lowest level of each row
     
@@ -224,7 +227,7 @@ importMetaPhlAn <- function(
     # at specific rank
     tables <- split(table, levels)
     # Get the order
-    metaphlan_tax = names(.taxonomy_rank_prefixes)
+    metaphlan_tax <- names(.taxonomy_rank_prefixes)
     indices <- match(tolower(metaphlan_tax), tolower(names(tables)))
     # Remove NAs which occurs if rank is not included
     indices <- indices[!is.na(indices)]
@@ -233,8 +236,9 @@ importMetaPhlAn <- function(
     return(tables)
 }
 
-# Get the lowest level of the string that contains multiple taxonomic levels with prefixes
-# Output is single character that specifies the rank, e.g, "s" == "Species"
+# Get the lowest level of the string that contains multiple taxonomic levels
+# with prefixes Output is single character that specifies the rank, e.g,
+# "s" == "Species"
 .get_lowest_taxonomic_level <- function(string){
     # List all ranks and what prefix they correspond
     ranks <- .taxonomy_rank_prefixes
@@ -245,7 +249,8 @@ importMetaPhlAn <- function(
     # Get the location of lowest rank
     lowest_level_ind <- levels[length(levels)]
     # Get the lowest rank that was found
-    lowest_level <- substr(string, start = lowest_level_ind, stop = lowest_level_ind)
+    lowest_level <- substr(
+        string, start = lowest_level_ind, stop = lowest_level_ind)
     
     # Convert prefix into full rank name
     lowest_level <- names(ranks[ match(lowest_level, ranks) ])

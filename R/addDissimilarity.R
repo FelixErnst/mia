@@ -8,7 +8,8 @@
 #' types of dissimilarities, they rely on \code{\link[vegan:vegdist]{vegdist}}
 #' by default.
 #'
-#' @param x \code{\link[TreeSummarizedExperiment:TreeSummarizedExperiment-class]{TreeSummarizedExperiment}}
+#' @param x
+#' \code{\link[TreeSummarizedExperiment:TreeSummarizedExperiment-class]{TreeSummarizedExperiment}}
 #' or \code{matrix}.
 #'
 #' @param method \code{Character scalar}. Specifies which dissimilarity to 
@@ -157,12 +158,6 @@ NULL
 
 #' @rdname getDissimilarity
 #' @export
-setGeneric(
-    "addDissimilarity", signature = c("x"), function(x, method, ...)
-    standardGeneric("addDissimilarity"))
-
-#' @rdname getDissimilarity
-#' @export
 setMethod(
     "addDissimilarity", signature = c(x = "SummarizedExperiment"),
     function(x, method = "bray", name = method, ...){
@@ -173,12 +168,6 @@ setMethod(
     return(x)
     }
 )
-
-#' @rdname getDissimilarity
-#' @export
-setGeneric(
-    "getDissimilarity", signature = c("x"), function(x, method, ...)
-        standardGeneric("getDissimilarity"))
 
 #' @rdname getDissimilarity
 #' @export

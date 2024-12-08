@@ -166,11 +166,6 @@ getTaxonomyRankPrefixes <- function() {
 TAXONOMY_RANKS <- names(.taxonomy_rank_prefixes)
 
 #' @rdname taxonomy-methods
-setGeneric("taxonomyRanks", signature = c("x"),
-            function(x)
-            standardGeneric("taxonomyRanks"))
-
-#' @rdname taxonomy-methods
 #'
 #' @importFrom SummarizedExperiment rowData
 #'
@@ -181,13 +176,6 @@ setMethod("taxonomyRanks", signature = c(x = "SummarizedExperiment"),
         ranks[.get_tax_cols(ranks)]
     }
 )
-
-#' @rdname taxonomy-methods
-setGeneric("taxonomyRankEmpty",
-            signature = "x",
-            function(x, rank = taxonomyRanks(x)[1L],
-                    empty.fields = c(NA, "", " ", "\t", "-", "_"))
-            standardGeneric("taxonomyRankEmpty"))
 
 #' @rdname taxonomy-methods
 #' @aliases taxonomyRankEmpty
@@ -218,12 +206,6 @@ setMethod("taxonomyRankEmpty", signature = c(x = "SummarizedExperiment"),
 )
 
 #' @rdname taxonomy-methods
-setGeneric("checkTaxonomy",
-            signature = "x",
-            function(x, ...)
-              standardGeneric("checkTaxonomy"))
-
-#' @rdname taxonomy-methods
 #' @aliases checkTaxonomy
 #' @export
 setMethod("checkTaxonomy", signature = c(x = "SummarizedExperiment"),
@@ -246,11 +228,12 @@ setTaxonomyRanks <- function(ranks) {
     ranks <- tolower(ranks)
     # Check if rank is a character vector with length >= 1
     if (!is.character(ranks) || length(ranks) < 1 
-        || any(ranks == "" | ranks == " " | ranks == "\t" | ranks == "-" | ranks == "_")
+        || any(ranks == "" | ranks == " " | ranks == "\t" | ranks == "-" |
+            ranks == "_")
         || any(grepl("\\s{2,}", ranks))) {
         stop("Input 'rank' should be a character vector with non-empty strings,
-             no spaces, tabs, hyphens, underscores, and non-continuous spaces."
-             , call. = FALSE)
+            no spaces, tabs, hyphens, underscores, and non-continuous spaces.",
+            call. = FALSE)
     }
     #Replace default value of mia::TAXONOMY_RANKS
     assignInMyNamespace("TAXONOMY_RANKS", ranks)
@@ -302,24 +285,18 @@ getTaxonomyRanks <- function() {
     }
 }
 
-
-#' @rdname taxonomy-methods
-setGeneric("getTaxonomyLabels",
-            signature = "x",
-            function(x, ...)
-                standardGeneric("getTaxonomyLabels"))
-
 #' @rdname taxonomy-methods
 #' @aliases checkTaxonomy
 #' @export
 setMethod("getTaxonomyLabels", signature = c(x = "SummarizedExperiment"),
-    function(x, empty.fields = c(NA, "", " ", "\t", "-", "_"), with.rank = with_rank,
-            with_rank = FALSE, make.unique = make_unique, make_unique = TRUE, 
+    function(x, empty.fields = c(NA, "", " ", "\t", "-", "_"),
+            with.rank = with_rank,
+            with_rank = FALSE, make.unique = make_unique, make_unique = TRUE,
             resolve.loops = resolve_loops, resolve_loops = FALSE, ...){
         # input check
         if(nrow(x) == 0L){
             stop("No data available in `x` ('x' has nrow(x) == 0L.)",
-                 call. = FALSE)
+                call. = FALSE)
         }
         if(ncol(rowData(x)) == 0L){
             stop("rowData needs to be populated.", call. = FALSE)
@@ -327,7 +304,7 @@ setMethod("getTaxonomyLabels", signature = c(x = "SummarizedExperiment"),
         .check_for_taxonomic_data_order(x)
         if(!is.character(empty.fields) || length(empty.fields) == 0L){
             stop("'empty.fields' must be a character vector with one or ",
-                 "more values.", call. = FALSE)
+                "more values.", call. = FALSE)
         }
         if(!.is_a_bool(with.rank)){
             stop("'with.rank' must be TRUE or FALSE.", call. = FALSE)
@@ -458,7 +435,7 @@ setMethod("getTaxonomyLabels", signature = c(x = "SummarizedExperiment"),
 #'   
 #' Please note that a hierarchy tree is not an actual phylogenetic tree.
 #' A phylogenetic tree represents evolutionary relationships among features.
-#' On the other hand, a hierarchy tree organizes species into a hierarchical 
+#' On the other hand, a hierarchy tree organizes species into a hierarchical
 #' structure based on their taxonomic ranks. 
 #' 
 #' @return
@@ -483,12 +460,6 @@ setMethod("getTaxonomyLabels", signature = c(x = "SummarizedExperiment"),
 #' tse <- addHierarchyTree(tse)
 #' tse
 NULL
-
-#' @rdname hierarchy-tree
-setGeneric("getHierarchyTree",
-            signature = "x",
-            function(x, ...)
-                standardGeneric("getHierarchyTree"))
 
 #' @rdname hierarchy-tree
 #' @aliases getHierarchyTree
@@ -554,12 +525,6 @@ setMethod("getHierarchyTree", signature = c(x = "SummarizedExperiment"),
 )
 
 #' @rdname hierarchy-tree
-setGeneric("addHierarchyTree",
-            signature = "x",
-            function(x, ...)
-                standardGeneric("addHierarchyTree"))
-
-#' @rdname hierarchy-tree
 #' @export
 setMethod("addHierarchyTree", signature = c(x = "SummarizedExperiment"),
     function(x, ...){
@@ -576,12 +541,6 @@ setMethod("addHierarchyTree", signature = c(x = "SummarizedExperiment"),
         return(x)
     }
 )
-
-#' @rdname taxonomy-methods
-setGeneric("mapTaxonomy",
-            signature = "x",
-            function(x, ...)
-                standardGeneric("mapTaxonomy"))
 
 #' @importFrom BiocGenerics %in% grepl
 .get_taxa_row_match <- function(taxa, td, from, use.grepl = FALSE){
@@ -655,7 +614,7 @@ setMethod("mapTaxonomy", signature = c(x = "SummarizedExperiment"),
         }
         if(!is.null(from) && !is.null(to)){
             if(from  == to){
-                stop("'from' and 'to' must be different values.", call. = FALSE)    
+                stop("'from' and 'to' must be different values.", call. = FALSE)
             }
         }
         if(!.is_a_bool(use.grepl)){

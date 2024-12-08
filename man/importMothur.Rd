@@ -39,8 +39,8 @@ A
 object
 }
 \description{
-This method creates a \code{TreeSummarizedExperiment} object from \code{Mothur}
-files provided as input.
+This method creates a \code{TreeSummarizedExperiment} object from
+\code{Mothur} files provided as input.
 }
 \details{
 Results exported from Mothur can be imported as a
@@ -52,7 +52,8 @@ Results exported from Mothur can be imported as a
 # Abundance table
 counts <- system.file("extdata", "mothur_example.shared", package = "mia")
 # Taxa table (in "cons.taxonomy" or "taxonomy" format)
-taxa <- system.file("extdata", "mothur_example.cons.taxonomy", package = "mia")
+taxa <- system.file(
+    "extdata", "mothur_example.cons.taxonomy", package = "mia")
 #taxa <- system.file("extdata", "mothur_example.taxonomy", package = "mia")
 # Sample meta data
 meta <- system.file("extdata", "mothur_example.design", package = "mia")

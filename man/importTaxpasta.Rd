@@ -22,7 +22,9 @@ taxonomy table be treated as taxonomy ranks? (Default: \code{FALSE})
 }}
 }
 \value{
-A \code{\link[TreeSummarizedExperiment:TreeSummarizedExperiment-class]{TreeSummarizedExperiment}} object.
+A
+\code{\link[TreeSummarizedExperiment:TreeSummarizedExperiment-class]{TreeSummarizedExperiment}}
+object.
 }
 \description{
 Import taxpasta-specific BIOM results to

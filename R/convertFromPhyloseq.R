@@ -38,36 +38,28 @@ convertFromPhyloseq <- function(x) {
     }
     #
     # Get the assay
-    counts <- x@otu_table@.Data
+    counts <- phyloseq::otu_table(x)
     # Check the orientation, and transpose if necessary
-    if( !x@otu_table@taxa_are_rows ){
+    if( !phyloseq::taxa_are_rows(x) ){
         counts <- t(counts)
     }
     # Create a list of assays
     assays <- SimpleList(counts = counts)
     
-    if(!is.null(x@tax_table@.Data)){
-        rowData <- DataFrame(data.frame(x@tax_table@.Data))
-    } else{
+    rowData <- tryCatch(phyloseq::tax_table(x), error = function(e) NULL) |>
+        data.frame() |> DataFrame()
+    if( nrow(rowData) == 0L ){
         rowData <- S4Vectors::make_zero_col_DFrame(nrow(assays$counts))
         rownames(rowData) <- rownames(assays$counts)
     }
-    if(!is.null(x@sam_data)){
-        colData <- DataFrame(data.frame(x@sam_data))
-    } else{
+    colData <- tryCatch(phyloseq::sample_data(x), error = function(e) NULL) |>
+        data.frame() |> DataFrame()
+    if( nrow(colData) == 0L ){
         colData <- S4Vectors::make_zero_col_DFrame(ncol(assays$counts))
         rownames(colData) <- colnames(assays$counts)
     }
-    if(!is.null(x@phy_tree)){
-        rowTree <- x@phy_tree
-    } else {
-        rowTree <- NULL
-    }
-    if (!is.null(x@refseq)) {
-        referenceSeq <- x@refseq
-    } else {
-        referenceSeq <- NULL
-    }
+    rowTree <- tryCatch(phyloseq::phy_tree(x), error = function(e) NULL)
+    referenceSeq <- tryCatch(phyloseq::refseq(x), error = function(e) NULL)
     TreeSummarizedExperiment(assays = assays,
                             rowData = rowData,
                             colData = colData,

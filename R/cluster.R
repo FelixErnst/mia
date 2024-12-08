@@ -4,8 +4,8 @@
 #'   information in its colData or rowData
 #'
 #' @param x A
-#'   \code{\link[SummarizedExperiment:SummarizedExperiment-class]{SummarizedExperiment}}
-#'   object.
+#' \code{\link[SummarizedExperiment:SummarizedExperiment-class]{SummarizedExperiment}}
+#' object.
 #' 
 #' @param by \code{Character scalar}. Determines if association is calculated
 #'   row-wise / for features ('rows') or column-wise / for samples ('cols').
@@ -34,9 +34,9 @@
 #' By default, clustering is done on the features.
 #'
 #' @return
-#' \code{addCluster} returns an object of the same type as the \code{x} parameter 
-#' with clustering information named \code{clusters} stored in \code{colData} 
-#' or \code{rowData}. 
+#' \code{addCluster} returns an object of the same type as the \code{x}
+#' parameter with clustering information named \code{clusters} stored in
+#' \code{colData} or \code{rowData}. 
 #'
 #' @name addCluster
 #' @export
@@ -58,16 +58,6 @@
 #' colData(tse)$clusters
 #' 
 NULL
-
-#' @rdname addCluster
-#' @export
-setGeneric("addCluster", signature = c("x"),
-    function(
-            x, BLUSPARAM, assay.type = assay_name, 
-            assay_name = "counts", by = MARGIN, MARGIN = "rows", full = FALSE, 
-            name = "clusters", clust.col = "clusters", ...)
-    standardGeneric("addCluster"))
-
 
 #' @rdname addCluster
 #' @export

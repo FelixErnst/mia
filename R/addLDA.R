@@ -64,16 +64,6 @@
 #' plot(tab[["k"]], tab[["perplexity"]], xlab = "k", ylab = "perplexity")
 NULL
 
-#' @rdname addLDA
-#' @export
-setGeneric(
-    "getLDA", signature = c("x"), function(x, ...) standardGeneric("getLDA"))
-
-#' @rdname addLDA
-#' @export
-setGeneric(
-    "addLDA", signature = c("x"), function(x, ...) standardGeneric("addLDA"))
-
 #' @export
 #' @rdname addLDA
 setMethod("getLDA", "SummarizedExperiment",

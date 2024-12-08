@@ -9,15 +9,15 @@
 #' @details
 #'   For \code{addNMDS} a \linkS4class{SingleCellExperiment}
 #'
-#' @param keep.dist \code{Logical scalar}. Indicates whether the \code{dist} object
-#'   calculated by \code{FUN} should be stored as \sQuote{dist} attribute of
-#'   the matrix returned/stored by \code{getNMDS}/ \code{addNMDS}. (Default: 
-#'   \code{FALSE})
+#' @param keep.dist \code{Logical scalar}. Indicates whether the \code{dist}
+#' object calculated by \code{FUN} should be stored as \sQuote{dist} attribute
+#' of the matrix returned/stored by \code{getNMDS}/ \code{addNMDS}. (Default: 
+#' \code{FALSE})
 #' 
 #' @param keep_dist Deprecated. Use \code{keep.dist} instead.
 #'
-#' @param FUN \code{Function} or \code{Character scalar}. A value with a function
-#'   name returning a \code{\link[stats:dist]{dist}} object
+#' @param FUN \code{Function} or \code{Character scalar}. A value with a
+#' function name returning a \code{\link[stats:dist]{dist}} object
 #'
 #' @param nmds.fun \code{Character scalar}. A value to choose the scaling
 #'   implementation, either \dQuote{isoMDS} for
@@ -32,8 +32,8 @@
 #' @param ... additional arguments to pass to \code{FUN} and
 #'   \code{nmds.fun}.
 #'
-#' @param dimred \code{Character scalar} or \code{integer scalar}. Specifies the existing dimensionality
-#'   reduction results to use.
+#' @param dimred \code{Character scalar} or \code{integer scalar}. Specifies
+#' the existing dimensionality reduction results to use.
 #'
 #' @param ndimred \code{integer vector}. Specifies the dimensions to use if
 #'   dimred is specified.
@@ -78,12 +78,6 @@
 #' reducedDims(esophagus)
 NULL
 
-
-#' @rdname runNMDS
-#' @export
-setGeneric("getNMDS", function(x, ...) standardGeneric("getNMDS"))
-
-
 .format_nmds_isoMDS <- function(nmds){
     ans <- nmds$points
     attr(ans, "Stress") <- nmds$stress
@@ -99,9 +93,10 @@ setGeneric("getNMDS", function(x, ...) standardGeneric("getNMDS"))
 }
 
 .format_nmds <- function(nmds, nmds.fun, sample_names){
-    ans <- switch(nmds.fun,
-                  "isoMDS" = .format_nmds_isoMDS(nmds),
-                  "monoMDS" = .format_nmds_monoMDS(nmds))
+    ans <- switch(
+        nmds.fun,
+        "isoMDS" = .format_nmds_isoMDS(nmds),
+        "monoMDS" = .format_nmds_monoMDS(nmds))
     rownames(ans) <- sample_names
     ans
 }
@@ -111,15 +106,17 @@ setGeneric("getNMDS", function(x, ...) standardGeneric("getNMDS"))
 }
 
 .get_nmds_args_monoMDS <- function(args){
-    args[c("model","threshold","maxit","weakties","stress","scaling","pc",
-           "smin","sfgrmin","sratmax")]
+    args[c(
+        "model","threshold","maxit","weakties","stress","scaling","pc",
+        "smin","sfgrmin","sratmax")]
 }
 
 .get_nmds_args <- function(nmds.fun, ...){
     args <- list(...)
-    args <- switch(nmds.fun,
-                   "isoMDS" = .get_nmds_args_isoMDS(args),
-                   "monoMDS" = .get_nmds_args_monoMDS(args))
+    args <- switch(
+        nmds.fun,
+        "isoMDS" = .get_nmds_args_isoMDS(args),
+        "monoMDS" = .get_nmds_args_monoMDS(args))
     args <- args[!vapply(args,is.null,logical(1))]
     args
 }
@@ -127,29 +124,29 @@ setGeneric("getNMDS", function(x, ...) standardGeneric("getNMDS"))
 #' @importFrom MASS isoMDS
 #' @importFrom stats cmdscale
 #' @importFrom vegan vegdist monoMDS
-.calculate_nmds <- function(x, FUN = vegdist, 
-                            nmds.fun = nmdsFUN,
-                            nmdsFUN = c("isoMDS","monoMDS"),
-                            ncomponents = 2, ntop = 500, subset.row = subset_row, 
-                            subset_row = NULL, scale = FALSE, transposed = FALSE,
-                            keep.dist = keep_dist,
-                            keep_dist = FALSE, ...){
+.calculate_nmds <- function(
+        x, FUN = vegdist, 
+        nmds.fun = nmdsFUN,
+        nmdsFUN = c("isoMDS","monoMDS"),
+        ncomponents = 2, ntop = 500, subset.row = subset_row, 
+        subset_row = NULL, scale = FALSE, transposed = FALSE,
+        keep.dist = keep_dist,
+        keep_dist = FALSE, ...){
     nmds.fun <- match.arg(nmds.fun)
     nmdsArgs <- .get_nmds_args(nmds.fun, ...)
     if(!transposed) {
-        x <- .get_mat_for_reddim(x, subset_row = subset.row, ntop = ntop,
-                                 scale = scale)
+        x <- .get_mat_for_reddim(
+            x, subset_row = subset.row, ntop = ntop, scale = scale)
     }
     x <- as.matrix(x)
     sample_names <- rownames(x)
-    sample_dist <- do.call(FUN,
-                           c(list(x),
-                             list(...)))
+    sample_dist <- do.call(
+        FUN, c(list(x), list(...)))
     attributes(sample_dist) <- attributes(sample_dist)[c("class","Size")]
     y <- cmdscale(sample_dist, k = ncomponents)
-    ans <- do.call(nmds.fun,
-                   c(list(sample_dist, y = y, k = ncomponents),
-                     nmdsArgs))
+    ans <- do.call(
+        nmds.fun,
+        c(list(sample_dist, y = y, k = ncomponents), nmdsArgs))
     ans <- .format_nmds(ans, nmds.fun, sample_names)
     if (keep.dist) {
         attr(ans,"dist") <- sample_dist
@@ -166,7 +163,7 @@ setMethod("getNMDS", "ANY", .calculate_nmds)
 #' @export
 setMethod("getNMDS", "SummarizedExperiment",
     function(x, ..., assay.type = assay_name, assay_name = exprs_values, 
-             exprs_values = "counts", FUN = vegdist) {
+        exprs_values = "counts", FUN = vegdist) {
         .calculate_nmds(assay(x, assay.type), FUN = FUN, ...)
     }
 )
@@ -177,8 +174,8 @@ setMethod("getNMDS", "SingleCellExperiment",
     function(x, ..., assay.type = assay_name, assay_name = exprs_values, 
             exprs_values = "counts", dimred = NULL, ndimred = n_dimred, 
             n_dimred = NULL, FUN = vegdist){
-        mat <- .get_mat_from_sce(x, exprs_values = assay.type,
-                                 dimred = dimred, n_dimred = ndimred)
+        mat <- .get_mat_from_sce(
+            x, exprs_values = assay.type, dimred = dimred, n_dimred = ndimred)
         getNMDS(mat, transposed = !is.null(dimred), FUN = FUN,...)
     }
 )

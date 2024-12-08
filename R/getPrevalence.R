@@ -5,7 +5,8 @@
 #'
 #' @inheritParams getDissimilarity
 #' 
-#' @param x \code{\link[TreeSummarizedExperiment:TreeSummarizedExperiment-class]{TreeSummarizedExperiment}}.
+#' @param x
+#' \code{\link[TreeSummarizedExperiment:TreeSummarizedExperiment-class]{TreeSummarizedExperiment}}.
 #' 
 #' @param assay_name Deprecated. Use \code{assay.type} instead.
 #'
@@ -172,12 +173,6 @@ NULL
 
 #' @rdname getPrevalence
 #' @export
-setGeneric("getPrevalence", signature = "x",
-    function(x, ...)
-    standardGeneric("getPrevalence"))
-
-#' @rdname getPrevalence
-#' @export
 setMethod("getPrevalence", signature = c(x = "ANY"), function(
     x, detection = 0, include.lowest = include_lowest, include_lowest = FALSE, 
     sort = FALSE, na.rm = TRUE, ...){
@@ -239,7 +234,7 @@ setMethod("getPrevalence", signature = c(x = "SummarizedExperiment"),
     }
 )
 ############################# getPrevalent #################################
-#' @rdname getPrevalence
+#' @name getPrevalence
 #'
 #' @param prevalence Prevalence threshold (in 0 to 1). The
 #'   required prevalence is strictly greater by default. To include the
@@ -252,9 +247,7 @@ setMethod("getPrevalence", signature = c(x = "SummarizedExperiment"),
 #' @aliases getPrevalent
 #'
 #' @export
-setGeneric("getPrevalent", signature = "x",
-    function(x, ...)
-    standardGeneric("getPrevalent"))
+NULL
 
 .norm_rownames <- function(x){
     if(is.null(rownames(x))){
@@ -317,7 +310,6 @@ setGeneric("getPrevalent", signature = "x",
     unique(taxa)
 }
 
-
 #' @rdname getPrevalence
 #' @export
 setMethod("getPrevalent", signature = c(x = "ANY"),
@@ -340,15 +332,13 @@ setMethod("getPrevalent", signature = c(x = "SummarizedExperiment"),
 
 ############################# getRare ######################################
 
-#' @rdname getPrevalence
+#' @name getPrevalence
 #'
 #' @details
 #' \code{getRare} returns complement of \code{getPrevalent}.
 #'
 #' @export
-setGeneric("getRare", signature = "x",
-    function(x, ...)
-    standardGeneric("getRare"))
+NULL
 
 .get_rare_indices <- function(x, ...){
     indices <- .get_prevalent_indices(x = x, ...)
@@ -399,12 +389,6 @@ setMethod("getRare", signature = c(x = "SummarizedExperiment"),
 
 #' @rdname getPrevalence
 #' @export
-setGeneric("subsetByPrevalent", signature = "x",
-    function(x, ...)
-    standardGeneric("subsetByPrevalent"))
-
-#' @rdname getPrevalence
-#' @export
 setMethod("subsetByPrevalent", signature = c(x = "SummarizedExperiment"),
     function(x, rank = NULL, ...){
         x <- .merge_features(x, rank = rank, ...)
@@ -432,12 +416,6 @@ setMethod("subsetByPrevalent", signature = c(x = "TreeSummarizedExperiment"),
 )
 
 ############################# subsetByRare #################################
-
-#' @rdname getPrevalence
-#' @export
-setGeneric("subsetByRare", signature = "x",
-    function(x, ...)
-    standardGeneric("subsetByRare"))
 
 #' @rdname getPrevalence
 #' @export
@@ -471,12 +449,6 @@ setMethod("subsetByRare", signature = c(x = "TreeSummarizedExperiment"),
 
 #' @rdname getPrevalence
 #' @export
-setGeneric("getPrevalentAbundance", signature = "x",
-    function(x, assay.type = assay_name, assay_name = "relabundance", ...)
-    standardGeneric("getPrevalentAbundance"))
-
-#' @rdname getPrevalence
-#' @export
 setMethod("getPrevalentAbundance", signature = c(x = "ANY"),
     function(x, ...){
         x <- .calc_rel_abund(x)
@@ -506,7 +478,7 @@ setMethod("getPrevalentAbundance", signature = c(x = "SummarizedExperiment"),
 
 #' Agglomerate data based on population prevalence
 #' 
-#' @rdname agglomerateByPrevalence
+#' @name agglomerateByPrevalence
 #'  
 #' @inheritParams agglomerateByRank
 #' 
@@ -550,9 +522,7 @@ setMethod("getPrevalentAbundance", signature = c(x = "SummarizedExperiment"),
 #' assay(tse)[,1:5]
 #'
 #' @export
-setGeneric("agglomerateByPrevalence", signature = "x",
-    function(x, ...)
-    standardGeneric("agglomerateByPrevalence"))
+NULL
 
 #' @rdname agglomerateByPrevalence
 #' @export
