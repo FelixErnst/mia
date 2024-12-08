@@ -48,13 +48,13 @@ convertFromPhyloseq <- function(x) {
     
     rowData <- tryCatch(phyloseq::tax_table(x), error = function(e) NULL) |>
         data.frame() |> DataFrame()
-    if( is.null(rowData) ){
+    if( nrow(rowData) == 0L ){
         rowData <- S4Vectors::make_zero_col_DFrame(nrow(assays$counts))
         rownames(rowData) <- rownames(assays$counts)
     }
     colData <- tryCatch(phyloseq::sample_data(x), error = function(e) NULL) |>
         data.frame() |> DataFrame()
-    if( is.null(colData) ){
+    if( nrow(colData) == 0L ){
         colData <- S4Vectors::make_zero_col_DFrame(ncol(assays$counts))
         rownames(colData) <- colnames(assays$counts)
     }
