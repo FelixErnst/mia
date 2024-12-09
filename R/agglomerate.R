@@ -250,6 +250,8 @@ setMethod(
         }
         # Agglomerate data by using SCE method
         x <- callNextMethod(x, rank = rank, update.tree = update.tree, ...)
+        # Rename tree ndesto correspond the current rownames
+        x <- .rename_all_tree_nodes(x, by = 1L)
         return(x)
     }
 )
@@ -492,24 +494,36 @@ setMethod("agglomerateByVariable", signature = c(x = "SummarizedExperiment"),
             args <- list(x, links_temp, name, TRUE)
             names(args) <- args_names
             x <- do.call(subsetByLeaf, args)
-            # Rename nodes
-            x <- .rename_tree_nodes(x, name, by)
         }
+    }
+    # Rename all tree nodes
+    x <- .rename_all_tree_nodes(x, by)
+    return(x)
+}
+
+# This function loops through all trees and replace their node names by
+# corresponding feature / sample name found in data.
+.rename_all_tree_nodes <- function(x, by = 1L){
+    # Loop through tree names
+    tree_names_FUN <- switch(by, rowTreeNames, colTreeNames)
+    tree_names <- tree_names_FUN(x)
+    for( name in tree_names ){
+        # Rename nodes
+        x <- .rename_tree_nodes(x, name, by)
     }
     return(x)
 }
 
 # This function renames the nodes of tree based on the row/colnames of TreeSE so
 # that the names of nodes match with row/colnames.
-.rename_tree_nodes <- function(tse, tree.name, by = "row"){
-    #
-    by <- .check_MARGIN(by)
+.rename_tree_nodes <- function(tse, tree.name, by){
+    # Get correct functions based on MARGIN/by
     names_FUN <- switch(by, rownames, colnames)
     links_FUN <- switch(by, rowLinks, colLins)
     tree_FUN <- switch(by, rowTree, colTree)
     #
     # Get rowlinks for the tree
-    links <- links_FUN(tse)
+    links <- links_FUN(tse) |> DataFrame()
     links <- links[links[["whichTree"]] == tree.name, ]
     # The rownames must be unique in order to use them as names of the nodes.
     # Moreover, rows must have one-to-one matching.
@@ -522,6 +536,7 @@ setMethod("agglomerateByVariable", signature = c(x = "SummarizedExperiment"),
             # Get new labels
             new_labels <- links[
                 match(tree[["tip.label"]], links[["nodeLab"]]), ]
+            new_labels[["nodeLab"]] <- rownames(new_labels)
             missing <- is.na(new_labels[["nodeLab"]]) 
             new_labels[missing, "nodeLab"] <- tree[["tip.label"]][missing]
             # Rename
@@ -537,6 +552,7 @@ setMethod("agglomerateByVariable", signature = c(x = "SummarizedExperiment"),
             # Get new labels
             new_labels <- links[
                 match(tree[["node.label"]], links[["nodeLab"]]), ]
+            new_labels[["nodeLab"]] <- rownames(new_labels)
             missing <- is.na(new_labels[["nodeLab"]]) 
             new_labels[missing, "nodeLab"] <- tree[["node.label"]][missing]
             # Rename
