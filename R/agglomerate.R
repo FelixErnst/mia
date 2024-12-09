@@ -547,7 +547,7 @@ setMethod("agglomerateByVariable", signature = c(x = "SummarizedExperiment"),
             not_missing <- !is.na(new_labels[["nodeLab"]]) 
             links[not_missing, ] <- new_labels[not_missing, ]
         }
-        # Assing the tree back
+        # Assign the tree back
         args <- list(tse, tree, links[["nodeLab"]])
         names(args) <- c("x", paste0(
             ifelse(by == 1L, "row", "col"), c("Tree", "NodeLab")))
