@@ -26,7 +26,7 @@ agglomerateByRank(x, ...)
   rank = taxonomyRanks(x)[1],
   update.tree = agglomerateTree,
   agglomerate.tree = agglomerateTree,
-  agglomerateTree = FALSE,
+  agglomerateTree = TRUE,
   ...
 )
 
@@ -55,7 +55,7 @@ agglomerateByVariable(x, ...)
   group = f,
   f,
   update.tree = mergeTree,
-  mergeTree = FALSE,
+  mergeTree = TRUE,
   ...
 )
 
@@ -118,7 +118,7 @@ See \code{\link[=agglomerate-methods]{agglomerateByRank}} for more details.}
 value of \code{taxonomyRanks()} function.}
 
 \item{update.tree}{\code{Logical scalar}. Should
-\code{rowTree()} also be merged? (Default: \code{FALSE})}
+\code{rowTree()} also be merged? (Default: \code{TRUE})}
 
 \item{agglomerate.tree}{Deprecated. Use \code{update.tree} instead.}
 
@@ -266,9 +266,9 @@ x1 <- agglomerateByRank(GlobalPatterns, rank="Family")
 nrow(GlobalPatterns)
 nrow(x1)
 
-# agglomerate the tree as well
-x2 <- agglomerateByRank(GlobalPatterns, rank="Family",
-                       update.tree = TRUE)
+# Do not agglomerate the tree
+x2 <- agglomerateByRank(
+    GlobalPatterns, rank="Family", update.tree = FALSE)
 nrow(x2) # same number of rows, but
 rowTree(x1) # ... different
 rowTree(x2) # ... tree

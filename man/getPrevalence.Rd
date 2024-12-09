@@ -83,13 +83,13 @@ subsetByPrevalent(x, ...)
 
 \S4method{subsetByPrevalent}{SummarizedExperiment}(x, rank = NULL, ...)
 
-\S4method{subsetByPrevalent}{TreeSummarizedExperiment}(x, update.tree = FALSE, ...)
+\S4method{subsetByPrevalent}{TreeSummarizedExperiment}(x, update.tree = TRUE, ...)
 
 subsetByRare(x, ...)
 
 \S4method{subsetByRare}{SummarizedExperiment}(x, rank = NULL, ...)
 
-\S4method{subsetByRare}{TreeSummarizedExperiment}(x, update.tree = FALSE, ...)
+\S4method{subsetByRare}{TreeSummarizedExperiment}(x, update.tree = TRUE, ...)
 
 getPrevalentAbundance(
   x,
@@ -154,7 +154,7 @@ required prevalence is strictly greater by default. To include the
 limit, set \code{include.lowest} to \code{TRUE}.}
 
 \item{update.tree}{\code{Logical scalar}. Should
-\code{rowTree()} also be agglomerated? (Default: \code{FALSE})}
+\code{rowTree()} also be agglomerated? (Default: \code{TRUE})}
 }
 \value{
 \code{subsetPrevalent} and \code{subsetRareFeatures} return subset of

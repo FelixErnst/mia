@@ -69,7 +69,7 @@ test_that("agglomerate", {
     data(GlobalPatterns, package="mia")
     se <- GlobalPatterns
     actual <- agglomerateByRank(se, rank = "Family", 
-        ignore.taxonomy = FALSE, empty.rm = FALSE)
+        ignore.taxonomy = FALSE, empty.rm = FALSE, update.tree = FALSE)
     expect_equal(dim(actual),c(603,26))
     expect_equal(length(rowTree(actual)$tip.label),
                  length(rowTree(se)$tip.label))

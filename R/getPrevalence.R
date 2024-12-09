@@ -30,7 +30,7 @@
 #' (Default: \code{TRUE})
 #' 
 #' @param update.tree \code{Logical scalar}. Should
-#' \code{rowTree()} also be agglomerated? (Default: \code{FALSE})
+#' \code{rowTree()} also be agglomerated? (Default: \code{TRUE})
 #'
 #' @param ... additional arguments
 #' \itemize{
@@ -416,7 +416,7 @@ setMethod("subsetByPrevalent", signature = c(x = "SummarizedExperiment"),
 #' @rdname getPrevalence
 #' @export
 setMethod("subsetByPrevalent", signature = c(x = "TreeSummarizedExperiment"),
-    function(x, update.tree = FALSE, ...){
+    function(x, update.tree = TRUE, ...){
         # Check that update.tree is logical value
         if( !.is_a_bool(update.tree) ){
             stop("'update.tree' must be TRUE or FALSE.", call. = FALSE)
@@ -452,7 +452,7 @@ setMethod("subsetByRare", signature = c(x = "SummarizedExperiment"),
 #' @rdname getPrevalence
 #' @export
 setMethod("subsetByRare", signature = c(x = "TreeSummarizedExperiment"),
-    function(x, update.tree = FALSE, ...){
+    function(x, update.tree = TRUE, ...){
         # Check that update.tree is logical value
         if( !.is_a_bool(update.tree) ){
             stop("'update.tree' must be TRUE or FALSE.", call. = FALSE)
@@ -572,9 +572,11 @@ setMethod("agglomerateByPrevalence", signature = c(x = "SummarizedExperiment"),
         pr <- getPrevalent(x, rank = NULL, ...)
         f <- rownames(x) %in% pr
         if(any(!f)){
-            other_x <- agglomerateByVariable(x[!f,], by = "rows",
-                                            factor(rep(1L,sum(!f))),
-                                            check_assays = FALSE)
+            other_x <- agglomerateByVariable(
+                x[!f,], by = "rows",
+                factor(rep(1L,sum(!f))),
+                check_assays = FALSE,
+                update.tree = FALSE)
             rowData(other_x)[,colnames(rowData(other_x))] <- NA
             # set the other label
             rownames(other_x) <- other.name
@@ -592,7 +594,7 @@ setMethod("agglomerateByPrevalence", signature = c(x = "SummarizedExperiment"),
 setMethod("agglomerateByPrevalence", 
     signature = c(x = "TreeSummarizedExperiment"),
     function(x, rank = NULL, other.name = other_label, other_label = "Other",
-            update.tree = FALSE, ...){
+            update.tree = TRUE, ...){
         # input check
         if(!.is_a_bool(update.tree)){
             stop("'update.tree' must be TRUE or FALSE.", call. = FALSE)

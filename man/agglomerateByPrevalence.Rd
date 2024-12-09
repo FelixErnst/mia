@@ -21,7 +21,7 @@ agglomerateByPrevalence(x, ...)
   rank = NULL,
   other.name = other_label,
   other_label = "Other",
-  update.tree = FALSE,
+  update.tree = TRUE,
   ...
 )
 }
@@ -41,7 +41,7 @@ summary of non-prevalent taxa. (default: \code{"Other"})}
 \item{other_label}{Deprecated. use \code{other.name} instead.}
 
 \item{update.tree}{\code{Logical scalar}. Should
-\code{rowTree()} also be merged? (Default: \code{FALSE})}
+\code{rowTree()} also be merged? (Default: \code{TRUE})}
 }
 \value{
 \code{agglomerateByPrevalence} returns a taxonomically-agglomerated object
