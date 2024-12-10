@@ -396,12 +396,14 @@ test_that("agglomerateByPrevalence", {
     expect_s4_class(actual,class(GlobalPatterns))
     expect_equal(dim(actual),c(2,26))
 
-    actual <- agglomerateByPrevalence(GlobalPatterns,
-                                      rank = "Phylum",
-                                      detection = 1/100,
-                                      prevalence = 50/100,
-                                      as.relative = TRUE,
-                                      other.name = "test")
+    actual <- agglomerateByPrevalence(
+        GlobalPatterns,
+        rank = "Phylum",
+        detection = 1/100,
+        prevalence = 50/100,
+        as.relative = TRUE,
+        other.name = "test",
+        update.tree = FALSE)
     expect_s4_class(actual,class(GlobalPatterns))
     expect_equal(dim(actual),c(6,26))
     expect_equal(rowData(actual)[6,"Phylum"],"test")

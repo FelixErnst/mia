@@ -161,3 +161,4 @@ Changes in version 1.15.x
 + subsetBy*: added update.tree argument
 + agglomerateBy*: Add na.rm option for excluding NA counts
 + Added getPERMANOVA and addPERMANOVA functions to calculate PERMANOVA
++ update.tree = TRUE by default

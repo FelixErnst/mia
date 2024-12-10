@@ -23,15 +23,15 @@ splitOn(x, ...)
   group = f,
   f = NULL,
   update.tree = update_rowTree,
-  update_rowTree = FALSE,
+  update_rowTree = TRUE,
   ...
 )
 
 unsplitOn(x, ...)
 
-\S4method{unsplitOn}{list}(x, update.tree = update_rowTree, update_rowTree = FALSE, ...)
+\S4method{unsplitOn}{list}(x, update.tree = update_rowTree, update_rowTree = TRUE, ...)
 
-\S4method{unsplitOn}{SimpleList}(x, update.tree = update_rowTree, update_rowTree = FALSE, ...)
+\S4method{unsplitOn}{SimpleList}(x, update.tree = update_rowTree, update_rowTree = TRUE, ...)
 
 \S4method{unsplitOn}{SingleCellExperiment}(
   x,
@@ -67,9 +67,9 @@ returned unchanged. If \code{group} matches with both dimensions,
 \item{f}{Deprecated. Use \code{group} instead.}
 
 \item{update.tree}{\code{Logical scalar}. Should
-\code{rowTree()} also be merged? (Default: \code{FALSE})}
+\code{rowTree()} also be merged? (Default: \code{TRUE})}
 
-\item{update_rowTree}{Deprecated. Use \code{update.tree } instead.}
+\item{update_rowTree}{Deprecated. Use \code{update.tree} instead.}
 
 \item{altexp}{\code{Character vector}. Specify the alternative experiments
 to be unsplit. (Default: \code{names(altExps(x))})}
