@@ -513,7 +513,7 @@ setMethod("mergeSEs", signature = c(x = "list"),
     # Combine trees into single tree.
     tree <- .merge_trees(trees, links, ...)
     # Order links so that the order matches with TreeSE
-    links <- links[rownames(tse), ]
+    links <- links[match(rownames(tse), links[["names"]]), ]
     # Add the data in correct slot based on MARGIN
     args <- list(tse, tree, links[["nodeLab"]])
     arg_names <- switch(

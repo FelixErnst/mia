@@ -525,10 +525,11 @@ setMethod("agglomerateByVariable", signature = c(x = "SummarizedExperiment"),
     # Get rowlinks for the tree
     links <- links_FUN(tse) |> DataFrame()
     links <- links[links[["whichTree"]] == tree.name, ]
+    rownames(links) <- names_FUN(tse)
     # The rownames must be unique in order to use them as names of the nodes.
     # Moreover, rows must have one-to-one matching.
-    if( !any(duplicated(names_FUN(tse))) && nrow(links) > 0L &&
-            !any(duplicated(links[["nodeLab"]])) ){
+    if( !is.null(rownames(links)) && !anyDuplicated(rownames(links)) &&
+            nrow(links) > 0L && !anyDuplicated(links[["nodeLab"]]) ){
         # Get the tree
         tree <- tree_FUN(tse, tree.name)
         # Rename tips
