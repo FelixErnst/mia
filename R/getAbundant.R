@@ -13,7 +13,29 @@
 #' prevalence.
 #' 
 #' @details
-#' Abundant and rare taxa 
+#' Abundant and rare taxa.
+#' 
+#' \itemize{
+#'   \item Abundant taxa: Taxa with an average abundance exceeding
+#'   \code{abundant.th}.
+#'   
+#'   \item Low abundant / rare taxa: Taxa with an average abundance not
+#'   exceeding \code{abundant.th}. Optionally, if specified, they must also
+#'   satisfy the condition \eqn{condition.th >=
+#'   \frac{abundance_{max}}{abundance_{min}} > permanent.th}.
+#'   
+#'   \item Conditionally rare taxa CRT): Taxa with an average abundance not
+#'   exceeding \code{abundant.th} and with a maximum-to-minimum abundance ratio
+#'   (\eqn{\frac{abundance_{max}}{abundance_{min}}}) greater than
+#'   \code{condition.th}.
+#'   
+#'   \item Permanently rare taxa (PRT): Taxa with an average abundance not
+#'   exceeding \code{abundant.th} and with a maximum-to-minimum abundance ratio
+#'   (\eqn{\frac{abundance_{max}}{abundance_{min}}}) less than or equal to
+#'   \code{permanent.th}.
+#' }
+#' 
+#' 
 #' 
 #' @return
 #' Vector of taxa.
@@ -42,7 +64,7 @@
 #' abundant <- getAbundant(tse, assay.type = "relabundance")
 #' abundant |> head()
 #' 
-#' # Get all rare taxa that have average relartive abundance below 10%
+#' # Get all rare taxa that have average relative abundance below 10%
 #' rare <- getLowAbundant(tse, assay.type = "relabundance", abundance.th = 10/100)
 #' rare |> head()
 #' 
