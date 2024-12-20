@@ -48,8 +48,8 @@ replacement (\code{replace=TRUE}).
 See \code{\link[phyloseq:rarefy_even_depth]{phyloseq::rarefy_even_depth}}
 for details on implications of this parameter. (Default: \code{TRUE})}
 
-\item{name}{\code{Character scalar}. A name for the column of the
-\code{colData} where results will be stored. (Default: \code{"method"})}
+\item{name}{\code{Character scalar}. The name for the transformed assay to
+be stored. (Default: \code{method})}
 
 \item{verbose}{\code{Logical scalar}. Choose whether to show messages.
 (Default: \code{TRUE})}
