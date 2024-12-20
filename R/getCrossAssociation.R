@@ -197,7 +197,6 @@
 #'     mae[[1]], mae[[1]], by = 2, paired = FALSE,
 #'     association.fun = getDissimilarity, method = "bray")
 #'                                         
-#' 
 #' # If experiments are equal and measure is symmetric
 #' # (e.g., taxa1 vs taxa2 == taxa2 vs taxa1),
 #' # it is possible to speed-up calculations by calculating association only
@@ -227,6 +226,21 @@
 #'     mae[[1]], assay.type1 = "counts", 
 #'     col.var2 = c("shannon_diversity", "coverage_diversity"),
 #'     test.signif = TRUE)
+#' 
+#' # If your data contains TreeSE with alternative experiment in altExp,
+#' # correlations can be calculated as follows.
+#' 
+#' # Create TreeSE with altExp
+#' tse <- mae[[1]]
+#' altExp(tse, "metabolites") <- mae[[2]]
+#' # Calculate
+#' res <- getCrossAssociation(
+#'     tse,
+#'     altexp2 = "metabolites",
+#'     assay.type1 = "rclr",
+#'     assay.type2 = "nmr"
+#' )
+#' 
 #'                                         
 NULL
 
