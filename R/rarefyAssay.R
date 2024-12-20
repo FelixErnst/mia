@@ -151,7 +151,7 @@ setMethod("rarefyAssay", signature = c(x = "SummarizedExperiment"),
         if( verbose && any(!feat_inc) ){
             message(
                 sum(!feat_inc), " features removed because they are not ",
-                "present in all samples after subsampling."
+                "present in any of the samples after subsampling."
                 )
         }
         # Subset the TreeSE based on new feature-set
