@@ -134,9 +134,9 @@ tse <- transformAssay(tse, method = "relabundance")
 # The target of transformation can be specified with "assay.type"
 # Pseudocount can be added by specifying 'pseudocount'.
 
-# Perform CLR with smallest positive value as pseudocount
+# Perform CLR with half of the smallest positive value as pseudocount
 tse <- transformAssay(
-    tse, assay.type = "relabundance", method = "clr", 
+    tse, assay.type = "counts", method = "clr", 
     pseudocount = TRUE
     )
                       
