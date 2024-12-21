@@ -21,8 +21,8 @@
 #'   Alternatively, a user-specified numeric value can be added as pseudocount.
 #'   (Default: \code{FALSE}).
 #' 
-#' @param name \code{Character scalar}. A name for the column of the 
-#'   \code{colData} where results will be stored. (Default: \code{"method"})
+#' @param name \code{Character scalar}. The name for the transformed assay to
+#' be stored. (Default: \code{method})
 #'   
 #' @param altexp \code{Character vector} or \code{NULL}. Specifies the names 
 #' of alternative experiments to which the transformation should also be 
@@ -115,9 +115,9 @@
 #' # The target of transformation can be specified with "assay.type"
 #' # Pseudocount can be added by specifying 'pseudocount'.
 #' 
-#' # Perform CLR with smallest positive value as pseudocount
+#' # Perform CLR with half of the smallest positive value as pseudocount
 #' tse <- transformAssay(
-#'     tse, assay.type = "relabundance", method = "clr", 
+#'     tse, assay.type = "counts", method = "clr", 
 #'     pseudocount = TRUE
 #'     )
 #'                       

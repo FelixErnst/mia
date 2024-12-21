@@ -58,8 +58,8 @@ method.}
 transformation is applied sample (column) or feature (row) wise.
 (Default: \code{"samples"})}
 
-\item{name}{\code{Character scalar}. A name for the column of the
-\code{colData} where results will be stored. (Default: \code{"method"})}
+\item{name}{\code{Character scalar}. The name for the transformed assay to
+be stored. (Default: \code{method})}
 
 \item{pseudocount}{\code{Logical scalar} or \code{numeric scalar}.
 When \code{TRUE}, automatically adds half of the minimum positive
@@ -134,9 +134,9 @@ tse <- transformAssay(tse, method = "relabundance")
 # The target of transformation can be specified with "assay.type"
 # Pseudocount can be added by specifying 'pseudocount'.
 
-# Perform CLR with smallest positive value as pseudocount
+# Perform CLR with half of the smallest positive value as pseudocount
 tse <- transformAssay(
-    tse, assay.type = "relabundance", method = "clr", 
+    tse, assay.type = "counts", method = "clr", 
     pseudocount = TRUE
     )
                       
