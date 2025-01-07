@@ -172,6 +172,27 @@ NULL
 
 #' @rdname getPrevalence
 #' @export
+setGeneric("addPrevalence", signature = "x", function(x, ...)
+    standardGeneric("addPrevalence"))
+
+#' @rdname getPrevalence
+#' @export
+setMethod("addPrevalence", signature = c(x = "SummarizedExperiment"),
+    function(x, name = "prevalence", ...){
+        # Sorting is disabled as it messes up the order of taxa
+        args <- c(list(x = x), list(...))
+        args <- args[ !names(args) %in% c("sort") ]
+        # Calculate
+        res <- do.call(getPrevalence, args)
+        # Add results to rowData
+        res <- list(res)
+        x <- .add_values_to_colData(x, res, name, MARGIN = 1)
+        return(x)
+    }
+)
+
+#' @rdname getPrevalence
+#' @export
 setGeneric("getPrevalence", signature = "x",
     function(x, ...)
     standardGeneric("getPrevalence"))
