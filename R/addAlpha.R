@@ -435,25 +435,32 @@ NULL
 #' @export
 setGeneric(
     "addAlpha", signature = c("x"),
-    function(
-        x, assay.type = "counts", 
-        index = c(
-            "coverage_diversity", "fisher_diversity", "faith_diversity",
-            "gini_simpson_diversity", "inverse_simpson_diversity",
-            "log_modulo_skewness_diversity", "shannon_diversity",
-            "absolute_dominance", "dbp_dominance",
-            "core_abundance_dominance", "gini_dominance",
-            "dmn_dominance", "relative_dominance",
-            "simpson_lambda_dominance", "camargo_evenness",
-            "pielou_evenness", "simpson_evenness",
-            "evar_evenness", "bulla_evenness", "ace_richness",
-            "chao1_richness", "hill_richness", "observed_richness"),
-        name = index, niter = NULL, ...)
+    function(x, ...)
     standardGeneric("addAlpha"))
 
 #' @rdname addAlpha
 #' @export
 setMethod("addAlpha", signature = c(x = "SummarizedExperiment"),
+    function(x, ...){
+        # Hiddenly support altExp
+        x <- .check_and_get_altExp(x, ...)
+        # Calculate indices
+        args <- c(list(x = x), list(...))
+        args <- args[ !names(args) %in% c("altexp") ]
+        res <- do.call(getAlpha, args)
+        # Add them to colData
+        name <- colnames(res)
+        res <- as.list(res)
+        res <- unname(res)
+        x <- .add_values_to_colData(x, res, name)
+        return(x)
+    }
+)
+
+#' @rdname addAlpha
+#' @export
+setGeneric(
+    "getAlpha", signature = c("x"),
     function(
         x, assay.type = "counts", 
         index = c(
@@ -467,8 +474,32 @@ setMethod("addAlpha", signature = c(x = "SummarizedExperiment"),
             "pielou_evenness", "simpson_evenness",
             "evar_evenness", "bulla_evenness", "ace_richness",
             "chao1_richness", "hill_richness", "observed_richness"),
-        name = index, niter = NULL, ...){
+        name = index, niter = NULL, BPPARAM = SerialParam(), ...)
+    standardGeneric("getAlpha"))
+
+#' @rdname addAlpha
+#' @importFrom BiocParallel bplapply
+#' @export
+setMethod("getAlpha", signature = c(x = "SummarizedExperiment"),
+    function(
+        x, assay.type = "counts", 
+        index = c(
+            "coverage_diversity", "fisher_diversity", "faith_diversity",
+            "gini_simpson_diversity", "inverse_simpson_diversity",
+            "log_modulo_skewness_diversity", "shannon_diversity",
+            "absolute_dominance", "dbp_dominance",
+            "core_abundance_dominance", "gini_dominance",
+            "dmn_dominance", "relative_dominance",
+            "simpson_lambda_dominance", "camargo_evenness",
+            "pielou_evenness", "simpson_evenness",
+            "evar_evenness", "bulla_evenness", "ace_richness",
+            "chao1_richness", "hill_richness", "observed_richness"),
+        name = index, niter = NULL, BPPARAM = SerialParam(), ...){
         ############################## Input check #############################
+        # Support altExp hiddenly
+        x <- .check_and_get_altExp(x, ...)
+        # Check assay.type
+        .check_assay_present(assay.type, x)
         # Check that index is a character vector
         if( !.is_non_empty_character(index) ){
             stop("'index' should be a character vector.", call. = FALSE)
@@ -481,40 +512,38 @@ setMethod("addAlpha", signature = c(x = "SummarizedExperiment"),
                 "same length than 'index'.",
                 call. = FALSE)
         }
-        # Check n.tier
+        # Check niter
         if( !(is.null(niter) || (.is_an_integer(niter) && niter >= 0)) ){
             stop("'niter' must be NULL or an integer.", call. = FALSE)
         }
         # Check if index exists. For each index input, detect it and get
         # information (e.g. internal function) to calculate the index.
         index <- .get_indices(index, name, x, assay.type, ...)
-
         ############################ Input check end ###########################
-        # Looping over the vector of indices to be estimated
-        for( i in seq_len(nrow(index)) ){
+        # Looping over the data.frame of indices to be estimated
+        res <- bplapply(index, function(ind){
             # Performing rarefaction if sample is specified
             if( !is.null(niter) && niter > 0 ){
-                x <- .alpha_rarefaction(
-                    x, assay.type = assay.type, niter = niter,
-                    FUN = index[i, "FUN"], index = index[i, "index"],
-                    name = index[i, "name"], ...)
+                temp <- .alpha_rarefaction(
+                    x, assay.type, ind[[1]], ind[[6]], niter, BPPARAM, ...)
             } else {
                 # Estimate index without rarefaction
-                args <- c(
-                    list(x, assay.type = assay.type, index = index[i, "index"],
-                        name = index[i, "name"]), list(...))
-                x <- do.call(index[i, "FUN"], args = args)
+                temp <- .calculate_alpha(x, assay.type, ind[[1]], ind[[6]], ...)
             }
-        }
-        return(x)
+            return(temp)
+            
+        }, BPPARAM = BPPARAM)
+        # Combine results into single DF
+        res <- do.call(cbind, res)
+        res <- DataFrame(res)
+        return(res)
     }
 )
 
 ################################ HELP FUNCTIONS ################################
 
 # Search alpha diversity index that user wants to calculate.
-
-.get_indices <- function(index, name, x, assay.type, tree = NULL,...){
+.get_indices <- function(index, name, x, assay.type, tree = NULL, ...){
     # Initialize list for supported indices
     supported <- list()
     # Supported diversity indices
@@ -524,7 +553,6 @@ setMethod("addAlpha", signature = c(x = "SummarizedExperiment"),
     temp <- data.frame(index = temp)
     temp[["measure"]] <- "diversity"
     temp[["index_long"]] <- paste0(temp[["index"]], "_", temp[["measure"]])
-    temp[["FUN"]] <- ".estimate_diversity"
     temp[["non_neg"]] <- c(TRUE, TRUE, TRUE, FALSE, FALSE, FALSE, FALSE)
     supported[["diversity"]] <- temp
     # Supported dominance indices
@@ -534,7 +562,6 @@ setMethod("addAlpha", signature = c(x = "SummarizedExperiment"),
     temp <- data.frame(index = temp)
     temp[["measure"]] <- "dominance"
     temp[["index_long"]] <- paste0(temp[["index"]], "_", temp[["measure"]])
-    temp[["FUN"]] <- ".estimate_dominance"
     temp[["non_neg"]] <- c(FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE)
     supported[["dominance"]] <- temp
     # Supported evenness indices
@@ -543,7 +570,6 @@ setMethod("addAlpha", signature = c(x = "SummarizedExperiment"),
     temp <- data.frame(index = temp)
     temp[["measure"]] <- "evenness"
     temp[["index_long"]] <- paste0(temp[["index"]], "_", temp[["measure"]])
-    temp[["FUN"]] <- ".estimate_evenness"
     temp[["non_neg"]] <- c(FALSE, FALSE, FALSE, FALSE, FALSE)
     supported[["eveness"]] <- temp
     # Supported richness indices
@@ -552,7 +578,6 @@ setMethod("addAlpha", signature = c(x = "SummarizedExperiment"),
     temp <- data.frame(index = temp)
     temp[["measure"]] <- "richness"
     temp[["index_long"]] <- paste0(temp[["index"]], "_", temp[["measure"]])
-    temp[["FUN"]] <- ".estimate_richness"
     temp[["non_neg"]] <- c(FALSE, FALSE, FALSE, FALSE)
     supported[["richness"]] <- temp
     # Combine
@@ -601,34 +626,36 @@ setMethod("addAlpha", signature = c(x = "SummarizedExperiment"),
                 call. = FALSE)
         }
     }
+    # The result is a data.frame where each column represent single index to be
+    # estimated. Rows include the name of index and other information.
+    detected <- as.data.frame( t(detected) )
     return(detected)
 }
 
 # This function rarifies the data niter of times and calculates index for the
 # rarified data. The result is a mean of the iterations.
-#' @importFrom DelayedMatrixStats colMeans2
-.alpha_rarefaction <- function(
-        x, assay.type, niter, FUN, index, name, ...){
-    # Calculating the mean of the subsampled alpha estimates ans storing them
-    res <- lapply(seq(niter), function(i){
-        # Subsampling the counts from the original TreeSE object.
+#' @importFrom DelayedMatrixStats rowMeans2
+#' @importFrom BiocParallel bplapply
+.alpha_rarefaction <- function(x, assay.type, index, name, niter, BPPARAM, ...){
+    # Subsample the data and then calculate index based on the rarified data
+    res <- bplapply(seq(niter), function(i){
         x_sub <- rarefyAssay(x, assay.type = assay.type, verbose = FALSE, ...)
-        # Calculating the diversity indices on the subsampled object
-        x_sub <- do.call(FUN, args = list(
-            x_sub, assay.type = assay.type, index = index,
-            name = "rarefaction_temp_result", list(...)))
-        # Get results as a vector from colData
-        temp <- colData(x_sub)[["rarefaction_temp_result"]]
-        names(temp) <- colnames(x_sub)
+        temp <- .calculate_alpha(x_sub, assay.type, index, name, ...)
         return(temp)
-    })
-    # Combine list of vectors from multiple iterations
+    }, BPPARAM = BPPARAM)
+    # Combine list of matrixed from multiple iterations
     res <- do.call(rbind, res)
-    # Calculate mean of iterations
-    res <- colMeans2(res)
+    cnames <- colnames(res)
+    # There might be multiple indices; for instance chao1 has 2 values. For
+    # every index calculate mean for each sample.
+    res <- lapply(cnames, function(cname){
+        rowMeans2(res[, cname, drop = FALSE])
+    })
+    names(res) <- cnames
+    res <- do.call(cbind, res)
     # Give warning about missing samples. Same might have been dropped during
     # rarefaction leading to missing values for dropped samples.
-    if( !all(colnames(x) %in% names(res)) ){
+    if( !all(colnames(x) %in% rownames(res)) ){
         warning(
             "Some samples were dropped during rarefaction leading to missing ",
             "diversity values. Consider lower 'sample'.", call. = FALSE)
@@ -636,10 +663,48 @@ setMethod("addAlpha", signature = c(x = "SummarizedExperiment"),
     # It might be that certain samples were dropped off if they have lower
     # abundance than rarefaction  depth --> order so that data includes all the
     # samples
-    res <- res[match(colnames(x), names(res))]
-    res <- unname(res)
-    # Add to original data. The data must be in a list.
-    res <- list(res)
-    x <- .add_values_to_colData(x, res, name)
-    return(x)
+    res <- res[match(colnames(x), rownames(res)), , drop = FALSE]
+    return(res)
+}
+
+# This function is helper function that calls the specific functions that
+# calculate indices.
+.calculate_alpha <- function(x, assay.type, index, name, ...){
+    # Get abundance matrix
+    mat <- assay(x, assay.type)
+    # Get correct function based on index
+    FUN <- switch(index,
+        shannon = .calc_shannon,
+        gini_simpson = .calc_gini_simpson,
+        inverse_simpson = .calc_inverse_simpson,
+        coverage = .calc_coverage,
+        fisher = .calc_fisher,
+        faith = .estimate_faith,
+        log_modulo_skewness = .calc_log_modulo_skewness,
+        #
+        simpson_lambda = .simpson_lambda,
+        core_abundance = .calc_core_dominance,
+        gini = .calc_gini_dominance,
+        absolute = .calc_dominance,
+        relative = .calc_dominance,
+        dbp = .calc_dominance,
+        dmn = .calc_dominance,
+        #
+        camargo = .calc_camargo_evenness,
+        pielou = .calc_pielou_evenness,
+        simpson = .calc_simpson_evenness,
+        evar = .calc_evar_evenness,
+        bulla = .calc_bulla_evenness,
+        #
+        observed = .calc_observed,
+        chao1 = .calc_chao1,
+        ace = .calc_ace,
+        hill = .calc_hill
+    )
+    # Calculate values, create matrix where column represent index and rows
+    # samples, and add name for the index
+    res <- FUN(x = x, mat = mat, index = index, ...)
+    res <- as.matrix(res)
+    colnames(res) <- paste0(name, colnames(res))
+    return(res)
 }

@@ -215,8 +215,10 @@ NULL
     return(x)
 }
 
-.calc_observed <- function(mat, detection, ...){
-    # vegan::estimateR(t(mat))["S.obs",]
+.calc_observed <- function(mat, detection = 0, ...){
+    if( !.is_a_numeric(detection) ){
+        stop("'detection' must be numeric value.", call. = FALSE)
+    }
     colSums(mat > detection)
 }
 
@@ -227,7 +229,7 @@ NULL
     }
 
     ans <- t(vegan::estimateR(t(mat))[c("S.chao1","se.chao1"),])
-    colnames(ans) <- c("","se")
+    colnames(ans) <- c("", "_se")
     ans
 }
 
@@ -238,7 +240,7 @@ NULL
     }
 
     ans <- t(vegan::estimateR(t(mat))[c("S.ACE","se.ACE"),])
-    colnames(ans) <- c("","se")
+    colnames(ans) <- c("", "_se")
     ans
 }
 
