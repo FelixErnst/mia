@@ -375,6 +375,8 @@ setMethod("getCrossAssociation", signature = "SummarizedExperiment",
         altexp2 = NULL,
         col.var1 = colData_variable1, colData_variable1 = NULL,
         col.var2 = colData_variable2, colData_variable2 = NULL,
+        dimred1 = NULL,
+        dimred2 = NULL,
         by = 1,
         method = c("kendall", "spearman", "categorical", "pearson"),
         mode = c("table", "matrix"),
@@ -403,15 +405,27 @@ setMethod("getCrossAssociation", signature = "SummarizedExperiment",
     # Check and fetch tse objects
     tse1 <- .check_and_get_altExp(tse1, altexp1)
     tse2 <- .check_and_get_altExp(tse2, altexp2)
-    # If variables from coldata are specified check them. Otherwise,
-    # check assay.type1
+    # There are 3 options, from where the values are fetched. First option, that
+    # takes the precedence, is the column metadata variables. Second option
+    # is the dimension reduction results. The third option is the default
+    # default choice, i.e., abundance table.
+    if( !is.null(col.var1) && !is.null(dimred1) ){
+        stop("Specify either 'col.var1' or 'dimred1'.", call. = FALSE)
+    }
+    if( !is.null(col.var2) && !is.null(dimred2) ){
+        stop("Specify either 'col.var2' or 'dimred2'.", call. = FALSE)
+    }
     if( !is.null(col.var1) ){
         tse1 <- .check_and_subset_colData_variables(tse1, col.var1)
+    } else if( !is.null(dimred1) ){
+        .check_dimred_present(dimred1, tse1)
     } else{
         .check_assay_present(assay.type1, tse1)
     }
     if( !is.null(col.var2) ){
         tse2 <- .check_and_subset_colData_variables(tse2, col.var2)
+    } else if( !is.null(dimred2) ){
+        .check_dimred_present(dimred2, tse2)
     } else{
         .check_assay_present(assay.type2, tse2)
     }
@@ -462,21 +476,30 @@ setMethod("getCrossAssociation", signature = "SummarizedExperiment",
         stop("'paired' must be a boolean value.", call. = FALSE)
     }
     ############################ INPUT CHECK END ###########################
-    # Fetch assays to correlate, if variables from coldata are specified, take 
-    # coldata, otherwise take assay
+    # Fetch assays to correlate, if variables from coldata or reducedDim are
+    # specified, take them from corresponding slot, otherwise take assay
     if( !is.null(col.var1) ){
         assay1 <- colData(tse1)
-        assay1 <- as.matrix(assay1)
-        assay1 <- t(assay1)
+    } else if( !is.null(dimred1) ){
+        assay1 <- reducedDim(tse1, dimred1)
     } else{
         assay1 <- assay(tse1, assay.type1)
     }
+    if( !is.null(col.var1) || !is.null(dimred1) ){
+        assay1 <- as.matrix(assay1)
+        assay1 <- t(assay1)
+    }
+    # Same for second table
     if( !is.null(col.var2) ){
         assay2 <- colData(tse2)
-        assay2 <- as.matrix(assay2)
-        assay2 <- t(assay2)
+    } else if( !is.null(dimred2) ){
+        assay2 <- reducedDim(tse2, dimred2)
     } else{
         assay2 <- assay(tse2, assay.type2)
+    }
+    if( !is.null(col.var2) || !is.null(dimred2) ){
+        assay2 <- as.matrix(assay2)
+        assay2 <- t(assay2)
     }
     # Transposes tables to right format, if row is specified
     if( by == 1 ){
@@ -734,7 +757,8 @@ setMethod("getCrossAssociation", signature = "SummarizedExperiment",
 # vice versa
 .check_that_assays_match <- function(assay1, assay2, MARGIN){
     names <- ifelse(MARGIN == 2, "Features", "Samples")
-    if( any(rownames(assay1) != rownames(assay2)) ){
+    if( nrow(assay1) != nrow(assay2) ||
+            any(rownames(assay1) != rownames(assay2)) ){
         stop(names, " must match between experiments.", call. = FALSE)
     }
 }
