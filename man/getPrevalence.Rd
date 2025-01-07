@@ -2,6 +2,8 @@
 % Please edit documentation in R/getPrevalence.R
 \name{getPrevalence}
 \alias{getPrevalence}
+\alias{addPrevalence}
+\alias{addPrevalence,SummarizedExperiment-method}
 \alias{getPrevalence,ANY-method}
 \alias{getPrevalence,SummarizedExperiment-method}
 \alias{getPrevalent}
@@ -21,6 +23,10 @@
 \alias{getPrevalentAbundance,SummarizedExperiment-method}
 \title{Calculation prevalence information for features across samples}
 \usage{
+addPrevalence(x, ...)
+
+\S4method{addPrevalence}{SummarizedExperiment}(x, name = "prevalence", ...)
+
 getPrevalence(x, ...)
 
 \S4method{getPrevalence}{ANY}(
@@ -123,6 +129,9 @@ and \code{subsetByRare} additional parameters passed to
 \item for \code{getPrevalentAbundance} additional parameters passed to
 \code{getPrevalent}
 }}
+
+\item{name}{\code{Character scalar}. The name to be used to store the result
+in metadata of the output. (Default: \code{method})}
 
 \item{detection}{\code{Numeric scalar}. Detection threshold for
 absence/presence. If \code{as_relative = FALSE},
