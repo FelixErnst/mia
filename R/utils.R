@@ -157,6 +157,18 @@
     }
 }
 
+# Check whether dimred is present in tse
+.check_dimred_present <- function(dimred, x){
+    specifies_index <- .is_integer(dimred) && dimred > 0 &&
+        dimred <= length(reducedDims(x))
+    specifies_name <- .is_a_string(dimred) && dimred %in% reducedDimNames(x)
+    if( !specifies_index && !specifies_name ){
+        stop("'dimred' must specify name or index from reducedDims(x).",
+             call. = FALSE)
+    }
+    return(NULL)
+}
+
 # Check MARGIN parameters. Should be defining rows or columns.
 .check_MARGIN <- function(MARGIN, name = .get_name_in_parent(MARGIN)) {
     # MARGIN must be one of the following options
