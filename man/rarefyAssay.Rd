@@ -10,10 +10,9 @@ rarefyAssay(
   assay.type = assay_name,
   assay_name = "counts",
   sample = min_size,
-  min_size = min(colSums2(assay(x))),
-  replace = TRUE,
+  min_size = min(colSums2(assay(x, assay.type))),
+  replace = FALSE,
   name = "subsampled",
-  verbose = TRUE,
   ...
 )
 
@@ -23,9 +22,8 @@ rarefyAssay(
   assay_name = "counts",
   sample = min_size,
   min_size = min(colSums2(assay(x, assay.type))),
-  replace = TRUE,
+  replace = FALSE,
   name = "subsampled",
-  verbose = TRUE,
   ...
 )
 }
@@ -43,18 +41,18 @@ counts found in a sample or a user specified number.}
 
 \item{min_size}{Deprecated. Use \code{sample} instead.}
 
-\item{replace}{\code{Logical scalar}. The default is with
-replacement (\code{replace=TRUE}).
-See \code{\link[phyloseq:rarefy_even_depth]{phyloseq::rarefy_even_depth}}
-for details on implications of this parameter. (Default: \code{TRUE})}
+\item{replace}{\code{Logical scalar}. Whether to åperform subsampling with
+replacement. Ths works similarly to \code{sample(..., replace = TRUE)}.
+(Default: \code{FALSE})}
 
 \item{name}{\code{Character scalar}. A name for the column of the
 \code{colData} where results will be stored. (Default: \code{"method"})}
 
-\item{verbose}{\code{Logical scalar}. Choose whether to show messages.
-(Default: \code{TRUE})}
-
-\item{...}{additional arguments not used}
+\item{...}{optional arguments:
+\itemize{
+\item \code{verbose}: \code{Logical scalar}. Choose whether to show
+messages. (Default: \code{TRUE})
+}}
 }
 \value{
 \code{rarefyAssay} return \code{x} with subsampled data.
@@ -66,18 +64,24 @@ for details on implications of this parameter. (Default: \code{TRUE})}
 subsampled assay.
 }
 \details{
-Although the subsampling approach is highly debated in microbiome research,
-we include the \code{rarefyAssay} function because there may be some
+Although the subsampling approach is highly debated in microbiome research, 
+we include the \code{rarefyAssay} function because there may be some 
 instances where it can be useful.
-Note that the output of \code{rarefyAssay} is not the equivalent as the
+Note that the output of \code{rarefyAssay} is not the equivalent as the 
 input and any result have to be verified with the original dataset.
 
 Subsampling/Rarefying may undermine downstream analyses and have unintended
 consequences. Therefore, make sure this normalization is appropriate for
 your data.
 
-To maintain the reproducibility, please define the seed using set.seed()
+To maintain the reproducibility, please define the seed using set.seed() 
 before implement this function.
+
+When \code{replace = FALSE}, the function uses internally
+\code{vegan::rarefy} while with replacement enabled the function utilizes
+own implementation, inspired by \code{phyloseq::rarefy_even_depth}.
+
+#
 }
 \examples{
 # When samples in TreeSE are less than specified sample, they will be removed.
@@ -104,4 +108,10 @@ Weiss S, Xu ZZ, Peddada S, Amir A, Bittinger K, Gonzalez A, Lozupone C,
 Zaneveld JR, Vázquez-Baeza Y, Birmingham A, Hyde ER. Normalization and
 microbial differential abundance strategies depend upon data characteristics.
 Microbiome. 2017 Dec;5(1):1-8.
+}
+\seealso{
+\itemize{
+\item \code{\link[vegan:rrarefy]{vegan::rrarefy}}
+\item \code{\link[phyloseq:rarefy_even_depth]{phyloseq::rarefy_even_depth}}
+}
 }
