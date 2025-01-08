@@ -643,7 +643,7 @@ setMethod("getAlpha", signature = c(x = "SummarizedExperiment"),
         temp <- .calculate_alpha(x_sub, "subsampled", index, name, ...)
         return(temp)
     }, BPPARAM = BPPARAM)
-    # Combine list of matrixed from multiple iterations
+    # Combine list of matrices from multiple iterations
     res <- do.call(rbind, res)
     cnames <- colnames(res)
     # There might be multiple indices; for instance chao1 has 2 values. For
