@@ -63,9 +63,6 @@ taxonomy information along with OTU number matches.
 
 \item{collapse_features}{Deprecated. Use \code{collapse.rows} instead.}
 
-\item{verbose}{\code{Logical scalar}. Choose whether to show messages.
-(Default: \code{TRUE})}
-
 \item{y}{a \code{\link{SummarizedExperiment}} object when \code{x} is a
 \code{\link{SummarizedExperiment}} object. Disabled when \code{x} is a list.}
 }

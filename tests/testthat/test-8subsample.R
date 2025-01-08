@@ -36,28 +36,34 @@ test_that("rarefyAssay", {
     expect_equal(unname(colSums2(assay(tse.subsampled, "subsampled"))), expColSums)
     
     # When replace = FALSE
+    sample <- 60000
     seed = 1938
     set.seed(seed)
     tse.subsampled.rp <- rarefyAssay(
         GlobalPatterns, 
-        sample = 60000, 
+        sample = sample, 
         name = "subsampled",
         replace = FALSE)
     
     # check number of features removed is correct
-    expnFeaturesRemovedRp <- 6731
-    obsnFeaturesRemovedRp <- nrow(GlobalPatterns) - nrow(tse.subsampled.rp)
-    expect_equal(obsnFeaturesRemovedRp, expnFeaturesRemovedRp)
+    set.seed(seed)
+    mat <- assay(GlobalPatterns, "counts")
+    # When replace = FALSE, the function utilize vegan::rrarefy
+    suppressWarnings(
+    sub_mat <- t( vegan::rrarefy(t(mat), sample = sample) )
+    )
+    # The function removes those samples whose library size is lower than
+    # 'sample'
+    sub_mat <- sub_mat[, colSums(mat) > sample]
+    # Moreover, it removes those features that are not present in any of the
+    # samples
+    sub_mat <- sub_mat[rowSums(sub_mat) > 0, ]
+    expect_equal(assay(tse.subsampled.rp, "subsampled"), sub_mat, check.attributes = FALSE)
     
     # check if all samples subsampled to even depth
-    expColSumsRp <- rep(60000, 25)
+    expColSumsRp <- rep(sample, 25)
     expect_equal(unname(colSums2(assay(tse.subsampled.rp, "subsampled"))), expColSumsRp)
     
     # check if same Features removed
-    obsFeaturesRemovedRp <- rownames(GlobalPatterns)[!rownames(GlobalPatterns) %in% rownames(tse.subsampled.rp)]
-    
-    expFeaturesRemovedRP <- c("522457","951","586076","244960","215972",
-                              "31759","30678","138353","406058","1126")
-    
-    expect_equal(obsFeaturesRemovedRp[1:10], expFeaturesRemovedRP)
+    expect_true( all(rownames(tse.subsampled.rp) == rownames(sub_mat)) )
 })
