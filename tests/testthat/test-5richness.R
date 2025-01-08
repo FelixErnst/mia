@@ -5,8 +5,9 @@ test_that(".estimate_richness", {
 
     skip_if_not(requireNamespace("vegan", quietly = TRUE))
     data(esophagus, package="mia")
-
-    tse <- .estimate_richness(esophagus, detection = 1)
+    
+    indices <- c("ace", "chao1", "hill", "observed")
+    tse <- addAlpha(esophagus, index = indices, detection = 1)
     cd <- colData(tse)    
     expect_equal(unname(round(cd$observed, 0)), c(15, 24, 16))
     # These are unaffected by detection parameter
@@ -17,7 +18,7 @@ test_that(".estimate_richness", {
     test_internal_.estimate_richness <- function(tse){
 
         # Calculate all indices.
-        tse_idx <- .estimate_richness(tse)
+        tse_idx <- addAlpha(tse, index = indices)
 
         # Check that the type of output is the same as the type of input.
         expect_true(typeof(tse_idx) == typeof(tse))
@@ -31,10 +32,10 @@ test_that(".estimate_richness", {
             c("ace", "ace_se", "chao1", "chao1_se", "hill", "observed"))
 
         # Delete colData
-	colData(tse_idx) <- NULL
+	    colData(tse_idx) <- NULL
 
         # Calculate all indices with specified names
-        tse_idx <- .estimate_richness(tse,
+        tse_idx <- addAlpha(tse,
 	    index = c("observed", "chao1", "ace", "hill"),
 	    name = c("Observed", "Chao1", "ACE", "Hill")
 	    )

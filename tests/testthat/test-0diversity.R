@@ -9,7 +9,7 @@ test_that("diversity estimates", {
     indices <- c("coverage", "fisher", "gini_simpson", "faith",
                  "inverse_simpson", "log_modulo_skewness",
                  "shannon")
-    tse_idx <- .estimate_diversity(tse, index = indices, threshold = 0.473)
+    tse_idx <- addAlpha(tse, index = indices, threshold = 0.473)
 
     # Checks that the type of output is the same as the type of input.
     expect_true(typeof(tse_idx) == typeof(tse))
@@ -43,7 +43,7 @@ test_that("diversity estimates", {
     
     # Tests that 'quantile' and 'nclasses' are working
     expect_equal(unname(round(colData(
-        .estimate_diversity(
+        addAlpha(
             tse, index="log_modulo_skewness", quantile=0.855,nclasses=32)
         )$log_modulo_skewness, 6)), c(1.814770, 1.756495, 1.842704))
     
@@ -121,16 +121,16 @@ test_that("diversity estimates", {
     data(GlobalPatterns, package="mia")
     data(esophagus, package="mia")
     tse <- mergeSEs(GlobalPatterns, esophagus,  join = "full", assay.type = "counts")
-    expect_error(.estimate_diversity(tse, index = c("shannon", "faith"), 
+    expect_error(addAlpha(tse, index = c("shannon", "faith"), 
                                      tree.name = "phylo.1", assay.type="counts"))
-    expect_error(.estimate_diversity(tse, index = c("faith"), 
+    expect_error(addAlpha(tse, index = c("faith"), 
                                    tree.name = "test"))
-    expect_error(.estimate_diversity(tse, index = c("shannon", "faith"), 
+    expect_error(addAlpha(tse, index = c("shannon", "faith"), 
                                    tree.name = TRUE))
-    expect_error(.estimate_diversity(tse, index = c("shannon", "faith"), 
+    expect_error(addAlpha(tse, index = c("shannon", "faith"), 
                                    tree.name = 1))
     
-    expect_error(.estimate_diversity(tse, index = c("shannon", "faith"), 
+    expect_error(addAlpha(tse, index = c("shannon", "faith"), 
                                    tree.name = c("phylo", "phylo.1")))
     
     # Test Faith with picante packages results (version 1.8.2)

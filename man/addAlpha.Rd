@@ -3,9 +3,15 @@
 \name{addAlpha}
 \alias{addAlpha}
 \alias{addAlpha,SummarizedExperiment-method}
+\alias{getAlpha}
+\alias{getAlpha,SummarizedExperiment-method}
 \title{Estimate alpha diversity indices}
 \usage{
-addAlpha(
+addAlpha(x, ...)
+
+\S4method{addAlpha}{SummarizedExperiment}(x, ...)
+
+getAlpha(
   x,
   assay.type = "counts",
   index = c("coverage_diversity", "fisher_diversity", "faith_diversity",
@@ -17,10 +23,11 @@ addAlpha(
     "ace_richness", "chao1_richness", "hill_richness", "observed_richness"),
   name = index,
   niter = NULL,
+  BPPARAM = SerialParam(),
   ...
 )
 
-\S4method{addAlpha}{SummarizedExperiment}(
+\S4method{getAlpha}{SummarizedExperiment}(
   x,
   assay.type = "counts",
   index = c("coverage_diversity", "fisher_diversity", "faith_diversity",
@@ -32,24 +39,12 @@ addAlpha(
     "ace_richness", "chao1_richness", "hill_richness", "observed_richness"),
   name = index,
   niter = NULL,
+  BPPARAM = SerialParam(),
   ...
 )
 }
 \arguments{
 \item{x}{a \code{\link{SummarizedExperiment}} object.}
-
-\item{assay.type}{\code{Character scalar}. Specifies the name of assay
-used in calculation. (Default: \code{"counts"})}
-
-\item{index}{\code{Character vector}. Specifies the alpha diversity
-indices to be calculated.}
-
-\item{name}{\code{Character vector}. A name for the column of the
-\code{colData} where results will be stored. (Default: \code{index})}
-
-\item{niter}{\code{Integer scalar}. Specifies the number of
-rarefaction rounds. Rarefaction is not applied when \code{niter=NULL}
-(see Details section). (Default: \code{NULL})}
 
 \item{...}{optional arguments:
 \itemize{
@@ -98,6 +93,19 @@ taxa with the indicated rank (default: \code{aggregate = TRUE}).
 \item \code{detection}: (observed index). \code{Numeric scalar} Selects
 detection threshold for the abundances (Default: \code{0})
 }}
+
+\item{assay.type}{\code{Character scalar}. Specifies the name of assay
+used in calculation. (Default: \code{"counts"})}
+
+\item{index}{\code{Character vector}. Specifies the alpha diversity
+indices to be calculated.}
+
+\item{name}{\code{Character vector}. A name for the column of the
+\code{colData} where results will be stored. (Default: \code{index})}
+
+\item{niter}{\code{Integer scalar}. Specifies the number of
+rarefaction rounds. Rarefaction is not applied when \code{niter=NULL}
+(see Details section). (Default: \code{NULL})}
 }
 \value{
 \code{x} with additional \code{colData} column(s) named \code{code}

@@ -288,11 +288,15 @@ setGeneric(
     getPrevalentAbundance(mat, detection = 0, as.relative = TRUE)
 }
 
-.calc_dominance <- function(mat, ntaxa, aggregate, index){
+.calc_dominance <- function(mat, index, ntaxa = 1L, aggregate = TRUE, ...){
 
     # Check ntaxa
-    if(!(ntaxa>0 && ntaxa<3)){
+    if(!(.is_an_integer(ntaxa) && ntaxa>0 && ntaxa<3)){
         stop("'ntaxa' must be a numerical value 1 or 2.", call. = FALSE)
+    }
+    # Check aggregate
+    if(!.is_a_bool(aggregate)){
+        stop("'aggregate' must be TRUE or FALSE.", call. = FALSE)
     }
     #
     if (index == "absolute") {

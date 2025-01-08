@@ -143,7 +143,10 @@ NULL
     return(x)
 }
 
-.calc_bulla_evenness <- function(mat) {
+.calc_bulla_evenness <- function(mat, ...) {
+    # Apply threshold, i.e., set values under and equal this threshold to 0
+    mat <- .apply_threshold(mat, ...)
+    
     # Species richness (number of species)
     S <- colSums2(mat > 0, na.rm = TRUE)
 
@@ -161,7 +164,10 @@ NULL
 # by code from Pepijn de Vries and Zhou Xiang at
 # researchgate.net/post/How_can_we_calculate_the_Camargo_evenness_index_in_R
 # but rewritten here
-.calc_camargo_evenness <- function(mat) {
+.calc_camargo_evenness <- function(mat, ...) {
+    # Apply threshold, i.e., set values under and equal this threshold to 0
+    mat <- .apply_threshold(mat, ...)
+    #
     N <- colSums2(mat > 0, na.rm = TRUE)
 
     seq <- IntegerList(lapply(N - 1,seq_len))
@@ -182,8 +188,10 @@ NULL
 }
 
 # x: Species count vector
-.calc_simpson_evenness <- function(mat) {
-
+.calc_simpson_evenness <- function(mat, ...) {
+    # Apply threshold, i.e., set values under and equal this threshold to 0
+    mat <- .apply_threshold(mat, ...)
+    
     # Species richness (number of detected species)
     S <- colSums2(mat > 0, na.rm = TRUE)
 
@@ -192,7 +200,10 @@ NULL
 }
 
 # x: Species count vector
-.calc_pielou_evenness <- function(mat) {
+.calc_pielou_evenness <- function(mat, ...) {
+    # Apply threshold, i.e., set values under and equal this threshold to 0
+    mat <- .apply_threshold(mat, ...)
+    
     # Remove zeroes
     mat[mat == 0] <- NA
 
@@ -210,7 +221,10 @@ NULL
 }
 
 # Smith and Wilson’s Evar index
-.calc_evar_evenness <- function(mat) {
+.calc_evar_evenness <- function(mat, ...) {
+    # Apply threshold, i.e., set values under and equal this threshold to 0
+    mat <- .apply_threshold(mat, ...)
+    #
     N <- colSums2(mat, na.rm = TRUE)
 
     # Log abundance
@@ -227,6 +241,18 @@ NULL
     f <- colSums2(d, na.rm = TRUE)
 
     (1 - 2/pi * atan(f))
+}
+
+# This function keeps only values over threshold and sets other to 0.
+.apply_threshold <- function(mat, threshold = 0, ...){
+    #
+    if(!is.numeric(threshold) || length(threshold) != 1L){
+        stop("'threshold' must be a single numeric value.", call. = FALSE)
+    }
+    if(threshold > 0){
+        mat[mat <= threshold] <- 0
+    }
+    return(mat)
 }
 
 .get_evenness_values <- function(index, mat, threshold = 0, ...){
