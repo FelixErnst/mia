@@ -23,7 +23,6 @@
 #' \code{vegan::rarefy} while with replacement enabled the function utilizes
 #' own implementation, inspired by \code{phyloseq::rarefy_even_depth}.
 #' 
-#' #
 #' @inheritParams transformAssay
 #' @inheritParams getDominant
 #' 

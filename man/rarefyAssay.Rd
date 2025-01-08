@@ -64,24 +64,22 @@ messages. (Default: \code{TRUE})
 subsampled assay.
 }
 \details{
-Although the subsampling approach is highly debated in microbiome research, 
-we include the \code{rarefyAssay} function because there may be some 
+Although the subsampling approach is highly debated in microbiome research,
+we include the \code{rarefyAssay} function because there may be some
 instances where it can be useful.
-Note that the output of \code{rarefyAssay} is not the equivalent as the 
+Note that the output of \code{rarefyAssay} is not the equivalent as the
 input and any result have to be verified with the original dataset.
 
 Subsampling/Rarefying may undermine downstream analyses and have unintended
 consequences. Therefore, make sure this normalization is appropriate for
 your data.
 
-To maintain the reproducibility, please define the seed using set.seed() 
+To maintain the reproducibility, please define the seed using set.seed()
 before implement this function.
 
 When \code{replace = FALSE}, the function uses internally
 \code{vegan::rarefy} while with replacement enabled the function utilizes
 own implementation, inspired by \code{phyloseq::rarefy_even_depth}.
-
-#
 }
 \examples{
 # When samples in TreeSE are less than specified sample, they will be removed.
