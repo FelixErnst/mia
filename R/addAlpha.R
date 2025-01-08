@@ -615,7 +615,7 @@ setMethod("getAlpha", signature = c(x = "SummarizedExperiment"),
             "populated or with 'tree' provided separately.", call. = FALSE)
     }
     # Check for unsupported values (negative values)
-    if( any(assay(x, assay.type) < 0) ){
+    if( any(assay(x, assay.type) < 0 & !is.na(assay(x, assay.type))) ){
         ind <- detected[["non_neg"]]
         index_rm <- detected[!ind, "index"]
         detected <- detected[ind, ]
@@ -640,7 +640,7 @@ setMethod("getAlpha", signature = c(x = "SummarizedExperiment"),
     # Subsample the data and then calculate index based on the rarified data
     res <- bplapply(seq(niter), function(i){
         x_sub <- rarefyAssay(x, assay.type = assay.type, verbose = FALSE, ...)
-        temp <- .calculate_alpha(x_sub, assay.type, index, name, ...)
+        temp <- .calculate_alpha(x_sub, "subsampled", index, name, ...)
         return(temp)
     }, BPPARAM = BPPARAM)
     # Combine list of matrixed from multiple iterations
