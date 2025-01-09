@@ -332,14 +332,12 @@ importQZA <- function(file, temp.dir = temp, temp = tempdir(), ...) {
 #' @importFrom Biostrings DNAStringSet
 #' @noRd
 .rownames_as_dna_seq <- function(seq){
-    # names(seq) <- paste0("seq_", seq_along(seq))
     names(seq) <- seq
     seq <- try({DNAStringSet(seq)}, silent = TRUE)
     if (is(seq, "try-error")) {
-        return(NULL)
+        seq <- NULL
     }
-
-    seq
+    return(seq)
 }
 
 #' extract file extension
