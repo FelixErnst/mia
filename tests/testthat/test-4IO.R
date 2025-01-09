@@ -262,7 +262,6 @@ col.file <- system.file("extdata", "sample-metadata.tsv", package = "mia")
 refseq.file <- system.file("extdata", "refseq.qza", package = "mia")
 
 test_that("make TSE worked properly while no sample or taxa data", {
-    skip_if_not(require("biomformat", quietly = TRUE))
     ## no sample data or taxa data
     expect_silent(tse <- importQIIME2(assay.file))
     expect_s4_class(tse, "TreeSummarizedExperiment")
@@ -281,8 +280,8 @@ test_that("reference sequences of TSE", {
         refseq.file = refseq.file,
         featureNamesAsRefseq = FALSE
     )
-    expect_identical(tse@referenceSeq, importQZA(refseq.file))
-    expect_identical(tse2@referenceSeq, importQZA(refseq.file))
+    expect_identical(tse@referenceSeq, importQZA(refseq.file)[rownames(tse), ])
+    expect_identical(tse2@referenceSeq, importQZA(refseq.file)[rownames(tse), ])
 
     # 2. row.names of feature table as refseq
     # 2.1 element of row.names of feature table is not DNA sequence
@@ -333,17 +332,18 @@ test_that("reference sequences of TSE", {
     )
     feature_tab <- importQZA(featureTableFile2)
     names_seq <- Biostrings::DNAStringSet(row.names(feature_tab))
-    names(names_seq) <- paste0("seq_", seq_along(names_seq))
+    names(names_seq) <- names_seq
     expect_identical(tse@referenceSeq, names_seq)
 
     # refseq.file is not NULL, featureNamesAsRefseq is TRUE,
-    # set the sequences from refseq.file as reference sequences
+    # set the sequences from refseq.file as reference sequences. However,
+    # the names are ot matching with the data, so NULL is added to refseq.
     tse <- importQIIME2(
         featureTableFile2,
         featureNamesAsRefseq = TRUE,
         refseq.file = refseq.file
-    )
-    expect_identical(tse@referenceSeq, importQZA(refseq.file))
+    ) |> expect_warning()
+    expect_identical(tse@referenceSeq, NULL)
 
     # 3. refseq.file = NULL, featureNamesAsRefseq = FALSE
     tse <- importQIIME2(
@@ -420,15 +420,17 @@ test_that("dimnames of feature table is identicle with meta data", {
    
     sample_meta <- .read_q2sample_meta(col.file)
     taxa_meta <- importQZA(row.file)
-    taxa_meta <- .subset_taxa_in_feature(taxa_meta, feature_tab)
-    new_feature_tab <- .set_feature_tab_dimnames(
+    data_list <- .set_feature_tab_dimnames(
         feature_tab, 
         sample_meta, 
         taxa_meta
    )
-    expect_identical(rownames(new_feature_tab), rownames(taxa_meta))
-    expect_identical(colnames(new_feature_tab), rownames(sample_meta))
-   
+    expect_identical(colnames(data_list[[1]]), colnames(feature_tab))
+    expect_identical(rownames(data_list[[1]]), rownames(feature_tab))
+    expect_identical(rownames(data_list[[1]]), rownames(data_list[[2]]))
+    expect_identical(colnames(data_list[[1]]), rownames(data_list[[3]]))
+    expect_identical(colnames(data_list[[1]]), colnames(data_list[[1]]))
+    
     # sample_meta or feature meta is NULL
     sample_meta2 <- S4Vectors::make_zero_col_DFrame(ncol(feature_tab))
     rownames(sample_meta2) <- colnames(feature_tab)
@@ -446,13 +448,15 @@ test_that("dimnames of feature table is identicle with meta data", {
     )
     sample_meta3 <- S4Vectors::DataFrame(row.names = paste0("sample", 3:1))
     feature_meta3 <- S4Vectors::DataFrame(row.names = paste0("feature", c(2, 3, 1)))
-    new_feature_tab3 <- .set_feature_tab_dimnames(
+    data_list <- .set_feature_tab_dimnames(
         feature_tab3, 
         sample_meta3, 
         feature_meta3
     )
-    expect_identical(row.names(new_feature_tab3), paste0("feature", c(2, 3, 1)))
-    expect_identical(colnames(new_feature_tab3), paste0("sample", 3:1))
+    expect_identical(rownames(data_list[[1]]), rownames(feature_tab3))
+    expect_identical(colnames(data_list[[1]]), colnames(feature_tab3))
+    expect_identical(rownames(data_list[[2]]), rownames(feature_tab3))
+    expect_identical(rownames(data_list[[3]]), colnames(feature_tab3))
 })
 
 
@@ -487,7 +491,7 @@ test_that("convertToPhyloseq", {
     test1 <- agglomerateByRank(tse, rank = "Phylum")
     test2 <- agglomerateByRank(tse, rank = "Phylum", update.tree = TRUE)
     test1_phy <- expect_warning(convertToPhyloseq(test1))
-    test2_phy <- convertToPhyloseq(test2)
+    test2_phy <- convertToPhyloseq(test2) |> expect_warning()
     
     expect_equal(length(phyloseq::phy_tree(test1_phy)$node), 
                 length(ape::keep.tip(rowTree(test1), rowLinks(test1)$nodeLab)$node))
