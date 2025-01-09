@@ -336,14 +336,13 @@ test_that("reference sequences of TSE", {
     expect_identical(tse@referenceSeq, names_seq)
 
     # refseq.file is not NULL, featureNamesAsRefseq is TRUE,
-    # set the sequences from refseq.file as reference sequences. However,
-    # the names are ot matching with the data, so NULL is added to refseq.
+    # set the sequences from refseq.file as reference sequences.
     tse <- importQIIME2(
-        featureTableFile2,
+        assay.file,
         featureNamesAsRefseq = TRUE,
         refseq.file = refseq.file
-    ) |> expect_warning()
-    expect_identical(tse@referenceSeq, NULL)
+    )
+    expect_identical(tse@referenceSeq, importQZA(refseq.file)[rownames(tse)])
 
     # 3. refseq.file = NULL, featureNamesAsRefseq = FALSE
     tse <- importQIIME2(
