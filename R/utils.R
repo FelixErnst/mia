@@ -455,30 +455,33 @@
     }
     not_found <- sum(!rownames(feature_tab) %in% rownames(feature_meta))
     if( not_found != 0 ){
-        warning("The dataset includes ", not_found, " features that do not ",
-                "have metadata. Please check for errors.", call. = FALSE)
+        warning("The dataset includes ", not_found, " features that are not ",
+                "included in the taxonomy table. Please check for errors.",
+                call. = FALSE)
     }
     # If the metadata includes samples or features that will be removed give
     # warning for the user.
     not_found <- sum(!rownames(sample_meta) %in% colnames(feature_tab))
     if( not_found != 0 ){
-        warning("The metadata includes ", not_found, " samples that are not ",
-                "included in the abundance table and thus being removed. ",
-                "Please check for errors.", call. = FALSE)
+        warning("The sample metadata includes ", not_found, " samples that ",
+                "are not included in the abundance table and thus being ",
+                "removed. Please check for errors.", call. = FALSE)
     }
     not_found <- sum(!rownames(feature_meta) %in% rownames(feature_tab))
     if( not_found != 0 ){
-        warning("The metadata includes ", not_found, " features that are not ",
-                "included in the abundance table and thus being removed. ",
-                "Please check for errors.", call. = FALSE)
+        warning("The taxonomy table includes ", not_found, " features that ",
+                "are not present in the abundance table and thus being ",
+                "removed. Please check for errors.", call. = FALSE)
     }
     
     # We order the metadata based on abundance table. Moreover, we subset
     # the metadata to match with abundance table if there are additional data.
     ind <- match(colnames(feature_tab), rownames(sample_meta))
     sample_meta <- sample_meta[ind, , drop = FALSE]
+    rownames(sample_meta) <- colnames(feature_tab)
     ind <- match(rownames(feature_tab), rownames(feature_meta))
     feature_meta <- feature_meta[ind, , drop = FALSE]
+    rownames(feature_meta) <- rownames(feature_tab)
     # Reference sequences are optional and all the features must have sequences.
     # This is because DNAStringSet object cannot have empty element for
     # features that were not included.
