@@ -68,7 +68,14 @@
 #' 
 #' @param use_grepl Deprecated. Use \code{use.grepl} instead.
 #'
-#' @param ... optional arguments not used currently.
+#' @param ... additional arguments
+#' \itemize{
+#'   \item \code{lowest.rank}: A lowest taxonomy level to be considered in
+#'   \code{getTaxonomyLabels}. Ranks lower than this will be collapsed into rank
+#'   specified by \code{lowest.rank}. For example, if genus level is specified,
+#'   species will be collapsed into genus. If \code{NULL}, the data is not
+#'   collapsed. (Default: \code{NULL})
+#' }
 #' 
 #' @param ranks \code{Character vector}. A vector of ranks to be set.
 #' @details
@@ -339,9 +346,15 @@ setMethod("getTaxonomyLabels", signature = c(x = "SummarizedExperiment"),
             stop("'resolve.loops' must be TRUE or FALSE.", call. = FALSE)
         }
         #
-        dup <- duplicated(rowData(x)[,taxonomyRanks(x)])
+        # Collapse taxonomy ranks if user has specified so
+        x <- .collapse_lowest_taxonomy_ranks(x, ...)
+        
+        dup <- duplicated(rowData(x)[,taxonomyRanks(x), drop = FALSE])
         if(any(dup)){
-            td <- apply(rowData(x)[,taxonomyRanks(x)],1L,paste,collapse = "___")
+            td <- apply(
+                rowData(x)[,taxonomyRanks(x), drop = FALSE],
+                1L,
+                paste, collapse = "___")
             td_non_dup <- td[!dup]
             m <- match(td, td_non_dup)
         }
@@ -361,6 +374,38 @@ setMethod("getTaxonomyLabels", signature = c(x = "SummarizedExperiment"),
         ans
     }
 )
+
+# This function is for collapsing the lowest taxonomy ranks into single value.
+# For instance, if user specifies genus rank, genus and species are collapsed
+# into one, and species rank is removed from the taxonomy table. If family is
+# specified, along with these two, also family is incorporated into this value.
+.collapse_lowest_taxonomy_ranks <- function(
+        x, lowest.rank = NULL, empty.fields = c(NA, "", " ", "\t", "-", "_"),
+        ...){
+    # By default, we keep the taxonomy table untouched.
+    if( !is.null(lowest.rank) ){
+        .check_taxonomic_rank(lowest.rank, x)
+        # Get available taxonomy ranks
+        available_ranks <- taxonomyRanks(x)
+        # Get indices of ranks that we are going to collapse into one
+        mod_ranks <- seq(
+            which(available_ranks == lowest.rank), length(available_ranks))
+        # For each row, collapse ranks into one
+        new_rank <- apply(rowData(x)[, mod_ranks, drop = FALSE], 1, function(x){
+            # Check if empty, and replace with NA if it is
+            x[ x %in% empty.fields ] <- NA
+            # Collapse values
+            x <- paste(na.omit(x), collapse = "_")
+            return(x)
+        })
+        # Remove the collapsed ranks from the original table
+        rowData(x) <- rowData(x)[, -mod_ranks, drop = FALSE]
+        # Add the collapsed values to the taxonomy table
+        new_rank <- unname(new_rank)
+        rowData(x)[[lowest.rank]] <- new_rank
+    }
+    return(x)
+}
 
 #' @importFrom IRanges CharacterList LogicalList
 .get_tax_ranks_selected <- function(x,rd, tax_cols, empty.fields){
@@ -444,6 +489,8 @@ setMethod("getTaxonomyLabels", signature = c(x = "SummarizedExperiment"),
 #' object and add this hierarchy tree into the \code{rowTree}.
 #' 
 #' @inheritParams taxonomy-methods
+#' 
+#' @param ... optional arguments not used currently.
 #' 
 #' @details
 #' 
