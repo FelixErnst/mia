@@ -78,7 +78,14 @@ value of \code{taxonomyRanks()} function.}
 regarded as empty. (Default: \code{c(NA, "", " ", "\t")}). They will be
 removed if \code{na.rm = TRUE} before agglomeration.}
 
-\item{...}{optional arguments not used currently.}
+\item{...}{additional arguments
+\itemize{
+\item \code{lowest.rank}: A lowest taxonomy level to be considered in
+\code{getTaxonomyLabels}. Ranks lower than this will be collapsed into rank
+specified by \code{lowest.rank}. For example, if genus level is specified,
+species will be collapsed into genus. If \code{NULL}, the data is not
+collapsed. (Default: \code{NULL})
+}}
 
 \item{ranks}{\code{Character vector}. A vector of ranks to be set.}
 
