@@ -236,15 +236,14 @@ setMethod("convertToPhyloseq", signature = c(x = "TreeSummarizedExperiment"),
                 referenceSeq<=length(refSeqs))) )
             ){
             stop("'referenceSeq' must be a non-empty single character value ",
-                "or an integer ",
-                "specifying the DNAStringSet from DNAStringSetList.",
-                call. = FALSE)
+                "or an integer specifying the DNAStringSet from ",
+                "DNAStringSetList.", call. = FALSE)
         }
         # Get specified referenceSeq
         refSeqs <- refSeqs[[referenceSeq]]
         warning("Use 'referenceSeq' to specify DNA set from ",
-                "DNAStringSetList. ",
-                "Current choice is '", referenceSeq, "'.", call. = FALSE)
+                "DNAStringSetList. Current choice is '", referenceSeq, "'.",
+                call. = FALSE)
     }
     # Check if all rownames have referenceSeqs
     if( !(all(rownames(x) %in% names(refSeqs)) &&

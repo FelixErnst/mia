@@ -78,7 +78,7 @@ importTaxpasta <- function(file, add.tree = TRUE, ...) {
         # Create rowData and rowTree
         rowData(tse) <- .create_row_data(biom, ranks)
         .set_ranks_based_on_rowdata(tse, ...)
-    if (add.tree) tse <- addHierarchyTree(tse)
+        if (add.tree) tse <- addHierarchyTree(tse)
         # Agglomerate to all existing ranks
         tse <- agglomerateByRanks(tse, update.tree = TRUE)
     } else{

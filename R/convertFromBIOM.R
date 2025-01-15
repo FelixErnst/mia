@@ -255,7 +255,6 @@ convertFromBIOM <- function(
 #' @param ... Additional arguments. Not used currently.
 #' 
 #' @export
-#' 
 setMethod(
     "convertToBIOM", signature = c(x = "SummarizedExperiment"),
         function(x, assay.type = "counts", ...){

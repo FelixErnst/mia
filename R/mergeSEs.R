@@ -158,8 +158,6 @@ setMethod("mergeSEs", signature = c(x = "SimpleList"),
             } else if (!is.null(assay_name) & !is.null(assay.type)) {
                 warning("The assay.type argument is used and assay_name is ",
                         "ignored")
-            } else {
-                # See next step
             }
             # CHeck which assays can be found, and if any --> FALSE
             assay.type <- .assays_cannot_be_found(assay.type = assay.type, x)

@@ -223,7 +223,6 @@ setMethod("getMediation", signature = c(x = "SummarizedExperiment"),
             # Use mediator for analysis  
             mediators <- mediator
             mat <- NULL
-            
         } else if( med_opts[[2]] ){
             # Check that assay is in assays
             .check_assay_present(assay.type, x)
@@ -231,7 +230,6 @@ setMethod("getMediation", signature = c(x = "SummarizedExperiment"),
             mat <- assay(x, assay.type)
             # Use assay for analysis
             mediators <- rownames(mat)
-            
         } else if( med_opts[[3]] ){
             # Check that reducedDim is in reducedDims
             if(!dimred %in% reducedDimNames(x)){
@@ -253,35 +251,28 @@ setMethod("getMediation", signature = c(x = "SummarizedExperiment"),
         
         # Set initial index  
         i <- 0
-        
         for( mediator in mediators ){
-            
             # Update index 
             i <- i + 1
-            
             if( verbose ){
                 message("\rMediator ", i, " out of ",
                         length(mediators), ": ", mediator
-                ) 
+                )
             }
-            
             # Run mediation analysis for current mediator
             med_out <- .run_mediate(
                 x, outcome, treatment, mediator,
                 family = family, mat = mat,
                 covariates = covariates, ...
             )
-            
             # Update list of results
             results <- .update.results(results, med_out, mediator)
         }
-        
         # Combine results into dataframe
         med_df <- .make.output(results, p.adj.method, add.metadata)
         return(med_df)
     }
 )
-
 
 # Check that arguments can be passed to mediate and remove unused samples
 #' @importFrom stats na.omit
@@ -354,7 +345,6 @@ setMethod("getMediation", signature = c(x = "SummarizedExperiment"),
 #' @importFrom stats lm formula glm
 .run_mediate <- function(x, outcome, treatment, mediator = NULL, mat = NULL,
                         family = gaussian(), covariates = NULL, ...) {
-    
     # Create initial dataframe with outcome and treatment variables
     df <- data.frame(
         Outcome = colData(x)[[outcome]], Treatment = colData(x)[[treatment]])
@@ -373,10 +363,8 @@ setMethod("getMediation", signature = c(x = "SummarizedExperiment"),
     relation_dv <- "Outcome ~ Treatment + Mediator"
     
     if( !is.null(covariates) ){
-        
         # Fetch covariates from colData and store them in dataframe
         df <- cbind(df, colData(x)[covariates])
-        
         # Add covariate to formula of mediation model
         relation_m <- paste(
             relation_m, "+",
@@ -402,31 +390,24 @@ setMethod("getMediation", signature = c(x = "SummarizedExperiment"),
         treat = "Treatment", mediator = "Mediator",
         covariates = covariates, ...
     )
-    
     return(med_out)
 }
 
 
 # Update list of results
 .update.results <- function(results, med_out, mediator) {
-    
     # Update model variables
     results[["Mediator"]] <- c(results[["Mediator"]], mediator)
-
     # Update stats of ACME (average causal mediation effect)
     results[["ACME_estimate"]] <- c(results[["ACME_estimate"]], med_out$d.avg)
     results[["ACME_pval"]] <- c(results[["ACME_pval"]], med_out$d.avg.p)
-
     # Update stats of ADE (average direct effect)
     results[["ADE_estimate"]] <- c(results[["ADE_estimate"]], med_out$z.avg)
     results[["ADE_pval"]] <- c(results[["ADE_pval"]], med_out$z.avg.p)
-
     # Add current model to metadata
     results[["Model"]][[length(results[["Model"]]) + 1]] <- med_out
-    
     return(results)
 }
-
 
 # Combine results into output dataframe
 .make.output <- function(results, p.adj.method, add.metadata) {
