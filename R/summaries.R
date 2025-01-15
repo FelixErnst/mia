@@ -105,7 +105,7 @@ NULL
 #' @export
 setMethod("getTop", signature = c(x = "SummarizedExperiment"),
     function(
-        x, top = 5L, method = c("mean","sum","median","prevalence"),
+        x, top = 5L, method = c("mean", "sum", "median", "prevalence"),
         assay.type = assay_name, assay_name = "counts", 
         na.rm = TRUE, ...){
         # input check
