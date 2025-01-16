@@ -37,7 +37,7 @@ SummarizedExperiment."><!-- mathjax --><script src="https://cdnjs.cloudflare.com
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mia</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.15.7</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.15.8</span>
       </span>
     </div>
 
@@ -64,7 +64,7 @@ SummarizedExperiment."><!-- mathjax --><script src="https://cdnjs.cloudflare.com
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Agglomerate data using taxonomic information or other grouping</h1>
-    <small class="dont-index">Source: <a href="https://github.com/microbiome/mia/blob/devel/R/AllGenerics.R" class="external-link"><code>R/AllGenerics.R</code></a>, <a href="https://github.com/microbiome/mia/blob/devel/R/agglomerate.R" class="external-link"><code>R/agglomerate.R</code></a>, <a href="https://github.com/microbiome/mia/blob/devel/R/splitByRanks.R" class="external-link"><code>R/splitByRanks.R</code></a></small>
+    <small class="dont-index">Source: <a href="https://github.com/microbiome/mia/blob/update_tree_default/R/AllGenerics.R" class="external-link"><code>R/AllGenerics.R</code></a>, <a href="https://github.com/microbiome/mia/blob/update_tree_default/R/agglomerate.R" class="external-link"><code>R/agglomerate.R</code></a>, <a href="https://github.com/microbiome/mia/blob/update_tree_default/R/splitByRanks.R" class="external-link"><code>R/splitByRanks.R</code></a></small>
     <div class="hidden name"><code>agglomerate-methods.Rd</code></div>
     </div>
 
@@ -107,7 +107,7 @@ experiments and flattens them again into a single
 <span>  rank <span class="op">=</span> <span class="fu"><a href="taxonomy-methods.html">taxonomyRanks</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>,</span>
 <span>  update.tree <span class="op">=</span> <span class="va">agglomerateTree</span>,</span>
 <span>  agglomerate.tree <span class="op">=</span> <span class="va">agglomerateTree</span>,</span>
-<span>  agglomerateTree <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  agglomerateTree <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span>
 <span></span>
@@ -137,7 +137,7 @@ experiments and flattens them again into a single
 <span>  group <span class="op">=</span> <span class="va">f</span>,</span>
 <span>  <span class="va">f</span>,</span>
 <span>  update.tree <span class="op">=</span> <span class="va">mergeTree</span>,</span>
-<span>  mergeTree <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  mergeTree <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span>
 <span></span>
@@ -213,7 +213,7 @@ value of <code><a href="taxonomy-methods.html">taxonomyRanks()</a></code> functi
 
 <dt id="arg-update-tree">update.tree<a class="anchor" aria-label="anchor" href="#arg-update-tree"></a></dt>
 <dd><p><code>Logical scalar</code>. Should
-<code>rowTree()</code> also be merged? (Default: <code>FALSE</code>)</p></dd>
+<code>rowTree()</code> also be merged? (Default: <code>TRUE</code>)</p></dd>
 
 
 <dt id="arg-agglomerate-tree">agglomerate.tree<a class="anchor" aria-label="anchor" href="#arg-agglomerate-tree"></a></dt>
@@ -383,29 +383,29 @@ the <code>colData</code> of the base object is kept.</p>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">x1</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 341</span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># agglomerate the tree as well</span></span></span>
-<span class="r-in"><span><span class="va">x2</span> <span class="op">&lt;-</span> <span class="fu">agglomerateByRank</span><span class="op">(</span><span class="va">GlobalPatterns</span>, rank<span class="op">=</span><span class="st">"Family"</span>,</span></span>
-<span class="r-in"><span>                       update.tree <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="co"># Do not agglomerate the tree</span></span></span>
+<span class="r-in"><span><span class="va">x2</span> <span class="op">&lt;-</span> <span class="fu">agglomerateByRank</span><span class="op">(</span></span></span>
+<span class="r-in"><span>    <span class="va">GlobalPatterns</span>, rank<span class="op">=</span><span class="st">"Family"</span>, update.tree <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">x2</span><span class="op">)</span> <span class="co"># same number of rows, but</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 341</span>
 <span class="r-in"><span><span class="fu">rowTree</span><span class="op">(</span><span class="va">x1</span><span class="op">)</span> <span class="co"># ... different</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Phylogenetic tree with 19216 tips and 19215 internal nodes.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Phylogenetic tree with 341 tips and 340 internal nodes.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Tip labels:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   549322, 522457, 951, 244423, 586076, 246140, ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Sulfolobaceae, SAGMA-X, Cenarchaeaceae, Nitrososphaeraceae, Halobacteriaceae, Methanosaetaceae, ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Node labels:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   , 0.858.4, 1.000.154, 0.764.3, 0.995.2, 1.000.2, ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   , 0.858.4, 0.764.3, 0.985.6, 1.000.112, 0.978.18, ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Rooted; includes branch length(s).</span>
 <span class="r-in"><span><span class="fu">rowTree</span><span class="op">(</span><span class="va">x2</span><span class="op">)</span> <span class="co"># ... tree</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Phylogenetic tree with 341 tips and 340 internal nodes.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Phylogenetic tree with 19216 tips and 19215 internal nodes.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Tip labels:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   951, 215972, 138353, 546313, 173903, 202347, ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   549322, 522457, Sulfolobaceae, 244423, 586076, 246140, ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Node labels:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   , 0.858.4, 0.764.3, 0.985.6, 1.000.112, 0.978.18, ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   , 0.858.4, 1.000.154, 0.764.3, 0.995.2, 1.000.2, ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Rooted; includes branch length(s).</span>
 <span class="r-in"><span></span></span>
@@ -575,7 +575,7 @@ the <code>colData</code> of the base object is kept.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> mainExpName: NULL</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> altExpNames(0):</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> rowLinks: a LinkDataFrame (2 rows)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> rowTree: 1 phylo tree(s) (19216 leaves)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> rowTree: 1 phylo tree(s) (2 leaves)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> colLinks: NULL</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> colTree: NULL</span>
 <span class="r-in"><span><span class="fu">altExp</span><span class="op">(</span><span class="va">tse</span>,<span class="st">"Species"</span><span class="op">)</span></span></span>
@@ -592,7 +592,7 @@ the <code>colData</code> of the base object is kept.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> mainExpName: NULL</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> altExpNames(0):</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> rowLinks: a LinkDataFrame (944 rows)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> rowTree: 1 phylo tree(s) (19216 leaves)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> rowTree: 1 phylo tree(s) (944 leaves)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> colLinks: NULL</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> colTree: NULL</span>
 <span class="r-in"><span></span></span>
