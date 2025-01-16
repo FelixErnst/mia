@@ -518,41 +518,41 @@ setMethod("mergeSEs", signature = c(x = "list"),
     # Take first tree
     tree <- trees[[1]]
     trees[[1]] <- NULL
-    # Loop through trees and bind them
+    # Loop through trees and merge them. The merging is done incrementally to
+    # avoid creating huge trees that exceed memory.
     for( t in trees ){
         # Bind from root node if available. If not, then bind from node 0.
         tree <- bind.tree(tree, t)
-    }
-    # Prune the tree so that it includes rows in tips. This step removes
-    # additional tips, i.e., only tips that are in rows are preserved. Also
-    # it simplifies the structure preserving the necessary information on the
-    # dataset. Moreover, it ensures that there are no duplicated tips which
-    # might be the case if the merged trees had shared taxa in addition to
-    # unique taxa.
-    tree <- .prune_tree(tree, links[["nodeLab"]], ...)
-    # At this point, we have one large tree that includes all trees. The trees
-    # are bind without merging. This means that we can have duplicated nodes
-    # and branches. For instance, there can be a node "family x" which is
-    # present in two trees that were merged. This means that "family x" is now
-    # present 2 times in result tree. Moreover, descendant nodes of these
-    # "family x" nodes can differ, which means that we cannot just remove
-    # duplicated nodes. Instead, we have to relink nodes so that each node
-    # label is present only one time and all its child nodes are preserved.
-    if( any(duplicated( c(tree$tip.label, tree$node.label) )) ){
-        # Convert to table so that we can modify the data
-        old_tree <- tree <- as_tibble(tree)
-        # Remove duplicated nodes
-        tree <- tree[ !duplicated(tree[["label"]]), ]
-        # Reindex nodes
-        tree[["node"]] <- seq_len(nrow(tree))
-        # Reorder the old tree to match new trees parent node order
-        old_tree <- old_tree[ match(tree[["parent"]], old_tree[["node"]]), ]
-        # Reindex parent nodes of new tree
-        parent <- tree[ match(old_tree[["label"]], tree[["label"]]), ]
-        parent <- parent[["node"]]
-        tree[["parent"]] <- parent
-        # Convert back to phylo object
-        tree <- as.phylo(tree)
+        # Prune the tree so that it includes rows in tips. This step removes
+        # additional tips, i.e., only tips that are in rows are preserved. Also
+        # it simplifies the structure preserving the necessary information on
+        # the dataset. Moreover, it ensures that there are no duplicated
+        # tips which might be the case if the merged trees had shared taxa in
+        # addition to unique taxa.
+        tree <- .prune_tree(tree, links[["nodeLab"]], ...)
+        # The trees are bind without merging. This means that we can have
+        # duplicated nodes and branches. For instance, there can be a node
+        # "family x" which is present in two trees that were merged. Moreover,
+        # descendant nodes of these "family x" nodes can differ, which means
+        # that we cannot just remove duplicated nodes. Instead, we have to
+        # relink nodes so that each node label is present only one time and
+        # all its child nodes are preserved.
+        if( any(duplicated( c(tree$tip.label, tree$node.label) )) ){
+            # Convert to table so that we can modify the data
+            old_tree <- tree <- as_tibble(tree)
+            # Remove duplicated nodes
+            tree <- tree[ !duplicated(tree[["label"]]), ]
+            # Reindex nodes
+            tree[["node"]] <- seq_len(nrow(tree))
+            # Reorder the old tree to match new trees parent node order
+            old_tree <- old_tree[ match(tree[["parent"]], old_tree[["node"]]), ]
+            # Reindex parent nodes of new tree
+            parent <- tree[ match(old_tree[["label"]], tree[["label"]]), ]
+            parent <- parent[["node"]]
+            tree[["parent"]] <- parent
+            # Convert back to phylo object
+            tree <- as.phylo(tree)
+        }
     }
     return(tree)
 }
