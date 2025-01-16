@@ -91,13 +91,6 @@
 #' 
 NULL
 
-#' @rdname splitOn
-#' @export
-setGeneric("splitOn",
-            signature = "x",
-            function(x, ...)
-                standardGeneric("splitOn"))
-
 # This function collects group (grouping variable), by, and 
 # use.names and returns them as a list.
 .norm_args_for_split_by <- function(
@@ -306,13 +299,6 @@ setMethod("splitOn", signature = c(x = "TreeSummarizedExperiment"),
 
 ################################################################################
 # unsplitOn
-
-#' @rdname splitOn
-#' @export
-setGeneric("unsplitOn",
-            signature = c("x"),
-            function(x, ...)
-                standardGeneric("unsplitOn"))
 
 # Perform the unsplit
 .list_unsplit_on <- function(

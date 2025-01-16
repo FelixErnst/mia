@@ -41,7 +41,7 @@ reference:
 - contents:
   - getPrevalence
   - getPrevalentAbundance
-  - summaries
+  - summary
   - getDominant
 - title: Data loading
 - contents:

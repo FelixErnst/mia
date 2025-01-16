@@ -48,7 +48,7 @@
 #' 
 #' Weiss S, Xu ZZ, Peddada S, Amir A, Bittinger K, Gonzalez A, Lozupone C, 
 #' Zaneveld JR, Vázquez-Baeza Y, Birmingham A, Hyde ER. Normalization and 
-#' microbial differential abundance strategies depend upon data characteristics. 
+#' microbial differential abundance strategies depend upon data characteristics.
 #' Microbiome. 2017 Dec;5(1):1-8.
 #' 
 #' @return \code{rarefyAssay} return \code{x} with subsampled data.
@@ -56,9 +56,9 @@
 #' @name rarefyAssay
 #'  
 #' @examples
-#' # When samples in TreeSE are less than specified sample, they will be removed.
-#' # If after subsampling features are not present in any of the samples, 
-#' # they will be removed.
+#' # When samples in TreeSE are less than specified sample, they will be
+#' # removed. If after subsampling features are not present in any of the
+#' # samples, they will be removed.
 #' data(GlobalPatterns)
 #' tse <- GlobalPatterns
 #' set.seed(123)
@@ -68,14 +68,6 @@
 #' dim(assay(tse_subsampled, "subsampled"))
 #' 
 NULL
-
-#' @rdname rarefyAssay
-#' @export
-setGeneric("rarefyAssay", signature = c("x"), function(
-        x, assay.type = assay_name, assay_name = "counts", 
-        sample = min_size, min_size = min(colSums2(assay(x))),
-        replace = TRUE, name = "subsampled", verbose = TRUE, ...)
-            standardGeneric("rarefyAssay"))
 
 #' @importFrom SummarizedExperiment assay assay<-
 #' @importFrom DelayedMatrixStats colSums2 rowSums2

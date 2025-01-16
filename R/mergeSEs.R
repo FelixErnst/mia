@@ -6,22 +6,24 @@
 #' @param y a \code{\link{SummarizedExperiment}} object when \code{x} is a
 #' \code{\link{SummarizedExperiment}} object. Disabled when \code{x} is a list.
 #' 
-#' @param join \code{Character scalar}. A value for selecting the joining method.
-#' Must be 'full', 'inner', 'left', or 'right'. 'left' and 'right' are disabled
-#' when more than two objects are being merged.  (Default: \code{"full"})
+#' @param join \code{Character scalar}. A value for selecting the joining
+#' method. Must be 'full', 'inner', 'left', or 'right'. 'left' and 'right' are
+#' disabled when more than two objects are being merged.
+#' (Default: \code{"full"})
 #' 
-#' @param missing.values \code{NA}, \code{0} or \code{Character scalar}. Specifies the notation
-#' of missing values. (By default: \code{NA})
+#' @param missing.values \code{NA}, \code{0} or \code{Character scalar}.
+#' Specifies the notation of missing values. (By default: \code{NA})
 #' 
 #' @param missing_values Deprecated. Use \code{missing.values} instead.
 #' 
-#' @param collapse.cols \code{Logical scalar}. Determines whether to collapse identically
-#' named samples to one. (Default: \code{FALSE})
+#' @param collapse.cols \code{Logical scalar}. Determines whether to collapse
+#' identically named samples to one. (Default: \code{FALSE})
 #' 
 #' @param collapse_samples Deprecated. Use \code{collapse.cols} instead.
 #' 
-#' @param collapse.rows \code{Logical scalar}. Selects whether to collapse identically
-#' named features to one. Since all taxonomy information is taken into account,
+#' @param collapse.rows \code{Logical scalar}. Selects whether to collapse
+#' identically named features to one. Since all taxonomy information is
+#' taken into account,
 #' this concerns rownames-level (usually strain level) comparison. Often
 #' OTU or ASV level is just an arbitrary number series from sequencing machine
 #' meaning that the OTU information is not comparable between studies. With this
@@ -36,9 +38,11 @@
 #' @return A single \code{SummarizedExperiment} object.
 #'
 #' @details
-#' This function merges multiple \code{SummarizedExperiment} objects. It combines
+#' This function merges multiple \code{SummarizedExperiment} objects. It
+#' combines
 #' \code{rowData}, \code{assays}, and \code{colData} so that the output includes
-#' each unique row and column ones. The merging is done based on \code{rownames} and
+#' each unique row and column ones. The merging is done based on
+#' \code{rownames} and
 #' \code{colnames}. \code{rowTree} and \code{colTree} are preserved if linkage
 #' between rows/cols and the tree is found.
 #' 
@@ -50,9 +54,12 @@
 #' sample. 
 #' 
 #' If, for example, all rows are not shared with
-#' individual objects, there are missing values in \code{assays}. The notation of missing
-#' can be specified with the \code{missing.values} argument. If input consists of
-#' \code{TreeSummarizedExperiment} objects, also \code{rowTree}, \code{colTree}, and
+#' individual objects, there are missing values in \code{assays}.
+#' The notation of missing
+#' can be specified with the \code{missing.values} argument. If input consists
+#' of
+#' \code{TreeSummarizedExperiment} objects, also \code{rowTree}, \code{colTree},
+#' and
 #' \code{referenceSeq} are preserved if possible. The data is preserved if 
 #' all the rows or columns can be found from it.
 #' 
@@ -62,7 +69,8 @@
 #' 
 #' You can choose joining methods from \code{'full'}, \code{'inner'},
 #'  \code{'left'}, and  \code{'right'}. In all the methods, all the samples are 
-#'  included in the result object. However, with different methods, it is possible 
+#'  included in the result object. However, with different methods, it is
+#'  possible 
 #'  to choose which rows are included.
 #' 
 #' \itemize{
@@ -72,8 +80,10 @@
 #'   \item{\code{right} -- all the features of the second object}
 #' }
 #' 
-#' The output depends on the input. If the input contains \code{SummarizedExperiment}
-#' object, then the output will be \code{SummarizedExperiment}. When all the input
+#' The output depends on the input. If the input contains
+#' \code{SummarizedExperiment}
+#' object, then the output will be \code{SummarizedExperiment}. When all the
+#' input
 #' objects belong to \code{TreeSummarizedExperiment}, the output will be 
 #' \code{TreeSummarizedExperiment}.
 #'
@@ -127,16 +137,6 @@
 #' 
 NULL
 
-
-
-################################### Generic ####################################
-
-#' @rdname mergeSEs
-#' @export
-setGeneric("mergeSEs", signature = c("x"),
-        function(x, ... )
-            standardGeneric("mergeSEs"))
-
 ###################### Function for SimpleList of TreeSEs ######################
 
 #' @rdname mergeSEs
@@ -145,39 +145,40 @@ setMethod("mergeSEs", signature = c(x = "SimpleList"),
         function(x, assay.type="counts", assay_name = NULL, join = "full",
                 missing.values = missing_values, missing_values = NA, 
                 collapse.cols = collapse_samples, collapse_samples = FALSE, 
-                collapse.rows = collapse_features, collapse_features = TRUE, verbose = TRUE, 
-                 ... ){
+                collapse.rows = collapse_features, collapse_features = TRUE,
+                verbose = TRUE, ... ){
             ################## Input check ##################
             # Check the objects 
             class <- .check_objects_and_give_class(x)
-	    if (!is.null(assay_name) & is.null(assay.type)) {
-                .Deprecated(new="assay.type", old="assay_name", msg="The argument assay_name is deprecated and replace with assay.type")
-		assay.type <- assay_name
+            if (!is.null(assay_name) & is.null(assay.type)) {
+                .Deprecated(new="assay.type", old="assay_name", msg=paste0(
+                    "The argument assay_name is deprecated and replace ",
+                "with assay.type"))
+            assay.type <- assay_name
             } else if (!is.null(assay_name) & !is.null(assay.type)) {
-                warning("The assay.type argument is used and assay_name is ignored")
-            } else {
-	        # See next step
+                warning("The assay.type argument is used and assay_name is ",
+                        "ignored")
             }
             # CHeck which assays can be found, and if any --> FALSE
             assay.type <- .assays_cannot_be_found(assay.type = assay.type, x)
             if( .is_a_bool(assay.type) && assay.type == FALSE ){
-                stop("'assay.type' must specify an assay from assays. 'assay.type' ",
-                     "cannot be found at least in one SE object.",
-                     call. = FALSE)
+                stop("'assay.type' must specify an assay from assays. ",
+                    "'assay.type' cannot be found at least in one SE object.",
+                    call. = FALSE)
             }
 
             # Check join
             if( !(.is_a_string(join) &&
                 join %in% c("full", "inner", "left", "right") ) ){
                 stop("'join' must be 'full', 'inner', 'left', or 'right'.",
-                     call. = FALSE)
+                    call. = FALSE)
             }
             # Check if join is not available
             if( length(x) > 2 &&
                 join %in% c("left", "right") ){
                 stop("Joining method 'left' and 'right' are not available ",
-                     "when more than two objects are being merged.",
-                     call. = FALSE)
+                    "when more than two objects are being merged.",
+                    call. = FALSE)
             }
             # Is missing.values one of the allowed ones
             missing_values_bool <- length(missing.values) == 1L &&
@@ -185,23 +186,20 @@ setMethod("mergeSEs", signature = c(x = "SimpleList"),
                 .is_a_string(missing.values) || is.na(missing.values)
             # If not then give error
             if(  !missing_values_bool ){
-                stop("'missing.values' must be 0, NA, or a single character value.",
-                     call. = FALSE)
+                stop("'missing.values' must be 0, NA, or a single character ",
+                    "value.", call. = FALSE)
             }
             # Check collapse.cols
             if( !.is_a_bool(collapse.cols) ){
-                stop("'collapse.cols' must be TRUE or FALSE.",
-                     call. = FALSE)
+                stop("'collapse.cols' must be TRUE or FALSE.", call. = FALSE)
             }
             # Check collapse.cols
             if( !.is_a_bool(collapse.rows) ){
-                stop("'collapse.rows' must be TRUE or FALSE.",
-                     call. = FALSE)
+                stop("'collapse.rows' must be TRUE or FALSE.", call. = FALSE)
             }
             # Check verbose
             if( !.is_a_bool(verbose) ){
-                stop("'verbose' must be TRUE or FALSE.",
-                     call. = FALSE)
+                stop("'verbose' must be TRUE or FALSE.", call. = FALSE)
             }
 
             ################ Input check end ################
@@ -228,7 +226,7 @@ setMethod("mergeSEs", signature = c(x = "SummarizedExperiment"),
             # Check y
             if( !(is(y, "SummarizedExperiment")) ){
                 stop("'y' must be a 'SummarizedExperiment' object.",
-                     call. = FALSE)
+                    call. = FALSE)
             } 
             ################ Input check end ################
             # Create a list based on TreeSEs
@@ -243,12 +241,12 @@ setMethod("mergeSEs", signature = c(x = "SummarizedExperiment"),
 #' @rdname mergeSEs
 #' @export
 setMethod("mergeSEs", signature = c(x = "list"),
-          function(x, ...){
-              # Convert into a list
-              x <- SimpleList(x)
-              # Call the function for list
-              mergeSEs(x, ...)
-          }
+    function(x, ...){
+        # Convert into a list
+        x <- SimpleList(x)
+        # Call the function for list
+        mergeSEs(x, ...)
+    }
 )
 
 ################################ HELP FUNCTIONS ################################
@@ -286,10 +284,11 @@ setMethod("mergeSEs", signature = c(x = "list"),
     args <- .get_SummarizedExperiment_data(tse = tse, assay.type = assay.type)
 
     # Get the function based on class
-    FUN_constructor <- switch(class,
-                              TreeSummarizedExperiment = TreeSummarizedExperiment,
-                              SingleCellExperiment = SingleCellExperiment,
-                              SummarizedExperiment = SummarizedExperiment
+    FUN_constructor <- switch(
+        class,
+        TreeSummarizedExperiment = TreeSummarizedExperiment,
+        SingleCellExperiment = SingleCellExperiment,
+        SummarizedExperiment = SummarizedExperiment
     )
     # Create an object
     tse <- do.call(FUN_constructor, args = args)
@@ -305,7 +304,8 @@ setMethod("mergeSEs", signature = c(x = "list"),
             # Get the ith object
             temp <- x[[i]]
             # Add rownames to rowData so that full matches are found
-            temp <- .add_rowdata_to_rownames(temp, rownames_name = rownames_name)
+            temp <- .add_rowdata_to_rownames(
+                temp, rownames_name = rownames_name)
 
             # Modify names if specified
             if( !collapse.cols ){
@@ -364,8 +364,8 @@ setMethod("mergeSEs", signature = c(x = "list"),
 }
 
 ########################### .add_rowdata_to_rownames ###########################
-# This function adds taxonomy information to rownames to enable more specific match
-# between rows
+# This function adds taxonomy information to rownames to enable more specific
+# match between rows
 
 # Input: (Tree)SE, name of the column that is being added to rowData
 # Output: (Tree)SE with rownames that include all taxonomy information
@@ -418,13 +418,14 @@ setMethod("mergeSEs", signature = c(x = "list"),
     })
     rows_that_have_seqs <- unlist(rows_that_have_seqs)
     # Check that all the rownames are included
-    if( !all(rownames(tse) %in% rows_that_have_seqs) || is.null(rownames(tse)) ){
-        warning("referenceSeqs do not match with the data so they are discarded.",
-                call. = FALSE)
+    if( !all(rownames(tse) %in% rows_that_have_seqs) ||
+            is.null(rownames(tse)) ){
+        warning("referenceSeqs do not match with the data so they are ",
+                "discarded.", call. = FALSE)
         return(tse)
     }
-    # Get the maximum number of DNA sets that individual TreeSE had / max number of 
-    # sets that individual rownames set had.
+    # Get the maximum number of DNA sets that individual TreeSE had / max
+    # number of sets that individual rownames set had.
     max_numrow <- max(lengths(refSeqs))
     
     # Initialize a list
@@ -577,8 +578,8 @@ setMethod("mergeSEs", signature = c(x = "list"),
 }
 
 ############################### .get_TreeSE_args ###############################
-# This function fetches TreeSummarizedExperiment specific data: rowTree, colTree,
-# and referenceSeq
+# This function fetches TreeSummarizedExperiment specific data: rowTree,
+# colTree, and referenceSeq
 
 # Input: TreeSE and argument list
 # Output: An argument list
@@ -679,7 +680,7 @@ setMethod("mergeSEs", signature = c(x = "list"),
         refSeq <- referenceSeq(tse)
         # Check if it is a individual set
         if( is(refSeq, "DNAStringSet") ){
-            # Convert individual set to a list, so that all refseqs are in same 
+            # Convert individual set to a list, so that all refseqs are in same
             # format
             refSeq <- DNAStringSetList(refSeq)
         }
@@ -701,8 +702,9 @@ setMethod("mergeSEs", signature = c(x = "list"),
 ######################## .get_SummarizedExperiment_data ########################
 # This function gets the desired data from one SE object and creates a list of 
 # arguments containing the data
-# Arguments of SCE and TreeSE are also fetched with this function. TreeSE-specific
-# slots are collected with different function so that they are merged at the end.
+# Arguments of SCE and TreeSE are also fetched with this function.
+# TreeSE-specific slots are collected with different function so that they are
+# merged at the end.
 
 # Input: SE
 # Output: A list of arguments
@@ -729,7 +731,8 @@ setMethod("mergeSEs", signature = c(x = "list"),
 # Output: A shared class of objects
 .check_objects_and_give_class <- function(x){
     # Allowed classes
-    allowed_classes <- c("TreeSummarizedExperiment", "SingleCellExperiment", "SummarizedExperiment")
+    allowed_classes <- c("TreeSummarizedExperiment", "SingleCellExperiment",
+        "SummarizedExperiment")
     
     # Get the class based on hierarchy TreeSE --> SCE --> SE
     # and check that objects are in correct format
@@ -763,24 +766,22 @@ setMethod("mergeSEs", signature = c(x = "list"),
     # Check that the class matches with supported ones
     if( !is(x, "SummarizedExperiment") ){
         stop("Input includes an object that is not 'SummarizedExperiment'.",
-             call. = FALSE)
+            call. = FALSE)
     }
     # Check that there are no object with no dimensions
     if( ncol(x) == 0 || nrow(x) == 0 ){
-        stop("Input includes an object that has either no columns or/and no rows.",
-             call. = FALSE)
+        stop("Input includes an object that has either no columns or/and ",
+            "no rows.", call. = FALSE)
     }
     # Check that object has row/colnames
     if( is.null(rownames(x)) || is.null(colnames(x)) ){
-        stop("Input includes object(s) whose rownames and/or colnames is NULL. ",
-             "Please add them.",
-             call. = FALSE)
+        stop("Input includes object(s) whose rownames and/or colnames is ",
+            "NULL. Please add them.", call. = FALSE)
     }
     # Check if the col/rownames are duplicated
     if( any(duplicated(rownames(x))) || any(duplicated(colnames(x))) ){
         stop("Input includes object(s) whose rownames and/or colnames include ",
-             "duplicates. Please make them unique.",
-             call. = FALSE)
+            "duplicates. Please make them unique.", call. = FALSE)
     }
     # Get class
     class <- class(x)
@@ -788,14 +789,16 @@ setMethod("mergeSEs", signature = c(x = "list"),
     
 }
 ########################### .assays_cannot_be_found ############################
-# This function checks that the assay(s) can be found from TreeSE objects of a list.
+# This function checks that the assay(s) can be found from TreeSE objects of
+# a list.
 
 # Input: the name of the assay and a list of TreeSE objects
 # Output: A list of assay.types that can be found or FALSE if any
 .assays_cannot_be_found <- function(assay.type, x){
     # Loop through objects
     assays <- lapply(x, FUN = function(tse){
-        # Check if the assay.types can be found. If yes, then TRUE. If not, then FALSE
+        # Check if the assay.types can be found. If yes, then TRUE. If not,
+        # then FALSE
         temp <- lapply(assay.type, .assay_cannot_be_found, tse = tse)
         # Unlist and return
         return( unlist(temp) )
@@ -811,22 +814,24 @@ setMethod("mergeSEs", signature = c(x = "list"),
     }
     # Give warning if assays were dropped
     if( length(assays) < length(assay.type) ){
-        warning("The following assay(s) was not found from all the objects ", 
+        warning("The following assay(s) was not found from all the objects ",
                 "so it is dropped from the output: ",
-                paste0("'", setdiff(assay.type, assays), sep = "'", collapse = ", "),
+                paste0("'", setdiff(assay.type, assays), sep = "'",
+                    collapse = ", "),
                 call. = FALSE)
     }
     return(assays)
 }
 
-############################ .assay_cannot_be_found #############################
-# This function checks that the assay can be found from TreeSE. If it can be found
-# --> TRUE, if it cannot be found --> FALSE
+############################ .assay_cannot_be_found ############################
+# This function checks that the assay can be found from TreeSE. If it can be
+# found --> TRUE, if it cannot be found --> FALSE
 
 # Input: the name of the assay and TreSE object
 # Output: TRUE or FALSE
 .assay_cannot_be_found <- function(assay.type, tse){
-    # Check if the assay.type can be found. If yes, then TRUE. If not, then FALSE
+    # Check if the assay.type can be found. If yes, then TRUE. If not, then
+    # FALSE
     tryCatch(
         {
             .check_assay_present(assay.type, tse)
@@ -882,8 +887,8 @@ setMethod("mergeSEs", signature = c(x = "list"),
 
 # Input: Two SEs
 # Output: A list of arguments
-.merge_SummarizedExperiments <- function(tse1, tse2, join,  
-                                         assay.type, missing.values){
+.merge_SummarizedExperiments <- function(
+        tse1, tse2, join, assay.type, missing.values){
     # Merge rowData
     rowdata <- .merge_rowdata(tse1, tse2, join)
     # Merge colData
@@ -912,8 +917,8 @@ setMethod("mergeSEs", signature = c(x = "list"),
 # Input: Two TreeSEs, the name of the assay, joining method, value to denote
 # missing values, merged rowData, and merged colData
 # Output: Merged assay
-.merge_assay <- function(tse1, tse2, assay.type, join,
-                         missing.values, rd, cd){
+.merge_assay <- function(
+        tse1, tse2, assay.type, join, missing.values, rd, cd){
     # Take assays
     assay1 <- assay(tse1, assay.type)
     assay2 <- assay(tse2, assay.type)
@@ -970,9 +975,8 @@ setMethod("mergeSEs", signature = c(x = "list"),
             keep1 <- vapply(temp, function(x) !is.na(x[1]),  logical(1))
             # 2nd row is kept if it is not NA and the value differs from 1st row
             keep2 <- vapply(temp, function(x)
-                !is.na(x[2]) &&
-                    (is.na(x[1]) ||
-                         (!is.na(x[1]) && x[2] != x[[1]])), logical(1))
+                !is.na(x[2]) && (is.na(x[1]) ||
+                (!is.na(x[1]) && x[2] != x[[1]])), logical(1))
             # Get the rows
             keep1 <- temp[1, keep1, drop = FALSE]
             keep2 <- temp[2, keep2, drop = FALSE]
@@ -1111,27 +1115,27 @@ setMethod("mergeSEs", signature = c(x = "list"),
             classes[classes$found_both, "class.x"] != classes[
                 classes$found_both, "class.y"] & classes$not_na.x[
                     classes$found_both] & classes$not_na.y[classes$found_both]
-        # Add new colnames to columns. If equally named variables' classes differ
-        # add also class information to colnames
+        # Add new colnames to columns. If equally named variables' classes
+        # differ add also class information to colnames
         classes$colnames1 <- classes$rownames
         classes$colnames2 <- classes$rownames
         classes[classes$no_match, "colnames1"] <-
             paste0(classes[classes$no_match, "colnames1"], "_",
-                   classes[classes$no_match, "class.x"])
+                classes[classes$no_match, "class.x"])
         classes[classes$no_match, "colnames2"] <-
             paste0(classes[classes$no_match, "colnames2"], "_",
-                   classes[classes$no_match, "class.y"])
-        # Give warning if there were missmatch between equally named variables and
-        # their classes
+                classes[classes$no_match, "class.y"])
+        # Give warning if there were missmatch between equally named variables
+        # and their classes
         if( any(classes$no_match) ){
             warning("Datasets include equally named variables called '",
-                    "'but their class differ. In the output, variables are not ",
-                    "combined and they are renamed based on their class.",
-                    "Please check the following columns:\n",
-                    paste0("'", paste(
-                        classes[classes$no_match, "rownames"], collapse = "', '"),
-                        "'"),
-                    call. = FALSE)
+                "'but their class differ. In the output, variables are not ",
+                "combined and they are renamed based on their class.",
+                "Please check the following columns:\n",
+                paste0("'", paste(
+                    classes[classes$no_match, "rownames"], collapse = "', '"),
+                    "'"),
+                call. = FALSE)
         }
         # Add new column names to df1
         colnames <- classes[classes$found1, "rownames"]
