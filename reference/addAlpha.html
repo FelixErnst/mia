@@ -18,7 +18,7 @@ then stores results in colData."><!-- mathjax --><script src="https://cdnjs.clou
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mia</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.15.6</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.15.7</span>
       </span>
     </div>
 
@@ -45,7 +45,7 @@ then stores results in colData."><!-- mathjax --><script src="https://cdnjs.clou
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Estimate alpha diversity indices</h1>
-    <small class="dont-index">Source: <a href="https://github.com/microbiome/mia/blob/devel/R/addAlpha.R" class="external-link"><code>R/addAlpha.R</code></a></small>
+    <small class="dont-index">Source: <a href="https://github.com/microbiome/mia/blob/fix_bioccheck/R/AllGenerics.R" class="external-link"><code>R/AllGenerics.R</code></a>, <a href="https://github.com/microbiome/mia/blob/fix_bioccheck/R/addAlpha.R" class="external-link"><code>R/addAlpha.R</code></a></small>
     <div class="hidden name"><code>addAlpha.Rd</code></div>
     </div>
 
@@ -122,8 +122,8 @@ depth i.e. the number of counts drawn from each sample.
 (Default: <code>min(colSums2(assay(x, assay.type)))</code>)</p></li>
 <li><p><code>tree.name</code>: <code>Character scalar</code>. Specifies which rowTree
 will be used. ( Faith's index). (Default: <code>"phylo"</code>)</p></li>
-<li><p><code>node.label</code>: <code>Character vector</code> or <code>NULL</code> Specifies the
-links between rows and node labels of phylogeny tree specified
+<li><p><code>node.label</code>: <code>Character vector</code> or <code>NULL</code> Specifies
+the links between rows and node labels of phylogeny tree specified
 by <code>tree.name</code>. If a certain row is not linked with the tree, missing
 instance should be noted as NA. When <code>NULL</code>, all the rownames should
 be found from the tree. (Faith's index). (Default: <code>NULL</code>)</p></li>
@@ -131,15 +131,16 @@ be found from the tree. (Faith's index). (Default: <code>NULL</code>)</p></li>
 whether to remove internal nodes when Faith's index is calculated.
 When <code>only.tips=TRUE</code>, those rows that are not tips of tree are
 removed. (Default: <code>FALSE</code>)</p></li>
-<li><p><code>threshold</code>: (Coverage and all evenness indices). <code>Numeric scalar</code>.
+<li><p><code>threshold</code>: (Coverage and all evenness indices).
+<code>Numeric scalar</code>.
 From <code>0 to 1</code>, determines the threshold for coverage and evenness
 indices. When evenness indices are calculated values under or equal to
 this threshold are denoted as zeroes. For coverage index, see details.
 (Default: <code>0.5</code> for coverage, <code>0</code> for evenness indices)</p></li>
 <li><p><code>quantile</code>: (log modulo skewness index). <code>Numeric scalar</code>.
-Arithmetic abundance classes are evenly cut up to to this quantile of the data.
-The assumption is that abundances higher than this are not common, and they
-are classified in their own group. (Default: <code>0.5</code>)</p></li>
+Arithmetic abundance classes are evenly cut up to to this quantile of the
+data. The assumption is that abundances higher than this are not common,
+and they are classified in their own group. (Default: <code>0.5</code>)</p></li>
 <li><p><code>nclasses</code>: (log modulo skewness index). <code>Integer scalar</code>.
 The number of arithmetic abundance classes from zero to the quantile cutoff
 indicated by <code>quantile</code>. (Default: <code>50</code>)</p></li>
@@ -268,9 +269,9 @@ This index gives values in interval 0 to 1.</p>
 dominant species and \(N_{tot}\) is the sum of absolute abundances of all
 species.</p></li>
 <li><p>'simpson_lambda': Simpson's (dominance) index or Simpson's lambda is
-the sum of squared relative abundances. This index gives values in the unit interval.
-This value equals the probability that two randomly chosen individuals
-belongs to the
+the sum of squared relative abundances. This index gives values in the unit
+interval. This value equals the probability that two randomly chosen
+individuals belongs to the
 same species. The higher the probability, the greater the dominance (See
 e.g. Simpson 1949).</p>
 <p>$$lambda = \sum(p^2)$$</p>
@@ -291,10 +292,13 @@ evenly the abundances of different species are distributed. The following
 evenness indices are provided:</p>
 <p>By default, this function returns all indices.</p>
 <p>The available evenness indices include the following (all in lowercase):</p><ul><li><p>'camargo': Camargo's evenness (Camargo 1992)</p></li>
-<li><p>'simpson_evenness': Simpson’s evenness is calculated as inverse Simpson diversity (1/lambda) divided by
+<li><p>'simpson_evenness': Simpson’s evenness is calculated as inverse
+Simpson diversity (1/lambda) divided by
 observed species richness S: (1/lambda)/S.</p></li>
-<li><p>'pielou': Pielou's evenness (Pielou, 1966), also known as Shannon or Shannon-Weaver/Wiener/Weiner
-evenness; H/ln(S). The Shannon-Weaver is the preferred term; see Spellerberg and Fedor (2003).</p></li>
+<li><p>'pielou': Pielou's evenness (Pielou, 1966), also known as Shannon or
+Shannon-Weaver/Wiener/Weiner
+evenness; H/ln(S). The Shannon-Weaver is the preferred term; see
+Spellerberg and Fedor (2003).</p></li>
 <li><p>'evar': Smith and Wilson’s Evar index (Smith &amp; Wilson 1996).</p></li>
 <li><p>'bulla': Bulla’s index (O) (Bulla 1994).</p></li>
 </ul><p>Desirable statistical evenness metrics avoid strong bias towards very

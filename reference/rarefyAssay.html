@@ -20,7 +20,7 @@ subsampled assay."><!-- mathjax --><script src="https://cdnjs.cloudflare.com/aja
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mia</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.15.6</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.15.7</span>
       </span>
     </div>
 
@@ -47,7 +47,7 @@ subsampled assay."><!-- mathjax --><script src="https://cdnjs.cloudflare.com/aja
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Subsample Counts</h1>
-    <small class="dont-index">Source: <a href="https://github.com/microbiome/mia/blob/devel/R/rarefyAssay.R" class="external-link"><code>R/rarefyAssay.R</code></a></small>
+    <small class="dont-index">Source: <a href="https://github.com/microbiome/mia/blob/fix_bioccheck/R/AllGenerics.R" class="external-link"><code>R/AllGenerics.R</code></a>, <a href="https://github.com/microbiome/mia/blob/fix_bioccheck/R/rarefyAssay.R" class="external-link"><code>R/rarefyAssay.R</code></a></small>
     <div class="hidden name"><code>rarefyAssay.Rd</code></div>
     </div>
 
@@ -165,9 +165,9 @@ Microbiome. 2017 Dec;5(1):1-8.</p>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># When samples in TreeSE are less than specified sample, they will be removed.</span></span></span>
-<span class="r-in"><span><span class="co"># If after subsampling features are not present in any of the samples, </span></span></span>
-<span class="r-in"><span><span class="co"># they will be removed.</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># When samples in TreeSE are less than specified sample, they will be</span></span></span>
+<span class="r-in"><span><span class="co"># removed. If after subsampling features are not present in any of the</span></span></span>
+<span class="r-in"><span><span class="co"># samples, they will be removed.</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">GlobalPatterns</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">tse</span> <span class="op">&lt;-</span> <span class="va">GlobalPatterns</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">123</span><span class="op">)</span></span></span>

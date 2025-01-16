@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mia</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.15.6</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.15.7</span>
       </span>
     </div>
 
@@ -44,7 +44,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Merge SE objects into single SE object.</h1>
-    <small class="dont-index">Source: <a href="https://github.com/microbiome/mia/blob/devel/R/mergeSEs.R" class="external-link"><code>R/mergeSEs.R</code></a></small>
+    <small class="dont-index">Source: <a href="https://github.com/microbiome/mia/blob/fix_bioccheck/R/AllGenerics.R" class="external-link"><code>R/AllGenerics.R</code></a>, <a href="https://github.com/microbiome/mia/blob/fix_bioccheck/R/mergeSEs.R" class="external-link"><code>R/mergeSEs.R</code></a></small>
     <div class="hidden name"><code>mergeSEs.Rd</code></div>
     </div>
 
@@ -100,14 +100,15 @@ calculation. (Default: <code>"counts"</code>)</p></dd>
 
 
 <dt id="arg-join">join<a class="anchor" aria-label="anchor" href="#arg-join"></a></dt>
-<dd><p><code>Character scalar</code>. A value for selecting the joining method.
-Must be 'full', 'inner', 'left', or 'right'. 'left' and 'right' are disabled
-when more than two objects are being merged.  (Default: <code>"full"</code>)</p></dd>
+<dd><p><code>Character scalar</code>. A value for selecting the joining
+method. Must be 'full', 'inner', 'left', or 'right'. 'left' and 'right' are
+disabled when more than two objects are being merged.
+(Default: <code>"full"</code>)</p></dd>
 
 
 <dt id="arg-missing-values">missing.values<a class="anchor" aria-label="anchor" href="#arg-missing-values"></a></dt>
-<dd><p><code>NA</code>, <code>0</code> or <code>Character scalar</code>. Specifies the notation
-of missing values. (By default: <code>NA</code>)</p></dd>
+<dd><p><code>NA</code>, <code>0</code> or <code>Character scalar</code>.
+Specifies the notation of missing values. (By default: <code>NA</code>)</p></dd>
 
 
 <dt id="arg-missing-values">missing_values<a class="anchor" aria-label="anchor" href="#arg-missing-values"></a></dt>
@@ -115,8 +116,8 @@ of missing values. (By default: <code>NA</code>)</p></dd>
 
 
 <dt id="arg-collapse-cols">collapse.cols<a class="anchor" aria-label="anchor" href="#arg-collapse-cols"></a></dt>
-<dd><p><code>Logical scalar</code>. Determines whether to collapse identically
-named samples to one. (Default: <code>FALSE</code>)</p></dd>
+<dd><p><code>Logical scalar</code>. Determines whether to collapse
+identically named samples to one. (Default: <code>FALSE</code>)</p></dd>
 
 
 <dt id="arg-collapse-samples">collapse_samples<a class="anchor" aria-label="anchor" href="#arg-collapse-samples"></a></dt>
@@ -124,8 +125,9 @@ named samples to one. (Default: <code>FALSE</code>)</p></dd>
 
 
 <dt id="arg-collapse-rows">collapse.rows<a class="anchor" aria-label="anchor" href="#arg-collapse-rows"></a></dt>
-<dd><p><code>Logical scalar</code>. Selects whether to collapse identically
-named features to one. Since all taxonomy information is taken into account,
+<dd><p><code>Logical scalar</code>. Selects whether to collapse
+identically named features to one. Since all taxonomy information is
+taken into account,
 this concerns rownames-level (usually strain level) comparison. Often
 OTU or ASV level is just an arbitrary number series from sequencing machine
 meaning that the OTU information is not comparable between studies. With this
@@ -154,9 +156,11 @@ taxonomy information along with OTU number matches.
     </div>
     <div id="details">
     <h2>Details</h2>
-    <p>This function merges multiple <code>SummarizedExperiment</code> objects. It combines
+    <p>This function merges multiple <code>SummarizedExperiment</code> objects. It
+combines
 <code>rowData</code>, <code>assays</code>, and <code>colData</code> so that the output includes
-each unique row and column ones. The merging is done based on <code>rownames</code> and
+each unique row and column ones. The merging is done based on
+<code>rownames</code> and
 <code>colnames</code>. <code>rowTree</code> and <code>colTree</code> are preserved if linkage
 between rows/cols and the tree is found.</p>
 <p>Equally named rows are interpreted as equal. Further
@@ -166,9 +170,12 @@ in different objects are interpreted as unique. Collapsing can be enabled
 with <code>collapse.cols = TRUE</code> when equally named samples describe the same
 sample.</p>
 <p>If, for example, all rows are not shared with
-individual objects, there are missing values in <code>assays</code>. The notation of missing
-can be specified with the <code>missing.values</code> argument. If input consists of
-<code>TreeSummarizedExperiment</code> objects, also <code>rowTree</code>, <code>colTree</code>, and
+individual objects, there are missing values in <code>assays</code>.
+The notation of missing
+can be specified with the <code>missing.values</code> argument. If input consists
+of
+<code>TreeSummarizedExperiment</code> objects, also <code>rowTree</code>, <code>colTree</code>,
+and
 <code>referenceSeq</code> are preserved if possible. The data is preserved if
 all the rows or columns can be found from it.</p>
 <p>Compared to <code>cbind</code> and <code>rbind</code> <code>mergeSEs</code>
@@ -176,14 +183,17 @@ allows more freely merging since <code>cbind</code> and <code>rbind</code> expec
 that rows and columns are matching, respectively.</p>
 <p>You can choose joining methods from <code>'full'</code>, <code>'inner'</code>,
 <code>'left'</code>, and  <code>'right'</code>. In all the methods, all the samples are
-included in the result object. However, with different methods, it is possible
+included in the result object. However, with different methods, it is
+possible
 to choose which rows are included.</p>
 <ul><li><p><code>full</code> – all unique features</p></li>
 <li><p><code>inner</code> – all shared features</p></li>
 <li><p><code>left</code> – all the features of the first object</p></li>
 <li><p><code>right</code> – all the features of the second object</p></li>
-</ul><p>The output depends on the input. If the input contains <code>SummarizedExperiment</code>
-object, then the output will be <code>SummarizedExperiment</code>. When all the input
+</ul><p>The output depends on the input. If the input contains
+<code>SummarizedExperiment</code>
+object, then the output will be <code>SummarizedExperiment</code>. When all the
+input
 objects belong to <code>TreeSummarizedExperiment</code>, the output will be
 <code>TreeSummarizedExperiment</code>.</p>
     </div>

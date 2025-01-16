@@ -18,7 +18,7 @@ SummarizedExperiment-class object."><!-- mathjax --><script src="https://cdnjs.c
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mia</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.15.6</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.15.7</span>
       </span>
     </div>
 
@@ -45,7 +45,7 @@ SummarizedExperiment-class object."><!-- mathjax --><script src="https://cdnjs.c
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Calculation prevalence information for features across samples</h1>
-    <small class="dont-index">Source: <a href="https://github.com/microbiome/mia/blob/devel/R/getPrevalence.R" class="external-link"><code>R/getPrevalence.R</code></a></small>
+    <small class="dont-index">Source: <a href="https://github.com/microbiome/mia/blob/fix_bioccheck/R/AllGenerics.R" class="external-link"><code>R/AllGenerics.R</code></a>, <a href="https://github.com/microbiome/mia/blob/fix_bioccheck/R/getPrevalence.R" class="external-link"><code>R/getPrevalence.R</code></a></small>
     <div class="hidden name"><code>getPrevalence.Rd</code></div>
     </div>
 
@@ -56,6 +56,21 @@ SummarizedExperiment-class object."><!-- mathjax --><script src="https://cdnjs.c
 
     <div id="ref-usage">
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">getPrevalence</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">getPrevalent</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">getRare</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">subsetByPrevalent</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">subsetByRare</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">getPrevalentAbundance</span><span class="op">(</span></span>
+<span>  <span class="va">x</span>,</span>
+<span>  assay.type <span class="op">=</span> <span class="va">assay_name</span>,</span>
+<span>  assay_name <span class="op">=</span> <span class="st">"relabundance"</span>,</span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S4 method for class 'ANY'</span></span>
 <span><span class="fu">getPrevalence</span><span class="op">(</span></span>
@@ -77,8 +92,6 @@ SummarizedExperiment-class object."><!-- mathjax --><script src="https://cdnjs.c
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">getPrevalent</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span></span>
-<span></span>
 <span><span class="co"># S4 method for class 'ANY'</span></span>
 <span><span class="fu">getPrevalent</span><span class="op">(</span></span>
 <span>  <span class="va">x</span>,</span>
@@ -98,8 +111,6 @@ SummarizedExperiment-class object."><!-- mathjax --><script src="https://cdnjs.c
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">getRare</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span></span>
-<span></span>
 <span><span class="co"># S4 method for class 'ANY'</span></span>
 <span><span class="fu">getRare</span><span class="op">(</span></span>
 <span>  <span class="va">x</span>,</span>
@@ -118,8 +129,6 @@ SummarizedExperiment-class object."><!-- mathjax --><script src="https://cdnjs.c
 <span>  include_lowest <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu">subsetByPrevalent</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S4 method for class 'SummarizedExperiment'</span></span>
 <span><span class="fu">subsetByPrevalent</span><span class="op">(</span><span class="va">x</span>, rank <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">...</span><span class="op">)</span></span>
@@ -127,20 +136,11 @@ SummarizedExperiment-class object."><!-- mathjax --><script src="https://cdnjs.c
 <span><span class="co"># S4 method for class 'TreeSummarizedExperiment'</span></span>
 <span><span class="fu">subsetByPrevalent</span><span class="op">(</span><span class="va">x</span>, update.tree <span class="op">=</span> <span class="cn">FALSE</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">subsetByRare</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span></span>
-<span></span>
 <span><span class="co"># S4 method for class 'SummarizedExperiment'</span></span>
 <span><span class="fu">subsetByRare</span><span class="op">(</span><span class="va">x</span>, rank <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S4 method for class 'TreeSummarizedExperiment'</span></span>
 <span><span class="fu">subsetByRare</span><span class="op">(</span><span class="va">x</span>, update.tree <span class="op">=</span> <span class="cn">FALSE</span>, <span class="va">...</span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu">getPrevalentAbundance</span><span class="op">(</span></span>
-<span>  <span class="va">x</span>,</span>
-<span>  assay.type <span class="op">=</span> <span class="va">assay_name</span>,</span>
-<span>  assay_name <span class="op">=</span> <span class="st">"relabundance"</span>,</span>
-<span>  <span class="va">...</span></span>
-<span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S4 method for class 'ANY'</span></span>
 <span><span class="fu">getPrevalentAbundance</span><span class="op">(</span></span>
@@ -174,6 +174,15 @@ and <code>subsetByRare</code> additional parameters passed to
 </ul></dd>
 
 
+<dt id="arg-assay-type">assay.type<a class="anchor" aria-label="anchor" href="#arg-assay-type"></a></dt>
+<dd><p><code>Character scalar</code>. Specifies which assay to use for
+calculation. (Default: <code>"counts"</code>)</p></dd>
+
+
+<dt id="arg-assay-name">assay_name<a class="anchor" aria-label="anchor" href="#arg-assay-name"></a></dt>
+<dd><p>Deprecated. Use <code>assay.type</code> instead.</p></dd>
+
+
 <dt id="arg-detection">detection<a class="anchor" aria-label="anchor" href="#arg-detection"></a></dt>
 <dd><p><code>Numeric scalar</code>. Detection threshold for
 absence/presence. If <code>as_relative = FALSE</code>,
@@ -199,15 +208,6 @@ detection and prevalence cutoffs be included? (Default: <code>FALSE</code>)</p><
 <dt id="arg-na-rm">na.rm<a class="anchor" aria-label="anchor" href="#arg-na-rm"></a></dt>
 <dd><p><code>Logical scalar</code>. Should NA values be omitted?
 (Default: <code>TRUE</code>)</p></dd>
-
-
-<dt id="arg-assay-type">assay.type<a class="anchor" aria-label="anchor" href="#arg-assay-type"></a></dt>
-<dd><p><code>Character scalar</code>. Specifies which assay to use for
-calculation. (Default: <code>"counts"</code>)</p></dd>
-
-
-<dt id="arg-assay-name">assay_name<a class="anchor" aria-label="anchor" href="#arg-assay-name"></a></dt>
-<dd><p>Deprecated. Use <code>assay.type</code> instead.</p></dd>
 
 
 <dt id="arg-rank">rank<a class="anchor" aria-label="anchor" href="#arg-rank"></a></dt>
@@ -271,7 +271,7 @@ To cite the R package, see citation('mia')</p>
     <div id="see-also">
     <h2>See also</h2>
     <div class="dont-index"><p><code><a href="agglomerate-methods.html">agglomerateByRank</a></code>,
-<code><a href="summaries.html">getTop</a></code></p></div>
+<code><a href="summary.html">getTop</a></code></p></div>
     </div>
 
     <div id="ref-examples">

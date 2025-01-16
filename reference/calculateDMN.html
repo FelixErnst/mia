@@ -19,7 +19,7 @@ package"><!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mat
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mia</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.15.6</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.15.7</span>
       </span>
     </div>
 
@@ -46,7 +46,7 @@ package"><!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mat
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Dirichlet-Multinomial Mixture Model: Machine Learning for Microbiome Data</h1>
-    <small class="dont-index">Source: <a href="https://github.com/microbiome/mia/blob/devel/R/calculateDMM.R" class="external-link"><code>R/calculateDMM.R</code></a></small>
+    <small class="dont-index">Source: <a href="https://github.com/microbiome/mia/blob/fix_bioccheck/R/AllGenerics.R" class="external-link"><code>R/AllGenerics.R</code></a>, <a href="https://github.com/microbiome/mia/blob/fix_bioccheck/R/calculateDMM.R" class="external-link"><code>R/calculateDMM.R</code></a></small>
     <div class="hidden name"><code>calculateDMN.Rd</code></div>
     </div>
 
@@ -58,6 +58,16 @@ package</p>
 
     <div id="ref-usage">
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">calculateDMN</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">getDMN</span><span class="op">(</span><span class="va">x</span>, name <span class="op">=</span> <span class="st">"DMN"</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">bestDMNFit</span><span class="op">(</span><span class="va">x</span>, name <span class="op">=</span> <span class="st">"DMN"</span>, type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"laplace"</span>, <span class="st">"AIC"</span>, <span class="st">"BIC"</span><span class="op">)</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">calculateDMNgroup</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">performDMNgroupCV</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">getBestDMNFit</span><span class="op">(</span><span class="va">x</span>, name <span class="op">=</span> <span class="st">"DMN"</span>, type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"laplace"</span>, <span class="st">"AIC"</span>, <span class="st">"BIC"</span><span class="op">)</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S4 method for class 'ANY'</span></span>
 <span><span class="fu">calculateDMN</span><span class="op">(</span></span>
@@ -80,22 +90,14 @@ package</p>
 <span></span>
 <span><span class="fu">runDMN</span><span class="op">(</span><span class="va">x</span>, name <span class="op">=</span> <span class="st">"DMN"</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">getDMN</span><span class="op">(</span><span class="va">x</span>, name <span class="op">=</span> <span class="st">"DMN"</span>, <span class="va">...</span><span class="op">)</span></span>
-<span></span>
 <span><span class="co"># S4 method for class 'SummarizedExperiment'</span></span>
 <span><span class="fu">getDMN</span><span class="op">(</span><span class="va">x</span>, name <span class="op">=</span> <span class="st">"DMN"</span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu">bestDMNFit</span><span class="op">(</span><span class="va">x</span>, name <span class="op">=</span> <span class="st">"DMN"</span>, type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"laplace"</span>, <span class="st">"AIC"</span>, <span class="st">"BIC"</span><span class="op">)</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S4 method for class 'SummarizedExperiment'</span></span>
 <span><span class="fu">bestDMNFit</span><span class="op">(</span><span class="va">x</span>, name <span class="op">=</span> <span class="st">"DMN"</span>, type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"laplace"</span>, <span class="st">"AIC"</span>, <span class="st">"BIC"</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">getBestDMNFit</span><span class="op">(</span><span class="va">x</span>, name <span class="op">=</span> <span class="st">"DMN"</span>, type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"laplace"</span>, <span class="st">"AIC"</span>, <span class="st">"BIC"</span><span class="op">)</span>, <span class="va">...</span><span class="op">)</span></span>
-<span></span>
 <span><span class="co"># S4 method for class 'SummarizedExperiment'</span></span>
 <span><span class="fu">getBestDMNFit</span><span class="op">(</span><span class="va">x</span>, name <span class="op">=</span> <span class="st">"DMN"</span>, type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"laplace"</span>, <span class="st">"AIC"</span>, <span class="st">"BIC"</span><span class="op">)</span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu">calculateDMNgroup</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S4 method for class 'ANY'</span></span>
 <span><span class="fu">calculateDMNgroup</span><span class="op">(</span></span>
@@ -116,8 +118,6 @@ package</p>
 <span>  transposed <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu">performDMNgroupCV</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S4 method for class 'ANY'</span></span>
 <span><span class="fu">performDMNgroupCV</span><span class="op">(</span></span>
@@ -154,9 +154,19 @@ object.</p></dd>
 <dd><p>optional arguments not used.</p></dd>
 
 
+<dt id="arg-name">name<a class="anchor" aria-label="anchor" href="#arg-name"></a></dt>
+<dd><p><code>Character scalar</code>. The name to store the result in
+<code><a href="https://rdrr.io/pkg/SummarizedExperiment/man/RangedSummarizedExperiment-class.html" class="external-link">metadata</a></code></p></dd>
+
+
+<dt id="arg-type">type<a class="anchor" aria-label="anchor" href="#arg-type"></a></dt>
+<dd><p><code>Character scalar</code>. The type of measure used for the
+goodness of fit. One of ‘laplace’, ‘AIC’ or ‘BIC’.</p></dd>
+
+
 <dt id="arg-k">k<a class="anchor" aria-label="anchor" href="#arg-k"></a></dt>
-<dd><p><code>Numeric scalar</code>. The number of Dirichlet components to fit. See
-<code><a href="https://mtmorgan.github.io/DirichletMultinomial/reference/dmn.html" class="external-link">dmn</a></code>. (Default: <code>1</code>)</p></dd>
+<dd><p><code>Numeric scalar</code>. The number of Dirichlet components to fit.
+See <code><a href="https://mtmorgan.github.io/DirichletMultinomial/reference/dmn.html" class="external-link">dmn</a></code>. (Default: <code>1</code>)</p></dd>
 
 
 <dt id="arg-bpparam">BPPARAM<a class="anchor" aria-label="anchor" href="#arg-bpparam"></a></dt>
@@ -184,23 +194,13 @@ assay used in calculation. (Default: <code>"counts"</code>)</p></dd>
 
 
 <dt id="arg-transposed">transposed<a class="anchor" aria-label="anchor" href="#arg-transposed"></a></dt>
-<dd><p><code>Logical scalar</code>. Is <code>x</code> transposed with samples in rows?
-(Default: <code>FALSE</code>)</p></dd>
-
-
-<dt id="arg-name">name<a class="anchor" aria-label="anchor" href="#arg-name"></a></dt>
-<dd><p><code>Character scalar</code>. The name to store the result in
-<code><a href="https://rdrr.io/pkg/SummarizedExperiment/man/RangedSummarizedExperiment-class.html" class="external-link">metadata</a></code></p></dd>
-
-
-<dt id="arg-type">type<a class="anchor" aria-label="anchor" href="#arg-type"></a></dt>
-<dd><p><code>Character scalar</code>. The type of measure used for the goodness of fit. One of
-‘laplace’, ‘AIC’ or ‘BIC’.</p></dd>
+<dd><p><code>Logical scalar</code>. Is <code>x</code> transposed with samples
+in rows? (Default: <code>FALSE</code>)</p></dd>
 
 
 <dt id="arg-variable">variable<a class="anchor" aria-label="anchor" href="#arg-variable"></a></dt>
-<dd><p><code>Character scalar</code>. A variable from <code>colData</code> to use as a
-grouping variable. Must be a character of factor.</p></dd>
+<dd><p><code>Character scalar</code>. A variable from <code>colData</code> to
+use as a grouping variable. Must be a character of factor.</p></dd>
 
 </dl></div>
     <div id="value">

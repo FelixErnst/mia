@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mia</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.15.6</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.15.7</span>
       </span>
     </div>
 
@@ -44,7 +44,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Import Metaphlan results to <code>TreeSummarizedExperiment</code></h1>
-    <small class="dont-index">Source: <a href="https://github.com/microbiome/mia/blob/devel/R/importMetaphlan.R" class="external-link"><code>R/importMetaphlan.R</code></a></small>
+    <small class="dont-index">Source: <a href="https://github.com/microbiome/mia/blob/fix_bioccheck/R/importMetaphlan.R" class="external-link"><code>R/importMetaphlan.R</code></a></small>
     <div class="hidden name"><code>importMetaPhlAn.Rd</code></div>
     </div>
 
@@ -88,8 +88,8 @@ path of the phylogenetic tree.
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
-<dd><p>additional arguments:</p><ul><li><p><code>assay.type</code>: <code>Character scalar</code>. Specifies the name of the assay
-used in calculation. (Default: <code>"counts"</code>)</p></li>
+<dd><p>additional arguments:</p><ul><li><p><code>assay.type</code>: <code>Character scalar</code>. Specifies the name of
+the assay used in calculation. (Default: <code>"counts"</code>)</p></li>
 <li><p><code>prefix.rm</code>: <code>Logical scalar</code>. Should
 taxonomic prefixes be removed? (Default: <code>FALSE</code>)</p></li>
 <li><p><code>remove.suffix</code>: <code>Logical scalar</code>. Should
@@ -125,9 +125,10 @@ Data is imported so that data at the lowest rank is imported as a
     </div>
     <div id="references">
     <h2>References</h2>
-    <p>Beghini F, McIver LJ, Blanco-Míguez A, Dubois L, Asnicar F, Maharjan S, Mailyan A,
-Manghi P, Scholz M, Thomas AM, Valles-Colomer M, Weingart G, Zhang Y, Zolfo M,
-Huttenhower C, Franzosa EA, &amp; Segata N (2021) Integrating taxonomic, functional,
+    <p>Beghini F, McIver LJ, Blanco-Míguez A, Dubois L, Asnicar F, Maharjan S,
+Mailyan A, Manghi P, Scholz M, Thomas AM, Valles-Colomer M, Weingart G,
+Zhang Y, Zolfo M, Huttenhower C, Franzosa EA, &amp; Segata N (2021)
+Integrating taxonomic, functional,
 and strain-level profiling of diverse microbial communities with bioBakery 3.
 <em>eLife</em>. 10:e65088. doi: 10.7554/eLife.65088</p>
     </div>
