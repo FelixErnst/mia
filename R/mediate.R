@@ -16,7 +16,7 @@
 #'   as mediator in the model. (Default: \code{NULL})
 #'
 #' @param assay.type \code{Character scalar}. Specifies the assay used for
-#'   feature-wise mediation analysis. (Default: \code{"counts"})
+#'   feature-wise mediation analysis. (Default: \code{NULL})
 #' 
 #' @param dimred \code{Character scalar}. Indicates the reduced dimension
 #'   result in \code{reducedDims(object)} for component-wise mediation analysis.
@@ -183,7 +183,7 @@ setGeneric("getMediation", signature = c("x"),
 #' @importFrom SingleCellExperiment reducedDim reducedDimNames
 setMethod("getMediation", signature = c(x = "SummarizedExperiment"),
         function(x, outcome, treatment,
-                 mediator = NULL, assay.type = "counts", dimred = NULL,
+                 mediator = NULL, assay.type = NULL, dimred = NULL,
                  family = gaussian(), covariates = NULL, p.adj.method = "holm",
                  add.metadata = FALSE, verbose = TRUE, ...) {
 
