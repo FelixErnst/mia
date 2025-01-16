@@ -491,26 +491,6 @@ setMethod("mergeSEs", signature = c(x = "list"),
                 "is discarded.", call. = FALSE)
         return(tse)
     }
-    # If there are multiple trees, select non-duplicated trees; the largest
-    # take the precedence, remove duplicated rowlinks --> each row is presented
-    # in the set only once --> remove trees that do not have any values anymore.
-    # The aim is to subset the dataset so that it is easier to handle in tree
-    # binding step for instance. Otherwise, it would lead to huge tree that
-    # might exceed memory.
-    if( length(trees) > 1 ){
-        # Sort trees --> trees with highest number of taxa first
-        max_trees <- table(links$whichTree)
-        max_trees <- names(max_trees)[order(max_trees, decreasing = TRUE)]
-        # Order the link data frame, take largest trees first
-        links$whichTree <- factor(links$whichTree, levels = max_trees)
-        links <- links[order(links$whichTree), ]
-        # Remove factorization
-        links$whichTree <- unfactor(links$whichTree)
-        # Remove duplicated links
-        links <- links[!duplicated(links$names), ]
-        # Subset trees
-        trees <- trees[unique(links$whichTree)]
-    }
     # Combine trees into single tree.
     tree <- .merge_trees(trees, links, ...)
     # Order links so that the order matches with TreeSE
