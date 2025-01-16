@@ -8,7 +8,8 @@
 #' summarization.
 #'
 #' @name mia-package
-#' @seealso \link[TreeSummarizedExperiment:TreeSummarizedExperiment-class]{TreeSummarizedExperiment}
+#' @seealso
+#' \link[TreeSummarizedExperiment:TreeSummarizedExperiment-class]{TreeSummarizedExperiment}
 "_PACKAGE"
 NULL
 
@@ -61,9 +62,11 @@ NULL
 #' tse
 NULL
 
-#' Global patterns of 16S rRNA diversity at a depth of millions of sequences per sample.
+#' Global patterns of 16S rRNA diversity at a depth of millions of sequences per
+#' sample.
 #'
-#' GlobalPatterns compared the microbial communities from 25 environmental samples
+#' GlobalPatterns compared the microbial communities from 25 environmental
+#' samples
 #' and three known "mock communities" at a an average depth of 3.1 million reads
 #' per sample. Authors reproduced diversity patterns seen in many other 
 #' published studies, while investigating technical bias by applying the same
@@ -82,7 +85,8 @@ NULL
 #'   \item{Final_Barcode}{final barcode (6 nucleotides)}
 #'   \item{Barcode_truncated_plus_T}{truncated barcode with an added tyrosine
 #'     (6 nucleotides)}
-#'   \item{Barcode_full_length}{complete barcode with a length of 11 nucleotides}
+#'   \item{Barcode_full_length}{complete barcode with a length of 11
+#'     nucleotides}
 #'   \item{SampleType}{sampling type by collection site (Soil, Feces, Skin,
 #'     Tongue, Freshwater, Creek Freshwater, Ocean, Estuary Sediment and Mock)}
 #'   \item{Description}{additional information (sampling location, environmental
@@ -97,7 +101,8 @@ NULL
 #' @author Caporaso, J. G., et al.
 #' @references
 #' Caporaso, J. G., et al. (2011). 
-#' Global patterns of 16S rRNA diversity at a depth of millions of sequences per sample.
+#' Global patterns of 16S rRNA diversity at a depth of millions of sequences per
+#' sample.
 #' PNAS, 108, 4516-4522. \url{https://doi.org/10.1073/pnas.1000080107}
 NULL
 
@@ -140,7 +145,8 @@ NULL
 #' Arumugam, M., et al. (2011). Enterotypes of the human gut microbiome.
 #' Nature, 473(7346), 174-180. \url{https://doi.org/10.1038/nature09944}
 #'
-#' Arumugam, M., et al. (2014). Addendum: Enterotypes of the human gut microbiome.
+#' Arumugam, M., et al. (2014). Addendum: Enterotypes of the human gut
+#' microbiome.
 #' Nature 506, 516 (2014). \url{https://doi.org/10.1038/nature13075}
 #' 
 #' @source \url{http://www.bork.embl.de/Docu/Arumugam_et_al_2011/downloads.html}
@@ -150,7 +156,8 @@ NULL
 #' 
 #' This small dataset from a human esophageal community includes 3 samples from
 #' 3 human adults based on biopsies analysed with 16S rDNA PCR. The 16S rRNA
-#' sequence processing is provided in the mothur wiki from the link below. It was
+#' sequence processing is provided in the mothur wiki from the link below. It
+#' was
 #' converted into a TreeSummarizedExperiment from the \pkg{phyloseq} package.
 #' 
 #' @format A TreeSummarizedExperiment with 58 features and 3 samples. The
@@ -163,12 +170,15 @@ NULL
 #' @seealso \code{\link{mia-datasets}}
 #' @author Pei et al. \email{zhiheng.pei@@med.nyu.edu}.
 #' @references 
-#' Pei, Z., Bini, E. J., Yang, L., Zhou, M., Francois, F., & Blaser, M. J. (2004). 
+#' Pei, Z., Bini, E. J., Yang, L., Zhou, M., Francois, F., & Blaser, M. J.
+#' (2004). 
 #' Bacterial biota in the human distal esophagus.
-#' Proceedings of the National Academy of Sciences of the United States of America, 101(12), 4250-4255.
+#' Proceedings of the National Academy of Sciences of the United States of
+#' America, 101(12), 4250-4255.
 #' \url{https://doi.org/10.1073/pnas.0306398101}
 #'
-#' McMurdie, J. & Holmes, S. (2013) \emph{phyloseq}: An R Package for reproducible interactive analysis
+#' McMurdie, J. & Holmes, S. (2013) \emph{phyloseq}: An R Package for
+#' reproducible interactive analysis
 #' and graphics of microbiome census data. PLoS ONE. 8(4):e61217.
 #' \url{https://doi.org/10.1371/journal.pone.0061217}
 #'
@@ -237,9 +247,11 @@ NULL
 #' @author Potbhare, R., et al.
 #' @references
 #' Potbhare, R., RaviKumar, A., Munukka, E., Lahti, L., & Ashma, R. (2022). 
-#' Skin microbiota diversity among genetically unrelated individuals of Indian origin. 
+#' Skin microbiota diversity among genetically unrelated individuals of Indian
+#' origin. 
 #' PeerJ, 10, e13075. \url{https://doi.org/10.7717/peerj.13075}
-#' Supplemental information includes OTU table and taxonomy table publicly-accessible from: 
+#' Supplemental information includes OTU table and taxonomy table
+#' publicly-accessible from: 
 #' \url{https://www.doi.org/10.7717/peerj.13075/supp-1}
 #' \url{https://www.doi.org/10.7717/peerj.13075/supp-2}
 NULL
@@ -254,9 +266,12 @@ NULL
 #' common for all experiments (microbiota, metabolites, biomarkers) and is
 #' described below.
 #' 
-#' @format A MultiAssayExperiment with 3 experiments (microbiota, metabolites and
-#' biomarkers). rowData of the microbiota experiment contains taxonomic information
-#' at Phylum, Class, Order, Family, Genus, Species and OTU levels. The metabolites
+#' @format A MultiAssayExperiment with 3 experiments (microbiota, metabolites
+#' and
+#' biomarkers). rowData of the microbiota experiment contains taxonomic
+#' information
+#' at Phylum, Class, Order, Family, Genus, Species and OTU levels. The
+#' metabolites
 #' and biomarkers experiments contain 38 NMR metabolites and 39 biomarkers,
 #' respectively. The colData includes:
 #' 
@@ -313,7 +328,8 @@ NULL
 #' @author A.C. Tengeler, et al.
 #' @references
 #' Tengeler, A.C., Dam, S.A., Wiesmann, M. et al. 
-#' Gut microbiota from persons with attention-deficit/hyperactivity disorder affects the brain in mice. 
+#' Gut microbiota from persons with attention-deficit/hyperactivity disorder
+#' affects the brain in mice. 
 #' Microbiome 8, 44 (2020). \url{https://doi.org/10.1186/s40168-020-00816-x}
 #' 
 #' Supplemental information includes Home-cage activity, methods, results and imaging parameters and publicly-accessible from: 
@@ -323,14 +339,18 @@ NULL
 #' 
 NULL
 
-#' Fecal microbiota samples from 589 patients across different colorectal cancer stages
+#' Fecal microbiota samples from 589 patients across different colorectal
+#' cancer stages
 #'
 #' The study combined Quantitative Microbiome Profiling (QMP) with 
 #' extensive patient phenotyping from a group of 589 colorectal cancer (CRC) 
 #' patients, advanced adenoma (AA) patients, and healthy controls. 
-#' By implementing confounder control and quantitative profiling methods, the study 
-#' was able to reveal potential misleading associations between microbial markers 
-#' and colorectal cancer development that were driven by other factors like intestinal 
+#' By implementing confounder control and quantitative profiling methods,
+#' the study 
+#' was able to reveal potential misleading associations between microbial
+#' markers 
+#' and colorectal cancer development that were driven by other factors like
+#' intestinal 
 #' inflammation, rather than the cancer diagnosis itself.
 #'
 #' @format A TreeSummarizedExperiment with 676 features and 589 samples. 
@@ -338,9 +358,11 @@ NULL
 #' 
 #' \describe{
 #'   \item{sampleID}{(character) Sample ID from the corresponding study}
-#'   \item{diagnosis}{(factor) Diagnosis type, with possible values: "ADE" (advanced adenoma), 
+#'   \item{diagnosis}{(factor) Diagnosis type, with possible values: "ADE"
+#'   (advanced adenoma), 
 #'   "CRC" (colorectal cancer), "CTL" (control)}
-#'   \item{colonoscopy}{(factor) Colonoscopy result, with possible values: "FIT_Positive", 
+#'   \item{colonoscopy}{(factor) Colonoscopy result, with possible values:
+#'   "FIT_Positive", 
 #'   "familial_risk_familial_CRC_FCC", "familial_risk_no", "abdomil_complaints"}
 #' }
 #'
@@ -352,9 +374,12 @@ NULL
 #' @author 
 #' Shadman Ishraq
 #' @references
-#' Raúl Y. Tito, Sara Verbandt, Marta Aguirre Vazquez, Leo Lahti, Chloe Verspecht, Verónica Lloréns-Rico, Sara Vieira-Silva,
-#' Janine Arts, Gwen Falony, Evelien Dekker, Joke Reumers, Sabine Tejpar & Jeroen Raes (2024). 
-#' Microbiome confounders and quantitative profiling challenge predicted microbial targets in colorectal cancer development. 
+#' Raúl Y. Tito, Sara Verbandt, Marta Aguirre Vazquez, Leo Lahti, Chloe
+#' Verspecht, Verónica Lloréns-Rico, Sara Vieira-Silva,
+#' Janine Arts, Gwen Falony, Evelien Dekker, Joke Reumers, Sabine Tejpar &
+#' Jeroen Raes (2024). 
+#' Microbiome confounders and quantitative profiling challenge predicted
+#' microbial targets in colorectal cancer development. 
 #' Nature Medicine,30, 1339-1348. 
 #' \url{https://doi.org/10.1038/s41591-024-02963-2}
 #' 

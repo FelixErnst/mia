@@ -127,7 +127,7 @@
 #' @param f Deprecated. Use \code{group} instead.
 #'
 #' @param update.tree \code{Logical scalar}. Should
-#'   \code{rowTree()} also be merged? (Default: \code{FALSE})
+#' \code{rowTree()} also be merged? (Default: \code{TRUE})
 #' 
 #' @param mergeTree Deprecated. Use \code{update.tree} instead.
 #'
@@ -146,9 +146,9 @@
 #' nrow(GlobalPatterns)
 #' nrow(x1)
 #'
-#' # agglomerate the tree as well
-#' x2 <- agglomerateByRank(GlobalPatterns, rank="Family",
-#'                        update.tree = TRUE)
+#' # Do not agglomerate the tree
+#' x2 <- agglomerateByRank(
+#'     GlobalPatterns, rank="Family", update.tree = FALSE)
 #' nrow(x2) # same number of rows, but
 #' rowTree(x1) # ... different
 #' rowTree(x2) # ... tree
@@ -226,15 +226,10 @@ NULL
 
 #' @rdname agglomerate-methods
 #' @export
-setGeneric("agglomerateByRank", signature = "x", function(x, ...)
-    standardGeneric("agglomerateByRank"))
-
-#' @rdname agglomerate-methods
-#' @export
 setMethod(
     "agglomerateByRank", signature = c(x = "TreeSummarizedExperiment"),
     function(x, rank = taxonomyRanks(x)[1], update.tree = agglomerateTree,
-        agglomerate.tree = agglomerateTree, agglomerateTree = FALSE, ...){
+        agglomerate.tree = agglomerateTree, agglomerateTree = TRUE, ...){
         # Input check
         if(!.is_a_bool(update.tree)){
             stop("'update.tree' must be TRUE or FALSE.", call. = FALSE)
@@ -250,6 +245,8 @@ setMethod(
         }
         # Agglomerate data by using SCE method
         x <- callNextMethod(x, rank = rank, update.tree = update.tree, ...)
+        # Rename tree to correspond the current rownames
+        x <- .rename_all_tree_nodes(x, by = 1L)
         return(x)
     }
 )
@@ -363,15 +360,9 @@ setMethod("agglomerateByRank", signature = c(x = "SummarizedExperiment"),
 #' @rdname agglomerate-methods
 #' @aliases agglomerateByVariable
 #' @export
-setGeneric("agglomerateByVariable", signature = "x", function(x, ...)
-    standardGeneric("agglomerateByVariable"))
-
-#' @rdname agglomerate-methods
-#' @aliases agglomerateByVariable
-#' @export
 setMethod("agglomerateByVariable",
     signature = c(x = "TreeSummarizedExperiment"),
-    function(x, by, group = f, f, update.tree = mergeTree, mergeTree = FALSE,
+    function(x, by, group = f, f, update.tree = mergeTree, mergeTree = TRUE,
         ...){
         # Check by
         by <- .check_MARGIN(by)
@@ -494,7 +485,81 @@ setMethod("agglomerateByVariable", signature = c(x = "SummarizedExperiment"),
             x <- do.call(subsetByLeaf, args)
         }
     }
+    # Rename all tree nodes
+    x <- .rename_all_tree_nodes(x, by)
     return(x)
+}
+
+# This function loops through all trees and replace their node names by
+# corresponding feature / sample name found in data.
+.rename_all_tree_nodes <- function(x, by = 1L){
+    # Loop through tree names
+    tree_names_FUN <- switch(by, rowTreeNames, colTreeNames)
+    tree_names <- tree_names_FUN(x)
+    for( name in tree_names ){
+        # Rename nodes
+        x <- .rename_tree_nodes(x, name, by)
+    }
+    return(x)
+}
+
+# This function renames the nodes of tree based on the row/colnames of TreeSE so
+# that the names of nodes match with row/colnames.
+.rename_tree_nodes <- function(tse, tree.name, by){
+    # Get correct functions based on MARGIN/by
+    names_FUN <- switch(by, rownames, colnames)
+    links_FUN <- switch(by, rowLinks, colLins)
+    tree_FUN <- switch(by, rowTree, colTree)
+    #
+    # Get rowlinks for the tree
+    links <- links_FUN(tse) |> DataFrame()
+    links <- links[links[["whichTree"]] == tree.name, ]
+    rownames(links) <- names_FUN(tse)
+    # The rownames must be unique in order to use them as names of the nodes.
+    # Moreover, rows must have one-to-one matching.
+    if( !is.null(rownames(links)) && !anyDuplicated(rownames(links)) &&
+            nrow(links) > 0L && !anyDuplicated(links[["nodeLab"]]) ){
+        # Get the tree
+        tree <- tree_FUN(tse, tree.name)
+        # Rename tips
+        if( any(links[["isLeaf"]]) ){
+            # Get new labels
+            new_labels <- links[
+                match(tree[["tip.label"]], links[["nodeLab"]]), ]
+            new_labels[["nodeLab"]] <- rownames(new_labels)
+            missing <- is.na(new_labels[["nodeLab"]]) 
+            new_labels[missing, "nodeLab"] <- tree[["tip.label"]][missing]
+            # Rename
+            tree[["tip.label"]] <- new_labels[["nodeLab"]]
+            # Update rowlinks
+            new_labels <- new_labels[
+                match(rownames(links), rownames(new_labels)), ]
+            not_missing <- !is.na(new_labels[["nodeLab"]]) 
+            links[not_missing, ] <- new_labels[not_missing, ]
+        }
+        # Rename internal nodes
+        if( any(!links[["isLeaf"]]) ){
+            # Get new labels
+            new_labels <- links[
+                match(tree[["node.label"]], links[["nodeLab"]]), ]
+            new_labels[["nodeLab"]] <- rownames(new_labels)
+            missing <- is.na(new_labels[["nodeLab"]]) 
+            new_labels[missing, "nodeLab"] <- tree[["node.label"]][missing]
+            # Rename
+            tree[["node.label"]] <- new_labels[["nodeLab"]]
+            # Update rowlinks
+            new_labels <- new_labels[
+                match(rownames(links), rownames(new_labels)), ]
+            not_missing <- !is.na(new_labels[["nodeLab"]]) 
+            links[not_missing, ] <- new_labels[not_missing, ]
+        }
+        # Assign the tree back
+        args <- list(tse, tree, links[["nodeLab"]])
+        names(args) <- c("x", paste0(
+            ifelse(by == 1L, "row", "col"), c("Tree", "NodeLab")))
+        tse <- do.call(changeTree, args)
+    }
+    return(tse)
 }
 
 # This function trims tips until all tips can be found from provided set of
