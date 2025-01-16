@@ -29,8 +29,6 @@ unsplitOn(x, ...)
   ...
 )
 
-unsplitOn(x, ...)
-
 \S4method{unsplitOn}{list}(x, update.tree = update_rowTree, update_rowTree = TRUE, ...)
 
 \S4method{unsplitOn}{SimpleList}(x, update.tree = update_rowTree, update_rowTree = TRUE, ...)

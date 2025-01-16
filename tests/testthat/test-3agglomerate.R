@@ -113,6 +113,10 @@ test_that("agglomerate", {
     expect_equal(nrow(test0), length( all_phyla[!is.na(all_phyla)] ))
     expect_equal(nrow(test1), length( all_phyla[!is.na(all_phyla)] ))
     
+    # Check that the names of tree tips correspond to rownames
+    expect_equal( all(rowTree(test0)$tip %in% rownames(test0)) )
+    expect_equal( all(rowTree(test1)$tip %in% rownames(test1)) )
+    
     # Check that there are more taxa when agglomeration is to "Species" level
     test0 <- agglomerateByVariable(tse, by = 1, group = "Species", empty.rm = FALSE)
     test1 <- agglomerateByRank(tse, rank = "Species", empty.rm = FALSE)

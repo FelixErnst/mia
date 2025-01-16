@@ -245,7 +245,7 @@ setMethod(
         }
         # Agglomerate data by using SCE method
         x <- callNextMethod(x, rank = rank, update.tree = update.tree, ...)
-        # Rename tree ndesto correspond the current rownames
+        # Rename tree to correspond the current rownames
         x <- .rename_all_tree_nodes(x, by = 1L)
         return(x)
     }
