@@ -44,7 +44,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Calculate correlations between features of two experiments.</h1>
-    <small class="dont-index">Source: <a href="https://github.com/microbiome/mia/blob/devel/R/AllGenerics.R" class="external-link"><code>R/AllGenerics.R</code></a>, <a href="https://github.com/microbiome/mia/blob/devel/R/getCrossAssociation.R" class="external-link"><code>R/getCrossAssociation.R</code></a></small>
+    <small class="dont-index">Source: <a href="https://github.com/microbiome/mia/blob/association_dimred/R/AllGenerics.R" class="external-link"><code>R/AllGenerics.R</code></a>, <a href="https://github.com/microbiome/mia/blob/association_dimred/R/getCrossAssociation.R" class="external-link"><code>R/getCrossAssociation.R</code></a></small>
     <div class="hidden name"><code>getCrossAssociation.Rd</code></div>
     </div>
 
@@ -330,7 +330,7 @@ faster solutions when running times are critical.</p>
 <span class="r-in"><span><span class="co"># Calculate cross-correlations</span></span></span>
 <span class="r-in"><span><span class="va">result</span> <span class="op">&lt;-</span> <span class="fu">getCrossAssociation</span><span class="op">(</span><span class="va">mae</span>, method <span class="op">=</span> <span class="st">"pearson"</span>, assay.type2 <span class="op">=</span> <span class="st">"nmr"</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating correlations...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> altexp1: -, altexp2: -, assay.type1: counts, col.var1: -, assay.type2: nmr, col.var2: -</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> altexp1: -, altexp2: -, assay.type1: counts, col.var1: -, dimred1: -, assay.type2: nmr, col.var2: -, dimred2: -</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> by: 1, function: stats::cor, method: pearson, test.signif: FALSE, p.adj.method: -, paired: FALSE, show.warnings: TRUE</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>the standard deviation is zero</span>
 <span class="r-in"><span><span class="co"># Show first 5 entries</span></span></span>
@@ -355,7 +355,7 @@ faster solutions when running times are critical.</p>
 <span class="r-in"><span>    <span class="va">mae</span>, experiment2 <span class="op">=</span> <span class="fl">2</span>, assay.type1 <span class="op">=</span> <span class="st">"relabundance"</span>, assay.type2 <span class="op">=</span> <span class="st">"nmr"</span>,</span></span>
 <span class="r-in"><span>    altexp1 <span class="op">=</span> <span class="st">"Phylum"</span>, method <span class="op">=</span> <span class="st">"pearson"</span>, mode <span class="op">=</span> <span class="st">"matrix"</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating correlations...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> altexp1: Phylum, altexp2: -, assay.type1: relabundance, col.var1: -, assay.type2: nmr, col.var2: -</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> altexp1: Phylum, altexp2: -, assay.type1: relabundance, col.var1: -, dimred1: -, assay.type2: nmr, col.var2: -, dimred2: -</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> by: 1, function: stats::cor, method: pearson, test.signif: FALSE, p.adj.method: -, paired: FALSE, show.warnings: TRUE</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Converting table into matrices...</span>
 <span class="r-in"><span><span class="co"># Show first 5 entries</span></span></span>
@@ -382,7 +382,7 @@ faster solutions when running times are critical.</p>
 <span class="r-in"><span>    <span class="va">mae</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>, experiment2 <span class="op">=</span> <span class="va">mae</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>, method <span class="op">=</span> <span class="st">"pearson"</span>,</span></span>
 <span class="r-in"><span>    filter.self.cor <span class="op">=</span> <span class="cn">TRUE</span>, p.adj.threshold <span class="op">=</span> <span class="fl">0.05</span>, test.signif <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating correlations...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> altexp1: -, altexp2: -, assay.type1: counts, col.var1: -, assay.type2: counts, col.var2: -</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> altexp1: -, altexp2: -, assay.type1: counts, col.var1: -, dimred1: -, assay.type2: counts, col.var2: -, dimred2: -</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> by: 1, function: stats::cor.test, method: pearson, test.signif: TRUE, p.adj.method: fdr, paired: FALSE, show.warnings: TRUE</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Filtering results...</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> p_adj_threshold: 0.05, cor.threshold: -, filter.self.cor: TRUE</span>
@@ -411,7 +411,7 @@ faster solutions when running times are critical.</p>
 <span class="r-in"><span>    <span class="va">mae</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>, <span class="va">mae</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>, by <span class="op">=</span> <span class="fl">2</span>, paired <span class="op">=</span> <span class="cn">FALSE</span>,</span></span>
 <span class="r-in"><span>    association.fun <span class="op">=</span> <span class="va">getDissimilarity</span>, method <span class="op">=</span> <span class="st">"bray"</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating correlations...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> altexp1: -, altexp2: -, assay.type1: counts, col.var1: -, assay.type2: counts, col.var2: -</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> altexp1: -, altexp2: -, assay.type1: counts, col.var1: -, dimred1: -, assay.type2: counts, col.var2: -, dimred2: -</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> by: 2, function: getDissimilarity, method: bray, test.signif: FALSE, p.adj.method: -, paired: FALSE, show.warnings: TRUE</span>
 <span class="r-in"><span>                                        </span></span>
 <span class="r-in"><span><span class="co"># If experiments are equal and measure is symmetric</span></span></span>
@@ -423,7 +423,7 @@ faster solutions when running times are critical.</p>
 <span class="r-in"><span>    <span class="va">mae</span>, experiment1 <span class="op">=</span> <span class="st">"microbiota"</span>, experiment2 <span class="op">=</span> <span class="st">"microbiota"</span>, </span></span>
 <span class="r-in"><span>    assay.type1 <span class="op">=</span> <span class="st">"counts"</span>, assay.type2 <span class="op">=</span> <span class="st">"counts"</span>, symmetric <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating correlations...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> altexp1: -, altexp2: -, assay.type1: counts, col.var1: -, assay.type2: counts, col.var2: -</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> altexp1: -, altexp2: -, assay.type1: counts, col.var1: -, dimred1: -, assay.type2: counts, col.var2: -, dimred2: -</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> by: 1, function: stats::cor, method: kendall, test.signif: FALSE, p.adj.method: -, paired: FALSE, show.warnings: TRUE</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># For big data sets, the calculations might take a long time.</span></span></span>
@@ -435,7 +435,7 @@ faster solutions when running times are critical.</p>
 <span class="r-in"><span><span class="va">tse_sub</span> <span class="op">&lt;-</span> <span class="va">tse</span><span class="op">[</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_len</a></span><span class="op">(</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">tse</span><span class="op">)</span> <span class="op">)</span>, <span class="va">sample_size</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">tse</span><span class="op">)</span> <span class="op">)</span>, <span class="op">]</span></span></span>
 <span class="r-in"><span><span class="va">result</span> <span class="op">&lt;-</span> <span class="fu">getCrossAssociation</span><span class="op">(</span><span class="va">tse_sub</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating correlations...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> altexp1: -, altexp2: -, assay.type1: counts, col.var1: -, assay.type2: counts, col.var2: -</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> altexp1: -, altexp2: -, assay.type1: counts, col.var1: -, dimred1: -, assay.type2: counts, col.var2: -, dimred2: -</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> by: 1, function: stats::cor, method: kendall, test.signif: FALSE, p.adj.method: -, paired: FALSE, show.warnings: TRUE</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># It is also possible to choose variables from colData and calculate</span></span></span>
@@ -451,7 +451,7 @@ faster solutions when running times are critical.</p>
 <span class="r-in"><span>    col.var2 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"shannon_diversity"</span>, <span class="st">"coverage_diversity"</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>    test.signif <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating correlations...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> altexp1: -, altexp2: -, assay.type1: counts, col.var1: -, assay.type2: -, col.var2: shannon_diversity + coverage_diversity</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> altexp1: -, altexp2: -, assay.type1: counts, col.var1: -, dimred1: -, assay.type2: -, col.var2: shannon_diversity + coverage_diversity, dimred2: -</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> by: 1, function: stats::cor.test, method: kendall, test.signif: TRUE, p.adj.method: fdr, paired: FALSE, show.warnings: TRUE</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Cannot compute exact p-value with ties</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Cannot compute exact p-value with ties</span>
@@ -485,7 +485,7 @@ faster solutions when running times are critical.</p>
 <span class="r-in"><span>    assay.type2 <span class="op">=</span> <span class="st">"nmr"</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating correlations...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> altexp1: -, altexp2: metabolites, assay.type1: rclr, col.var1: -, assay.type2: nmr, col.var2: -</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> altexp1: -, altexp2: metabolites, assay.type1: rclr, col.var1: -, dimred1: -, assay.type2: nmr, col.var2: -, dimred2: -</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> by: 1, function: stats::cor, method: kendall, test.signif: FALSE, p.adj.method: -, paired: FALSE, show.warnings: TRUE</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>the standard deviation is zero</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>the standard deviation is zero</span>
