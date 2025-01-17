@@ -48,6 +48,8 @@
 #' classes for each feature. For \code{addAbudanceClass}, a
 #' \code{SummarizedExperiment} object.
 #'
+#' @inheritParams addAlpha
+#'
 #' @param assay.type \code{Character scalar}. Specifies the name of assay
 #' used in calculation. (Default: \code{"relabundance"})
 #'

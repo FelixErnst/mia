@@ -74,6 +74,8 @@ addAbundanceClass(x, ...)
 \S4method{addAbundanceClass}{SummarizedExperiment}(x, name = "abundance_class", ...)
 }
 \arguments{
+\item{x}{a \code{\link{SummarizedExperiment}} object.}
+
 \item{...}{additional arguments.}
 
 \item{assay.type}{\code{Character scalar}. Specifies the name of assay
