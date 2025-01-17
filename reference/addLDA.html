@@ -137,12 +137,12 @@ feature loadings.</p>
 <span class="r-in"><span><span class="va">loadings</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="fu">reducedDim</span><span class="op">(</span><span class="va">tse</span>, <span class="st">"LDA"</span><span class="op">)</span>, <span class="st">"loadings"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">loadings</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                            1            2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> AD3             4.440983e-10 9.916946e-04</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Acidobacteria   6.279181e-03 3.272143e-02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Actinobacteria  1.317049e-01 5.628363e-02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Armatimonadetes 5.436454e-04 1.804688e-04</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> BRC1            2.489330e-05 5.558131e-05</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Bacteroidetes   8.591349e-02 2.818654e-01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> AD3             7.850874e-23 9.915606e-04</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Acidobacteria   6.264065e-03 3.272768e-02</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Actinobacteria  1.315185e-01 5.641506e-02</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Armatimonadetes 5.377974e-04 1.843210e-04</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> BRC1            2.482639e-05 5.562067e-05</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Bacteroidetes   8.658760e-02 2.814005e-01</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Estimate models with number of topics from 2 to 10</span></span></span>
 <span class="r-in"><span><span class="va">tse</span> <span class="op">&lt;-</span> <span class="fu">addLDA</span><span class="op">(</span><span class="va">tse</span>, k <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">3</span>, <span class="fl">4</span>, <span class="fl">5</span>, <span class="fl">6</span>, <span class="fl">7</span>, <span class="fl">8</span>, <span class="fl">9</span>, <span class="fl">10</span><span class="op">)</span>, name <span class="op">=</span> <span class="st">"LDA_10"</span><span class="op">)</span></span></span>
