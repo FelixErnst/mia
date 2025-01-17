@@ -45,7 +45,7 @@ See details for options."><!-- mathjax --><script src="https://cdnjs.cloudflare.
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Transform assay</h1>
-    <small class="dont-index">Source: <a href="https://github.com/microbiome/mia/blob/addprevalence/R/AllGenerics.R" class="external-link"><code>R/AllGenerics.R</code></a>, <a href="https://github.com/microbiome/mia/blob/addprevalence/R/transformCounts.R" class="external-link"><code>R/transformCounts.R</code></a></small>
+    <small class="dont-index">Source: <a href="https://github.com/microbiome/mia/blob/manual_improvements/R/AllGenerics.R" class="external-link"><code>R/AllGenerics.R</code></a>, <a href="https://github.com/microbiome/mia/blob/manual_improvements/R/transformCounts.R" class="external-link"><code>R/transformCounts.R</code></a></small>
     <div class="hidden name"><code>transformAssay.Rd</code></div>
     </div>
 
@@ -124,8 +124,8 @@ transformation is applied sample (column) or feature (row) wise.
 
 
 <dt id="arg-name">name<a class="anchor" aria-label="anchor" href="#arg-name"></a></dt>
-<dd><p><code>Character scalar</code>. A name for the column of the
-<code>colData</code> where results will be stored. (Default: <code>"method"</code>)</p></dd>
+<dd><p><code>Character scalar</code>. The name for the transformed assay to
+be stored. (Default: <code>method</code>)</p></dd>
 
 
 <dt id="arg-pseudocount">pseudocount<a class="anchor" aria-label="anchor" href="#arg-pseudocount"></a></dt>
@@ -200,49 +200,49 @@ doi:10.1038/nmeth.2658</p>
 <span class="r-in"><span><span class="co"># The target of transformation can be specified with "assay.type"</span></span></span>
 <span class="r-in"><span><span class="co"># Pseudocount can be added by specifying 'pseudocount'.</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># Perform CLR with smallest positive value as pseudocount</span></span></span>
+<span class="r-in"><span><span class="co"># Perform CLR with half of the smallest positive value as pseudocount</span></span></span>
 <span class="r-in"><span><span class="va">tse</span> <span class="op">&lt;-</span> <span class="fu">transformAssay</span><span class="op">(</span></span></span>
-<span class="r-in"><span>    <span class="va">tse</span>, assay.type <span class="op">=</span> <span class="st">"relabundance"</span>, method <span class="op">=</span> <span class="st">"clr"</span>, </span></span>
+<span class="r-in"><span>    <span class="va">tse</span>, assay.type <span class="op">=</span> <span class="st">"counts"</span>, method <span class="op">=</span> <span class="st">"clr"</span>, </span></span>
 <span class="r-in"><span>    pseudocount <span class="op">=</span> <span class="cn">TRUE</span></span></span>
 <span class="r-in"><span>    <span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> A pseudocount of 2.12117779669868e-07 was applied.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> A pseudocount of 0.5 was applied.</span>
 <span class="r-in"><span>                      </span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/SummarizedExperiment/man/SummarizedExperiment-class.html" class="external-link">assay</a></span><span class="op">(</span><span class="va">tse</span>, <span class="st">"clr"</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>              CL3       CC1       SV1    M31Fcsw    M11Fcsw   M31Plmr    M11Plmr</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 549322 -1.503009 -1.629094 -1.246806 -0.4159582 -0.3502969 -0.626809 -0.9297687</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 522457 -1.503009 -1.629094 -1.246806 -0.4159582 -0.3502969 -0.626809 -0.9297687</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 951    -1.503009 -1.629094 -1.246806 -0.4159582 -0.3502969 -0.626809  1.5438443</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 244423 -1.503009 -1.629094 -1.246806 -0.4159582 -0.3502969 -0.626809 -0.9297687</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 586076 -1.503009 -1.629094 -1.246806 -0.4159582 -0.3502969 -0.626809 -0.9297687</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 246140 -1.503009 -1.629094 -1.246806 -0.4159582 -0.3502969 -0.626809 -0.9297687</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           F21Plmr    M31Tong   M11Tong   LMEpi24M   SLEpi20M    AQC1cm</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 549322 -0.6794681 -0.3541412 -0.524686 -0.4745231  1.0715840  3.607222</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 522457 -0.6794681 -0.3541412 -0.524686 -0.4745231 -0.5120773 -1.093283</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 951    -0.6794681 -0.3541412 -0.524686 -0.4745231 -0.5120773 -1.093283</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 244423 -0.6794681 -0.3541412 -0.524686 -0.4745231 -0.5120773 -1.093283</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 586076 -0.6794681 -0.3541412 -0.524686 -0.4745231 -0.5120773 -1.093283</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 246140 -0.6794681 -0.3541412 -0.524686 -0.4745231 -0.5120773 -1.093283</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             AQC4cm     AQC7cm        NP2        NP3        NP5    TRRsed1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 549322  4.27795825  4.8045323  1.8130749 -0.6256967 -0.5083015 -0.8942877</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 522457  0.58409126  1.7843282 -0.4898264 -0.6256967 -0.5083015 -0.8942877</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 951    -1.02534666 -1.0861723 -0.4898264 -0.6256967 -0.5083015 -0.8942877</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 244423  2.78131583  3.3138775 -0.4898264 -0.6256967 -0.5083015 -0.8942877</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 586076  0.58409126  0.2420447 -0.4898264 -0.6256967 -0.5083015 -0.8942877</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 246140  0.07326563  1.1463040 -0.4898264 -0.6256967 -0.5083015 -0.8942877</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           TRRsed2   TRRsed3       TS28       TS29      Even1      Even2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 549322 -0.9741225 -1.029362 -0.4540262 -0.4062524 -0.5829973 -0.4578325</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 522457 -0.9741225 -1.029362 -0.4540262 -0.4062524 -0.5829973 -0.4578325</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 951    -0.9741225 -1.029362 -0.4540262 -0.4062524 -0.5829973 -0.4578325</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 244423 -0.9741225 -1.029362 -0.4540262 -0.4062524 -0.5829973 -0.4578325</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 586076 -0.9741225 -1.029362 -0.4540262 -0.4062524 -0.5829973 -0.4578325</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 246140 -0.9741225 -1.029362 -0.4540262 -0.4062524 -0.5829973 -0.4578325</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             Even3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 549322 -0.4074094</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 522457 -0.4074094</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 951    -0.4074094</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 244423 -0.4074094</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 586076 -0.4074094</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 246140 -0.4074094</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>              CL3       CC1        SV1    M31Fcsw    M11Fcsw    M31Plmr</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 549322 -1.168523 -1.361753 -0.9147168 -0.3661082 -0.3363033 -0.4485277</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 522457 -1.168523 -1.361753 -0.9147168 -0.3661082 -0.3363033 -0.4485277</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 951    -1.168523 -1.361753 -0.9147168 -0.3661082 -0.3363033 -0.4485277</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 244423 -1.168523 -1.361753 -0.9147168 -0.3661082 -0.3363033 -0.4485277</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 586076 -1.168523 -1.361753 -0.9147168 -0.3661082 -0.3363033 -0.4485277</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 246140 -1.168523 -1.361753 -0.9147168 -0.3661082 -0.3363033 -0.4485277</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           M11Plmr   F21Plmr    M31Tong    M11Tong   LMEpi24M   SLEpi20M</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 549322 -0.5934365 -0.341834 -0.3337211 -0.2111913 -0.4580681  0.6839692</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 522457 -0.5934365 -0.341834 -0.3337211 -0.2111913 -0.4580681 -0.4146431</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 951     0.5051758 -0.341834 -0.3337211 -0.2111913 -0.4580681 -0.4146431</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 244423 -0.5934365 -0.341834 -0.3337211 -0.2111913 -0.4580681 -0.4146431</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 586076 -0.5934365 -0.341834 -0.3337211 -0.2111913 -0.4580681 -0.4146431</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 246140 -0.5934365 -0.341834 -0.3337211 -0.2111913 -0.4580681 -0.4146431</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            AQC1cm      AQC4cm     AQC7cm        NP2        NP3        NP5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 549322  3.1171586  4.27795825  4.5741075  0.7860696 -0.5442038 -0.4552516</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 522457 -0.8901746  0.58409126  1.5745365 -0.3125427 -0.5442038 -0.4552516</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 951    -0.8901746 -1.02534666 -0.9904129 -0.3125427 -0.5442038 -0.4552516</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 244423 -0.8901746  2.78131583  3.0871246 -0.3125427 -0.5442038 -0.4552516</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 586076 -0.8901746  0.58409126  0.1081994 -0.3125427 -0.5442038 -0.4552516</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 246140 -0.8901746  0.07326563  0.9554973 -0.3125427 -0.5442038 -0.4552516</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           TRRsed1    TRRsed2   TRRsed3       TS28      TS29      Even1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 549322 -0.3507832 -0.6188603 -0.565259 -0.3427261 -0.328767 -0.4609279</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 522457 -0.3507832 -0.6188603 -0.565259 -0.3427261 -0.328767 -0.4609279</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 951    -0.3507832 -0.6188603 -0.565259 -0.3427261 -0.328767 -0.4609279</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 244423 -0.3507832 -0.6188603 -0.565259 -0.3427261 -0.328767 -0.4609279</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 586076 -0.3507832 -0.6188603 -0.565259 -0.3427261 -0.328767 -0.4609279</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 246140 -0.3507832 -0.6188603 -0.565259 -0.3427261 -0.328767 -0.4609279</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             Even2     Even3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 549322 -0.3357284 -0.312044</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 522457 -0.3357284 -0.312044</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 951    -0.3357284 -0.312044</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 244423 -0.3357284 -0.312044</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 586076 -0.3357284 -0.312044</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 246140 -0.3357284 -0.312044</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Perform CSS normalization.</span></span></span>
 <span class="r-in"><span><span class="va">tse</span> <span class="op">&lt;-</span> <span class="fu">transformAssay</span><span class="op">(</span><span class="va">tse</span>, method <span class="op">=</span> <span class="st">"css"</span><span class="op">)</span></span></span>
