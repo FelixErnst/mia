@@ -175,6 +175,8 @@ prt |> head()
 
 # To classify all features, one can use *AbundantClass function
 tse <- addAbundanceClass(tse)
+# When one uses add* function, the results are stored to rowData
+rowData(tse)
 
 }
 \references{
