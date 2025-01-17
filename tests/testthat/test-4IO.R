@@ -484,7 +484,7 @@ test_that("convertToPhyloseq", {
     expect_error(phyloseq::refseq(phy))
     
     # Test with agglomeration that that pruning is done internally
-    test1 <- agglomerateByRank(tse, rank = "Phylum")
+    test1 <- agglomerateByRank(tse, rank = "Phylum", update.tree = FALSE)
     test2 <- agglomerateByRank(tse, rank = "Phylum", update.tree = TRUE)
     test1_phy <- expect_warning(convertToPhyloseq(test1))
     test2_phy <- convertToPhyloseq(test2)
@@ -498,7 +498,7 @@ test_that("convertToPhyloseq", {
     # Check that everything works also with agglomerated data
     for (level in colnames(rowData(tse)) ){
         temp <- agglomerateByRank(tse, rank = level)
-        expect_warning(convertToPhyloseq(temp))
+        expect_no_warning(convertToPhyloseq(temp))
     }
     
     tse2 <- tse

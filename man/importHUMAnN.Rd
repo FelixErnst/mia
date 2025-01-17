@@ -16,9 +16,8 @@ path of the sample metadata file. The file must be in \code{tsv} format
 
 \item{...}{additional arguments:
 \itemize{
-\item \code{assay.type}:  \code{Character scalar}. Specifies the name of the assy
-used in calculation.
-(Default: \code{"counts"})
+\item \code{assay.type}:  \code{Character scalar}. Specifies the name of
+the assay used in calculation. (Default: \code{"counts"})
 \item \code{prefix.rm}:  \code{Logical scalar}. Should
 taxonomic prefixes be removed? (Default: \code{FALSE})
 \item \code{remove.suffix}: \code{Logical scalar}. Should

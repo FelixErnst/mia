@@ -14,7 +14,7 @@
 #'   
 #' @param f Deprecated. Use \code{group} instead.
 #' 
-#' @param update_rowTree Deprecated. Use \code{update.tree } instead.
+#' @param update_rowTree Deprecated. Use \code{update.tree} instead.
 #'   
 #' @param altexp \code{Character vector}. Specify the alternative experiments
 #'   to be unsplit. (Default: \code{names(altExps(x))})
@@ -90,13 +90,6 @@
 #' unsplitOn(se_list)
 #' 
 NULL
-
-#' @rdname splitOn
-#' @export
-setGeneric("splitOn",
-            signature = "x",
-            function(x, ...)
-                standardGeneric("splitOn"))
 
 # This function collects group (grouping variable), by, and 
 # use.names and returns them as a list.
@@ -275,7 +268,7 @@ setMethod("splitOn", signature = c(x = "SingleCellExperiment"),
 #' @export
 setMethod("splitOn", signature = c(x = "TreeSummarizedExperiment"),
     function(x, group = f, f = NULL, update.tree = update_rowTree,
-            update_rowTree = FALSE, ...){
+            update_rowTree = TRUE, ...){
         # Input check
         # Check update.tree
         if( !.is_a_bool(update.tree) ){
@@ -306,13 +299,6 @@ setMethod("splitOn", signature = c(x = "TreeSummarizedExperiment"),
 
 ################################################################################
 # unsplitOn
-
-#' @rdname splitOn
-#' @export
-setGeneric("unsplitOn",
-            signature = c("x"),
-            function(x, ...)
-                standardGeneric("unsplitOn"))
 
 # Perform the unsplit
 .list_unsplit_on <- function(
@@ -458,7 +444,7 @@ setGeneric("unsplitOn",
 #' @importFrom SingleCellExperiment altExpNames altExp altExps
 #' @export
 setMethod("unsplitOn", signature = c(x = "list"),
-    function(x, update.tree = update_rowTree, update_rowTree = FALSE, ...){
+    function(x, update.tree = update_rowTree, update_rowTree = TRUE, ...){
         # Unsplit list and create SCE, SE, or TreeSE from it
         .list_unsplit_on(x, update.tree, ...)
     }
@@ -467,7 +453,7 @@ setMethod("unsplitOn", signature = c(x = "list"),
 #' @importFrom SingleCellExperiment altExpNames altExp altExps
 #' @export
 setMethod("unsplitOn", signature = c(x = "SimpleList"),
-    function(x, update.tree = update_rowTree, update_rowTree = FALSE, ...){
+    function(x, update.tree = update_rowTree, update_rowTree = TRUE, ...){
         unsplitOn(as.list(x), update.tree, ...)
     }
 )

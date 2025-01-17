@@ -160,12 +160,6 @@ NULL
 
 #' @rdname transformAssay
 #' @export
-setGeneric("transformAssay", signature = c("x"),
-    function(x,  ...)
-    standardGeneric("transformAssay"))
-
-#' @rdname transformAssay
-#' @export
 setMethod("transformAssay", signature = c(x = "SummarizedExperiment"),
     function(x,
         assay.type = "counts", assay_name = NULL,

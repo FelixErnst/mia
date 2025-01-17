@@ -246,11 +246,6 @@ NULL
 
 #' @rdname getCrossAssociation
 #' @export
-setGeneric("getCrossAssociation", signature = c("x"),
-    function(x, ...) standardGeneric("getCrossAssociation"))
-
-#' @rdname getCrossAssociation
-#' @export
 setMethod("getCrossAssociation", signature = c(x = "MultiAssayExperiment"),
     function(
         x,
@@ -979,7 +974,7 @@ setMethod("getCrossAssociation", signature = "SummarizedExperiment",
     else if( ncol(correlations_and_p_values) == 2 ){
         colnames(correlations_and_p_values) <- c("cor", "pval")
     } else{
-        stop("Unexpected error occurred during calculation.",call. = FALSE)
+        stop("Unexpected problem occurred during calculation.", call. = FALSE)
     }
     
     # If assays were identical, and duplicate variable pairs were dropped
@@ -1149,9 +1144,9 @@ setMethod("getCrossAssociation", signature = "SummarizedExperiment",
             do.call(association.fun, args = c(list(feature_mat), list(...)))
         },
         error = function(cond) {
-            stop("Error occurred during calculation. Check, e.g., that ",
+            stop("Something went wrong during calculation. Check, e.g., that ",
                 "'association.fun' fulfills requirements. 'association.fun' ",
-                "threw a following error:\n",  cond,
+                "threw a following message:\n",  cond,
                 call. = FALSE)
         })
     } else {
@@ -1160,9 +1155,9 @@ setMethod("getCrossAssociation", signature = "SummarizedExperiment",
                 association.fun, args = c(list(feature_mat), list(...))) )
         },
         error = function(cond) {
-            stop("Error occurred during calculation. Check, e.g., that ",
+            stop("Something went wrong during calculation. Check, e.g., that ",
                 "'association.fun' fulfills requirements. 'association.fun' ",
-                "threw a following error:\n",  cond, call. = FALSE)
+                "threw a following message:\n",  cond, call. = FALSE)
         })
     }
     
@@ -1282,7 +1277,7 @@ setMethod("getCrossAssociation", signature = "SummarizedExperiment",
             t(tmp), use="pairwise.complete.obs")))$order
     },
     error = function(cond) {
-        stop("Error occurred during sorting. Possible reason is that ",
+        stop("Something went wrong during sorting. Possible reason is that ",
             "correlation matrix includes NAs. Try with 'sort = FALSE'.", 
             call. = FALSE)
     }
@@ -1292,7 +1287,7 @@ setMethod("getCrossAssociation", signature = "SummarizedExperiment",
             tmp, use="pairwise.complete.obs")))$order
     },
     error = function(cond) {
-        stop("Error occurred during sorting. Possible reason is that ",
+        stop("Something went wrong during sorting. Possible reason is that ",
             "correlation matrix includes NAs. Try with 'sort = FALSE'.", 
             call. = FALSE)
     }

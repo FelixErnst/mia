@@ -49,8 +49,8 @@ sequences will not be set.}
 
 \item{featureNamesAsRefSeq}{Deprecated. Use \code{as.refseq} instead.}
 
-\item{refseq.file}{\code{Character scalar} or \code{NULL}. Defines the file path of
-the reference sequences for each feature. (Default: \code{NULL}).}
+\item{refseq.file}{\code{Character scalar} or \code{NULL}. Defines the file
+path of the reference sequences for each feature. (Default: \code{NULL}).}
 
 \item{refSeqFile}{Deprecated. Use \code{refseq.file} instead.}
 
@@ -74,8 +74,8 @@ table), \code{NewickDirectoryFormat} (phylogenetic tree ) and
 \code{DNASequencesDirectoryFormat} (representative sequences) are supported
 right now.}
 
-\item{temp.dir}{character, a temporary directory in which the qza file will be
-decompressed to, default \code{tempdir()}.}
+\item{temp.dir}{character, a temporary directory in which the qza file will
+be decompressed to, default \code{tempdir()}.}
 
 \item{temp}{Deprecated. Use \code{temp.dir} instead.}
 }
@@ -136,7 +136,8 @@ coldata[, 1] <- NULL
 coldata <- coldata[match(colnames(assay), rownames(coldata)), ]
 
 # Create SE from individual files
-se <- SummarizedExperiment(assays = list(assay), rowData = rowdata, colData = coldata)
+se <- SummarizedExperiment(
+    assays = list(assay), rowData = rowdata, colData = coldata)
 se
 
 }

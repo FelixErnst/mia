@@ -8,11 +8,12 @@
 #' @inheritParams getDissimilarity
 #' @inheritParams getDominant
 #'
-#' @param seqtab,x
-#'   a \code{\link[SummarizedExperiment:SummarizedExperiment-class]{SummarizedExperiment}}
+#' @param seqtab,x a
+#' \code{\link[SummarizedExperiment:SummarizedExperiment-class]{SummarizedExperiment}}
 #'
 #' @param name \code{Character scalar}. A name for the column of the 
-#'   \code{colData} where results will be stored. (Default: \code{"isContaminant"})
+#' \code{colData} where results will be stored.
+#' (Default: \code{"isContaminant"})
 #'
 #' @param concentration \code{Character scalar} or \code{NULL}. Defining
 #'   a column with numeric values from the \code{colData} to use as
@@ -26,9 +27,9 @@
 #'   column with values interpretable as a factor from the \code{colData} to use
 #'   as batch information. (Default: \code{NULL})
 #' 
-#' @param detailed \code{Logical scalar}. If \code{TRUE}, the return value is a 
-#'   data.frame containing diagnostic information on the contaminant decision. 
-#'   If FALSE, the return value is a logical vector containing the binary 
+#' @param detailed \code{Logical scalar}. If \code{TRUE}, the return value is a
+#'   data.frame containing diagnostic information on the contaminant decision.
+#'   If FALSE, the return value is a logical vector containing the binary
 #'   contaminant classifications. (Default: \code{TRUE})
 #'
 #' @param ... arguments passed onto
@@ -87,16 +88,17 @@ NULL
 #' @rdname isContaminant
 #' @export
 setMethod("isContaminant", signature = c(seqtab = "SummarizedExperiment"),
-    function(seqtab,
-             assay.type = assay_name, assay_name = "counts",
-             name = "isContaminant",
-             concentration = NULL,
-             control = NULL,
-             batch = NULL,
-             threshold = 0.1,
-             normalize = TRUE,
-             detailed = TRUE,
-             ...){
+    function(
+        seqtab,
+        assay.type = assay_name, assay_name = "counts",
+        name = "isContaminant",
+        concentration = NULL,
+        control = NULL,
+        batch = NULL,
+        threshold = 0.1,
+        normalize = TRUE,
+        detailed = TRUE,
+        ...){
         # input check
         .check_assay_present(assay.type, seqtab)
         if(!.is_a_string(name)){
@@ -113,46 +115,46 @@ setMethod("isContaminant", signature = c(seqtab = "SummarizedExperiment"),
         }
         #
         if(!is.null(concentration)){
-            concentration <- retrieveCellInfo(seqtab, by = concentration,
-                                              search = "colData")$value
+            concentration <- retrieveCellInfo(
+                seqtab, by = concentration, search = "colData")$value
             if(!is.numeric(concentration)){
                 stop("'concentration' must define a column of colData() ",
-                     "containing numeric values.",
-                     call. = FALSE)
+                    "containing numeric values.", call. = FALSE)
             }
         }
         if(!is.null(control)){
-            control <- retrieveCellInfo(seqtab, by = control,
-                                        search = "colData")$value
+            control <- retrieveCellInfo(
+                seqtab, by = control, search = "colData")$value
             if(!is.logical(control)){
                 stop("'control' must define a column of colData() ",
-                     "containing logical values.",
-                     call. = FALSE)
+                    "containing logical values.", call. = FALSE)
             }
         }
         if(!is.null(batch)){
-            batch <- retrieveCellInfo(seqtab, by = batch,
-                                      search = "colData")$value
+            batch <- retrieveCellInfo(
+                seqtab, by = batch, search = "colData")$value
             batch <- factor(batch, sort(unique(batch)))
         }
         mat <- assay(seqtab,assay.type)
-        contaminant <- isContaminant(t(mat),
-                                     conc = concentration,
-                                     neg = control,
-                                     batch = batch,
-                                     threshold = threshold,
-                                     normalize = normalize,
-                                     detailed =  detailed,
-                                     ...)
+        contaminant <- isContaminant(
+            t(mat),
+            conc = concentration,
+            neg = control,
+            batch = batch,
+            threshold = threshold,
+            normalize = normalize,
+            detailed =  detailed,
+            ...)
         if(is.data.frame(contaminant)){
             contaminant <- DataFrame(contaminant)
         }
-        attr(contaminant, "metadata") <- list(conc = concentration,
-                                              neg = control,
-                                              batch = batch,
-                                              threshold = threshold,
-                                              normalize = normalize,
-                                              detailed =  detailed)
+        attr(contaminant, "metadata") <- list(
+            conc = concentration,
+            neg = control,
+            batch = batch,
+            threshold = threshold,
+            normalize = normalize,
+            detailed =  detailed)
         contaminant
     }
 )
@@ -160,14 +162,15 @@ setMethod("isContaminant", signature = c(seqtab = "SummarizedExperiment"),
 #' @rdname isContaminant
 #' @export
 setMethod("isNotContaminant", signature = c(seqtab = "SummarizedExperiment"),
-    function(seqtab,
-             assay.type = assay_name, assay_name = "counts",
-             name = "isNotContaminant",
-             control = NULL,
-             threshold = 0.5,
-             normalize = TRUE,
-             detailed = FALSE,
-             ...){
+    function(
+        seqtab,
+        assay.type = assay_name, assay_name = "counts",
+        name = "isNotContaminant",
+        control = NULL,
+        threshold = 0.5,
+        normalize = TRUE,
+        detailed = FALSE,
+        ...){
         # input check
         .check_assay_present(assay.type, seqtab)
         if(!.is_a_string(name)){
@@ -188,33 +191,28 @@ setMethod("isNotContaminant", signature = c(seqtab = "SummarizedExperiment"),
                                         search = "colData")$value
             if(!is.logical(control)){
                 stop("'control' must define a column of colData() ",
-                     "containing logical values.",
-                     call. = FALSE)
+                    "containing logical values.", call. = FALSE)
             }
         }
         mat <- assay(seqtab,assay.type)
-        not_contaminant <- isNotContaminant(t(mat),
-                                            neg = control,
-                                            threshold = threshold,
-                                            normalize = normalize,
-                                            detailed =  detailed,
-                                            ...)
+        not_contaminant <- isNotContaminant(
+            t(mat),
+            neg = control,
+            threshold = threshold,
+            normalize = normalize,
+            detailed =  detailed,
+            ...)
         if(is.data.frame(not_contaminant)){
             not_contaminant <- DataFrame(not_contaminant)
         }
-        attr(not_contaminant, "metadata") <- list(neg = control,
-                                                  threshold = threshold,
-                                                  normalize = normalize,
-                                                  detailed =  detailed)
+        attr(not_contaminant, "metadata") <- list(
+            neg = control,
+            threshold = threshold,
+            normalize = normalize,
+            detailed =  detailed)
         not_contaminant
     }
 )
-
-#' @rdname isContaminant
-#' @export
-setGeneric("addContaminantQC", signature = c("x"),
-           function(x, name = "isContaminant", ...)
-               standardGeneric("addContaminantQC"))
 
 #' @rdname isContaminant
 #' @export
@@ -231,12 +229,6 @@ setMethod("addContaminantQC", signature = c("SummarizedExperiment"),
         x
     }
 )
-
-#' @rdname isContaminant
-#' @export
-setGeneric("addNotContaminantQC", signature = c("x"),
-           function(x, name = "isNotContaminant", ...)
-               standardGeneric("addNotContaminantQC"))
 
 #' @rdname isContaminant
 #' @export
