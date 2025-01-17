@@ -64,7 +64,7 @@
 #'
 #' @param name \code{Character scalar}. Specifies name of column in
 #' \code{rowData} where the results will be stored.
-#' (Default: \code{"abundance_class})
+#' (Default: \code{"abundance_class"})
 #'
 #' @param ... additional arguments.
 #'
@@ -225,8 +225,7 @@ setMethod("getConditionallyLowAbundant",
 setMethod("getConditionallyLowAbundant", signature = c(x = "ANY"),
     function(x, abundant.th = 1/100, crt.th = 100, ...){
         if( !.is_a_numeric(crt.th) && crt.th > 0 ){
-            stop("'crt.th' must be positive numeric value.",
-                 call. = FALSE)
+            stop("'crt.th' must be positive numeric value.", call. = FALSE)
         }
         if( is.null(rownames(x)) ){
             rownames(x) <- seq_len(nrow(x))
@@ -268,8 +267,7 @@ setMethod("getPermanentlyLowAbundant",
 setMethod("getPermanentlyLowAbundant", signature = c(x = "ANY"),
     function(x, abundant.th = 1/100, prt.th = 5, ...){
         if( !.is_a_numeric(prt.th) && prt.th > 0 ){
-            stop("'prt.th' must be positive numeric value.",
-                call. = FALSE)
+            stop("'prt.th' must be positive numeric value.", call. = FALSE)
         }
         if( is.null(rownames(x)) ){
             rownames(x) <- seq_len(nrow(x))
@@ -309,7 +307,7 @@ setMethod("getAbundanceClass", signature = c(x = "SummarizedExperiment"),
 setMethod("getAbundanceClass", signature = c(x = "ANY"),
     function(x, abundant.th = 1/100, crt.th = 100, prt.th = 5, ...){
         if( is.null(rownames(x)) ){
-          rownames(x) <- seq_len(nrow(x))
+            rownames(x) <- seq_len(nrow(x))
         }
         #
         res <- .classify_by_abundance(x, abundant.th, crt.th, prt.th, ...)
@@ -352,16 +350,13 @@ setMethod("addAbundanceClass", signature = c(x = "SummarizedExperiment"),
 .classify_by_abundance <- function(
         mat, abundant.th, crt.th = NULL, prt.th = NULL, ...){
     if( !(.is_a_numeric(abundant.th) && abundant.th > 0) ){
-        stop("'abundant.th' must be positive numeric value.",
-             call. = FALSE)
+        stop("'abundant.th' must be positive numeric value.", call. = FALSE)
     }
     if( !( is.null(crt.th) || (.is_a_numeric(crt.th) && crt.th > 0)) ){
-        stop("'crt.th' must be positive numeric value or NULL.",
-             call. = FALSE)
+        stop("'crt.th' must be positive numeric value or NULL.", call. = FALSE)
     }
     if( !( is.null(prt.th) || (.is_a_numeric(prt.th) && prt.th > 0) ) ){
-        stop("'prt.th' must be positive numeric value or NULL.",
-             call. = FALSE)
+        stop("'prt.th' must be positive numeric value or NULL.", call. = FALSE)
     }
     if( (!is.null(crt.th) || !is.null(prt.th)) && any(mat==0) ){
         stop("CRT or PRT cannot be calculated when abundance contains zeroes. ",

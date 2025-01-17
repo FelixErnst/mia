@@ -92,7 +92,7 @@ to separate permanently rare features from other rare features.
 
 \item{name}{\code{Character scalar}. Specifies name of column in
 \code{rowData} where the results will be stored.
-(Default: \code{"abundance_class})}
+(Default: \code{"abundance_class"})}
 }
 \value{
 For \code{getAbundant}, \code{getLowAbundant},
