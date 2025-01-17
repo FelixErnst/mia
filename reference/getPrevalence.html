@@ -18,7 +18,7 @@ SummarizedExperiment-class object."><!-- mathjax --><script src="https://cdnjs.c
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mia</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.15.8</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.15.10</span>
       </span>
     </div>
 
@@ -45,7 +45,7 @@ SummarizedExperiment-class object."><!-- mathjax --><script src="https://cdnjs.c
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Calculation prevalence information for features across samples</h1>
-    <small class="dont-index">Source: <a href="https://github.com/microbiome/mia/blob/TuomasBorman-patch-1/R/AllGenerics.R" class="external-link"><code>R/AllGenerics.R</code></a>, <a href="https://github.com/microbiome/mia/blob/TuomasBorman-patch-1/R/getPrevalence.R" class="external-link"><code>R/getPrevalence.R</code></a></small>
+    <small class="dont-index">Source: <a href="https://github.com/microbiome/mia/blob/addprevalence/R/AllGenerics.R" class="external-link"><code>R/AllGenerics.R</code></a>, <a href="https://github.com/microbiome/mia/blob/addprevalence/R/getPrevalence.R" class="external-link"><code>R/getPrevalence.R</code></a></small>
     <div class="hidden name"><code>getPrevalence.Rd</code></div>
     </div>
 
@@ -71,6 +71,11 @@ SummarizedExperiment-class object."><!-- mathjax --><script src="https://cdnjs.c
 <span>  assay_name <span class="op">=</span> <span class="st">"relabundance"</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">addPrevalence</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S4 method for class 'SummarizedExperiment'</span></span>
+<span><span class="fu">addPrevalence</span><span class="op">(</span><span class="va">x</span>, name <span class="op">=</span> <span class="st">"prevalence"</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S4 method for class 'ANY'</span></span>
 <span><span class="fu">getPrevalence</span><span class="op">(</span></span>
@@ -183,6 +188,12 @@ calculation. (Default: <code>"counts"</code>)</p></dd>
 <dd><p>Deprecated. Use <code>assay.type</code> instead.</p></dd>
 
 
+<dt id="arg-name">name<a class="anchor" aria-label="anchor" href="#arg-name"></a></dt>
+<dd><p><code>Character scalar</code>. Specifies name of column in
+<code>rowData</code> where the results will be stored.
+(Default: <code>"prevalence"</code>)</p></dd>
+
+
 <dt id="arg-detection">detection<a class="anchor" aria-label="anchor" href="#arg-detection"></a></dt>
 <dd><p><code>Numeric scalar</code>. Detection threshold for
 absence/presence. If <code>as_relative = FALSE</code>,
@@ -232,7 +243,8 @@ limit, set <code>include.lowest</code> to <code>TRUE</code>.</p></dd>
 <code>x</code>.</p>
 <p>All other functions return a named vectors:</p><ul><li><p><code>getPrevalence</code> returns a <code>numeric</code> vector with the
 names being set to either the row names of <code>x</code> or the names after
-agglomeration.</p></li>
+agglomeration. <code>addPrevalence</code> adds these results to
+<code>rowData(x)</code>.</p></li>
 <li><p><code>getPrevalentAbundance</code> returns a <code>numeric</code> vector with
 the names corresponding to the column name of <code>x</code> and include the
 joint abundance of prevalent taxa.</p></li>
