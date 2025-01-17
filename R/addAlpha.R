@@ -24,42 +24,43 @@
 #'   depth i.e. the number of counts drawn from each sample.
 #'   (Default: \code{min(colSums2(assay(x, assay.type)))})
 #'   
-#'   \item \code{tree.name}: \code{Character scalar}. Specifies which rowTree 
+#'   \item \code{tree.name}: \code{Character scalar}. Specifies which rowTree
 #'    will be used. ( Faith's index). (Default: \code{"phylo"})
 #'   
-#'   \item \code{node.label}: \code{Character vector} or \code{NULL} Specifies the 
-#'   links between rows and node labels of phylogeny tree specified 
-#'   by \code{tree.name}. If a certain row is not linked with the tree, missing 
-#'   instance should be noted as NA. When \code{NULL}, all the rownames should 
+#'   \item \code{node.label}: \code{Character vector} or \code{NULL} Specifies
+#'   the links between rows and node labels of phylogeny tree specified 
+#'   by \code{tree.name}. If a certain row is not linked with the tree, missing
+#'   instance should be noted as NA. When \code{NULL}, all the rownames should
 #'   be found from the tree. (Faith's index). (Default: \code{NULL})
 #'   
 #'   \item \code{only.tips}: (Faith's index). \code{Logical scalar}. Specifies
-#'   whether to remove internal nodes when Faith's index is calculated. 
-#'   When \code{only.tips=TRUE}, those rows that are not tips of tree are 
+#'   whether to remove internal nodes when Faith's index is calculated.
+#'   When \code{only.tips=TRUE}, those rows that are not tips of tree are
 #'   removed. (Default: \code{FALSE})
 #'   
-#'   \item \code{threshold}: (Coverage and all evenness indices). \code{Numeric scalar}. 
+#'   \item \code{threshold}: (Coverage and all evenness indices).
+#'   \code{Numeric scalar}.
 #'   From \code{0 to 1}, determines the threshold for coverage and evenness
 #'   indices. When evenness indices are calculated values under or equal to
 #'   this threshold are denoted as zeroes. For coverage index, see details.
 #'   (Default: \code{0.5} for coverage, \code{0} for evenness indices)
 #'   
-#'   \item \code{quantile}: (log modulo skewness index). \code{Numeric scalar}. 
-#'   Arithmetic abundance classes are evenly cut up to to this quantile of the data. 
-#'   The assumption is that abundances higher than this are not common, and they 
-#'   are classified in their own group. (Default: \code{0.5})
+#'   \item \code{quantile}: (log modulo skewness index). \code{Numeric scalar}.
+#'   Arithmetic abundance classes are evenly cut up to to this quantile of the
+#'   data. The assumption is that abundances higher than this are not common,
+#'   and they are classified in their own group. (Default: \code{0.5})
 #'   
-#'   \item \code{nclasses}: (log modulo skewness index). \code{Integer scalar}. 
-#'   The number of arithmetic abundance classes from zero to the quantile cutoff 
+#'   \item \code{nclasses}: (log modulo skewness index). \code{Integer scalar}.
+#'   The number of arithmetic abundance classes from zero to the quantile cutoff
 #'   indicated by \code{quantile}. (Default: \code{50})
 #'   
-#'   \item \code{ntaxa}: (absolute and relative indices). \code{Integer scalar}. 
+#'   \item \code{ntaxa}: (absolute and relative indices). \code{Integer scalar}.
 #'   The n-th position of the dominant taxa to consider. (Default: \code{1})
 #'   
-#'   \item \code{aggregate}: (absolute, dbp, dmn, and relative indices). 
-#'   \code{Logical scalar}. Aggregate the values for top members selected by 
-#'   \code{ntaxa} or not. If \code{TRUE}, then the sum of relative abundances 
-#'   is returned. Otherwise the relative abundance is returned for the single 
+#'   \item \code{aggregate}: (absolute, dbp, dmn, and relative indices).
+#'   \code{Logical scalar}. Aggregate the values for top members selected by
+#'   \code{ntaxa} or not. If \code{TRUE}, then the sum of relative abundances
+#'   is returned. Otherwise the relative abundance is returned for the single
 #'   taxa with the indicated rank (default: \code{aggregate = TRUE}).
 #'   
 #'   \item \code{detection}: (observed index). \code{Numeric scalar} Selects
@@ -204,9 +205,9 @@
 #' species.
 #'
 #' \item 'simpson_lambda': Simpson's (dominance) index or Simpson's lambda is
-#' the sum of squared relative abundances. This index gives values in the unit interval.
-#' This value equals the probability that two randomly chosen individuals
-#' belongs to the
+#' the sum of squared relative abundances. This index gives values in the unit
+#' interval. This value equals the probability that two randomly chosen
+#' individuals belongs to the
 #' same species. The higher the probability, the greater the dominance (See
 #' e.g. Simpson 1949).
 #'
@@ -233,10 +234,13 @@
 #' The available evenness indices include the following (all in lowercase):
 #' \itemize{
 #'   \item 'camargo': Camargo's evenness (Camargo 1992)
-#'   \item 'simpson_evenness': Simpson’s evenness is calculated as inverse Simpson diversity (1/lambda) divided by
+#'   \item 'simpson_evenness': Simpson’s evenness is calculated as inverse
+#'   Simpson diversity (1/lambda) divided by
 #'   observed species richness S: (1/lambda)/S.
-#'   \item 'pielou': Pielou's evenness (Pielou, 1966), also known as Shannon or Shannon-Weaver/Wiener/Weiner
-#'     evenness; H/ln(S). The Shannon-Weaver is the preferred term; see Spellerberg and Fedor (2003).
+#'   \item 'pielou': Pielou's evenness (Pielou, 1966), also known as Shannon or
+#'   Shannon-Weaver/Wiener/Weiner
+#'   evenness; H/ln(S). The Shannon-Weaver is the preferred term; see
+#'   Spellerberg and Fedor (2003).
 #'   \item 'evar': Smith and Wilson’s Evar index (Smith & Wilson 1996).
 #'   \item 'bulla': Bulla’s index (O) (Bulla 1994).
 #' }
@@ -430,26 +434,6 @@
 #' @name addAlpha
 #' @export
 NULL
-
-#' @rdname addAlpha
-#' @export
-setGeneric(
-    "addAlpha", signature = c("x"),
-    function(
-        x, assay.type = "counts", 
-        index = c(
-            "coverage_diversity", "fisher_diversity", "faith_diversity",
-            "gini_simpson_diversity", "inverse_simpson_diversity",
-            "log_modulo_skewness_diversity", "shannon_diversity",
-            "absolute_dominance", "dbp_dominance",
-            "core_abundance_dominance", "gini_dominance",
-            "dmn_dominance", "relative_dominance",
-            "simpson_lambda_dominance", "camargo_evenness",
-            "pielou_evenness", "simpson_evenness",
-            "evar_evenness", "bulla_evenness", "ace_richness",
-            "chao1_richness", "hill_richness", "observed_richness"),
-        name = index, niter = NULL, ...)
-    standardGeneric("addAlpha"))
 
 #' @rdname addAlpha
 #' @export

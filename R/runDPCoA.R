@@ -15,26 +15,27 @@
 #' @param y a \code{dist} or a symmetric \code{matrix} compatible with
 #'   \code{ade4:dpcoa}
 #'
-#' @param ncomponents \code{Numeric scalar}. Indicates the number of DPCoA dimensions
-#'   to obtain. (Default: \code{2})
+#' @param ncomponents \code{Numeric scalar}. Indicates the number of DPCoA
+#' dimensions to obtain. (Default: \code{2})
 #'
-#' @param ntop \code{Numeric scalar}. Specifies the number of features with the highest
-#'   variances to use for dimensionality reduction. Alternatively \code{NULL},
-#'   if all features should be used. (Default: \code{NULL})
+#' @param ntop \code{Numeric scalar}. Specifies the number of features with the
+#' highest variances to use for dimensionality reduction. Alternatively
+#' \code{NULL}, if all features should be used. (Default: \code{NULL})
 #'
-#' @param subset.row \code{Character Vector}. Specifies the subset of features to use for
-#'   dimensionality reduction. This can be a character vector of row names, an
-#'   integer vector of row indices or a logical vector. (Default: \code{NULL})
+#' @param subset.row \code{Character Vector}. Specifies the subset of features
+#' to use for dimensionality reduction. This can be a character vector of row
+#' names, an integer vector of row indices or a logical vector.
+#' (Default: \code{NULL})
 #' 
 #' @param subset_row Deprecated. Use \code{subset.row} instead.
 #'
-#' @param scale \code{Logical scalar}. Should the expression values be standardized?
-#' (Default: \code{FALSE})
+#' @param scale \code{Logical scalar}. Should the expression values be
+#' standardized? (Default: \code{FALSE})
 #' 
 #' @param name \code{Character scalar}. A name for the column of the 
 #'   \code{colData} where results will be stored. (Default: \code{"DPCoA"})
 #' 
-#' @param altexp \code{Character scalar} or \code{integer scalar}. Specifies an 
+#' @param altexp \code{Character scalar} or \code{integer scalar}. Specifies an
 #'   alternative experiment containing the input data. (Default: \code{NULL})
 #'   
 #' @param exprs_values Deprecated. Use \code{assay.type} instead.
@@ -78,27 +79,22 @@
 #' plotReducedDim(esophagus, "DPCoA")
 NULL
 
-#' @export
-#' @rdname runDPCoA
-setGeneric("getDPCoA", signature = c("x", "y"),
-           function(x, y, ...)
-               standardGeneric("getDPCoA"))
-
-.calculate_dpcoa <- function(x, y, ncomponents = 2, ntop = NULL,
-                            subset.row = subset_row, subset_row = NULL, scale = FALSE,
-                            transposed = FALSE, ...)
+.calculate_dpcoa <- function(
+        x, y, ncomponents = 2, ntop = NULL,
+        subset.row = subset_row, subset_row = NULL, scale = FALSE,
+        transposed = FALSE, ...)
 {
     .require_package("ade4")
     # input check
     # Check ncomponents
     if( !(.is_an_integer(ncomponents) && ncomponents > 0) ){
-        stop("'ncomponents' must be a single integer value specifying the number ",
-             "of DPCoA dimensions.", call. = FALSE)
+        stop("'ncomponents' must be a single integer value specifying the ",
+            "number of DPCoA dimensions.", call. = FALSE)
     }
     # Check ntop
     if( !(is.null(ntop) || (.is_an_integer(ntop) && ntop > 0))  ){
-        stop("'ntop' must be NULL or a single integer value specifying the number ",
-             "of features with the highest variance.", call. = FALSE)
+        stop("'ntop' must be NULL or a single integer value specifying the ",
+            "number of features with the highest variance.", call. = FALSE)
     }
     y <- as.matrix(y)
     if(length(unique(dim(y))) != 1L){
@@ -107,15 +103,15 @@ setGeneric("getDPCoA", signature = c("x", "y"),
     #
     # Get NAs. ade4:dpcoa lead to an error if there are any NAs
     if( any( is.na(x) ) ){
-        stop("'x' includes NAs. Please try to convert them into numeric values.",
-             call. = FALSE)
+        stop("'x' includes NAs. Please try to convert them into numeric ",
+            "values.", call. = FALSE)
     }
     if(!transposed) {
         if(is.null(ntop)){
             ntop <- nrow(x)
         }
-        x <- .get_mat_for_reddim(x, subset_row = subset.row, ntop = ntop,
-                                 scale = scale)
+        x <- .get_mat_for_reddim(
+            x, subset_row = subset.row, ntop = ntop, scale = scale)
     }
     y <- y[colnames(x), colnames(x), drop = FALSE]
     if(nrow(y) != ncol(x)){
@@ -160,8 +156,8 @@ setMethod("getDPCoA", signature = c("TreeSummarizedExperiment","missing"),
         # Select only those features that are in the rowTree
         whichTree <- rowLinks(x)[ , "whichTree"] == tree.name
         if( any(!whichTree) ){
-            warning("Not all rows were present in the rowTree specified by 'tree.name'.",
-                    "'x' is subsetted.", call. = FALSE)
+            warning("Not all rows were present in the rowTree specified by ",
+                    "'tree.name'. 'x' is subsetted.", call. = FALSE)
             # Subset the data
             x <- x[ whichTree, ]
         }
@@ -196,7 +192,7 @@ addDPCoA <- function(x, ..., altexp = NULL, name = "DPCoA"){
     # Check name
     if( !.is_a_string(name) ){
         stop("'name' must be a single character value specifying a name of ",
-             "reducedDim where the result will be stored.", call. = FALSE)
+            "reducedDim where the result will be stored.", call. = FALSE)
     }
     reducedDim(x, name) <- getDPCoA(y, ...)
     x

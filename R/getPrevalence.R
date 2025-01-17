@@ -5,7 +5,8 @@
 #'
 #' @inheritParams getDissimilarity
 #' 
-#' @param x \code{\link[TreeSummarizedExperiment:TreeSummarizedExperiment-class]{TreeSummarizedExperiment}}.
+#' @param x
+#' \code{\link[TreeSummarizedExperiment:TreeSummarizedExperiment-class]{TreeSummarizedExperiment}}.
 #' 
 #' @param assay_name Deprecated. Use \code{assay.type} instead.
 #'
@@ -30,7 +31,7 @@
 #' (Default: \code{TRUE})
 #' 
 #' @param update.tree \code{Logical scalar}. Should
-#' \code{rowTree()} also be agglomerated? (Default: \code{FALSE})
+#' \code{rowTree()} also be agglomerated? (Default: \code{TRUE})
 #'
 #' @param ... additional arguments
 #' \itemize{
@@ -260,7 +261,7 @@ setMethod("getPrevalence", signature = c(x = "SummarizedExperiment"),
     }
 )
 ############################# getPrevalent #################################
-#' @rdname getPrevalence
+#' @name getPrevalence
 #'
 #' @param prevalence Prevalence threshold (in 0 to 1). The
 #'   required prevalence is strictly greater by default. To include the
@@ -273,9 +274,7 @@ setMethod("getPrevalence", signature = c(x = "SummarizedExperiment"),
 #' @aliases getPrevalent
 #'
 #' @export
-setGeneric("getPrevalent", signature = "x",
-    function(x, ...)
-    standardGeneric("getPrevalent"))
+NULL
 
 .norm_rownames <- function(x){
     if(is.null(rownames(x))){
@@ -338,7 +337,6 @@ setGeneric("getPrevalent", signature = "x",
     unique(taxa)
 }
 
-
 #' @rdname getPrevalence
 #' @export
 setMethod("getPrevalent", signature = c(x = "ANY"),
@@ -361,15 +359,13 @@ setMethod("getPrevalent", signature = c(x = "SummarizedExperiment"),
 
 ############################# getRare ######################################
 
-#' @rdname getPrevalence
+#' @name getPrevalence
 #'
 #' @details
 #' \code{getRare} returns complement of \code{getPrevalent}.
 #'
 #' @export
-setGeneric("getRare", signature = "x",
-    function(x, ...)
-    standardGeneric("getRare"))
+NULL
 
 .get_rare_indices <- function(x, ...){
     indices <- .get_prevalent_indices(x = x, ...)
@@ -420,12 +416,6 @@ setMethod("getRare", signature = c(x = "SummarizedExperiment"),
 
 #' @rdname getPrevalence
 #' @export
-setGeneric("subsetByPrevalent", signature = "x",
-    function(x, ...)
-    standardGeneric("subsetByPrevalent"))
-
-#' @rdname getPrevalence
-#' @export
 setMethod("subsetByPrevalent", signature = c(x = "SummarizedExperiment"),
     function(x, rank = NULL, ...){
         x <- .merge_features(x, rank = rank, ...)
@@ -437,7 +427,7 @@ setMethod("subsetByPrevalent", signature = c(x = "SummarizedExperiment"),
 #' @rdname getPrevalence
 #' @export
 setMethod("subsetByPrevalent", signature = c(x = "TreeSummarizedExperiment"),
-    function(x, update.tree = FALSE, ...){
+    function(x, update.tree = TRUE, ...){
         # Check that update.tree is logical value
         if( !.is_a_bool(update.tree) ){
             stop("'update.tree' must be TRUE or FALSE.", call. = FALSE)
@@ -456,12 +446,6 @@ setMethod("subsetByPrevalent", signature = c(x = "TreeSummarizedExperiment"),
 
 #' @rdname getPrevalence
 #' @export
-setGeneric("subsetByRare", signature = "x",
-    function(x, ...)
-    standardGeneric("subsetByRare"))
-
-#' @rdname getPrevalence
-#' @export
 setMethod("subsetByRare", signature = c(x = "SummarizedExperiment"),
     function(x, rank = NULL, ...){
         x <- .merge_features(x, rank = rank, ...)
@@ -473,7 +457,7 @@ setMethod("subsetByRare", signature = c(x = "SummarizedExperiment"),
 #' @rdname getPrevalence
 #' @export
 setMethod("subsetByRare", signature = c(x = "TreeSummarizedExperiment"),
-    function(x, update.tree = FALSE, ...){
+    function(x, update.tree = TRUE, ...){
         # Check that update.tree is logical value
         if( !.is_a_bool(update.tree) ){
             stop("'update.tree' must be TRUE or FALSE.", call. = FALSE)
@@ -489,12 +473,6 @@ setMethod("subsetByRare", signature = c(x = "TreeSummarizedExperiment"),
 )
 
 ############################# getPrevalentAbundance ############################
-
-#' @rdname getPrevalence
-#' @export
-setGeneric("getPrevalentAbundance", signature = "x",
-    function(x, assay.type = assay_name, assay_name = "relabundance", ...)
-    standardGeneric("getPrevalentAbundance"))
 
 #' @rdname getPrevalence
 #' @export
@@ -527,7 +505,7 @@ setMethod("getPrevalentAbundance", signature = c(x = "SummarizedExperiment"),
 
 #' Agglomerate data based on population prevalence
 #' 
-#' @rdname agglomerateByPrevalence
+#' @name agglomerateByPrevalence
 #'  
 #' @inheritParams agglomerateByRank
 #' 
@@ -571,9 +549,7 @@ setMethod("getPrevalentAbundance", signature = c(x = "SummarizedExperiment"),
 #' assay(tse)[,1:5]
 #'
 #' @export
-setGeneric("agglomerateByPrevalence", signature = "x",
-    function(x, ...)
-    standardGeneric("agglomerateByPrevalence"))
+NULL
 
 #' @rdname agglomerateByPrevalence
 #' @export
@@ -593,9 +569,11 @@ setMethod("agglomerateByPrevalence", signature = c(x = "SummarizedExperiment"),
         pr <- getPrevalent(x, rank = NULL, ...)
         f <- rownames(x) %in% pr
         if(any(!f)){
-            other_x <- agglomerateByVariable(x[!f,], by = "rows",
-                                            factor(rep(1L,sum(!f))),
-                                            check_assays = FALSE)
+            other_x <- agglomerateByVariable(
+                x[!f,], by = "rows",
+                factor(rep(1L,sum(!f))),
+                check_assays = FALSE,
+                update.tree = FALSE)
             rowData(other_x)[,colnames(rowData(other_x))] <- NA
             # set the other label
             rownames(other_x) <- other.name
@@ -613,7 +591,7 @@ setMethod("agglomerateByPrevalence", signature = c(x = "SummarizedExperiment"),
 setMethod("agglomerateByPrevalence", 
     signature = c(x = "TreeSummarizedExperiment"),
     function(x, rank = NULL, other.name = other_label, other_label = "Other",
-            update.tree = FALSE, ...){
+            update.tree = TRUE, ...){
         # input check
         if(!.is_a_bool(update.tree)){
             stop("'update.tree' must be TRUE or FALSE.", call. = FALSE)
