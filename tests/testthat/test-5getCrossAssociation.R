@@ -542,7 +542,7 @@ test_that("getCrossAssociation", {
     # Test colData_variable
     # Check that all the correct names are included
     indices <- c("shannon", "gini_simpson")
-    tse <- estimateDiversity(tse, index = indices)
+    tse <- addAlpha(tse, index = indices)
     res <- getCrossAssociation(tse, tse, 
                                          assay.type1 = "counts", 
                                          col.var2 = indices)

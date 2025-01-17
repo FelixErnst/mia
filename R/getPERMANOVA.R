@@ -113,14 +113,6 @@
 #'
 NULL
 
-#' @rdname getPERMANOVA
-setGeneric("getPERMANOVA", signature = c("x"), function(x, ...)
-    standardGeneric("getPERMANOVA"))
-
-#' @rdname getPERMANOVA
-setGeneric("addPERMANOVA", signature = c("x"), function(x, ...)
-    standardGeneric("addPERMANOVA"))
-
 #' @export
 #' @rdname getPERMANOVA
 setMethod("getPERMANOVA", "SingleCellExperiment", function(x,  ...){

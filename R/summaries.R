@@ -5,16 +5,17 @@
 #'
 #' @inheritParams getPrevalence
 #' 
-#' @param top \code{Numeric scalar}. Determines how many top taxa to return. Default is
-#' to return top five taxa. (Default: \code{5})
+#' @param top \code{Numeric scalar}. Determines how many top taxa to return.
+#' Default is to return top five taxa. (Default: \code{5})
 #'
-#' @param method \code{Character scalar}. Specify the method to determine top taxa. Either 
-#' sum, mean, median or prevalence. (Default: \code{"mean"})
+#' @param method \code{Character scalar}. Specify the method to determine top
+#' taxa. Either sum, mean, median or prevalence. (Default: \code{"mean"})
 #'
 #' @param ... Additional arguments passed, e.g., to getPrevalence:
 #'    \itemize{
 #'        \item \code{sort}: \code{Logical scalar}. Specify
-#'        whether to sort taxa in alphabetical order or not. Enabled in functions
+#'        whether to sort taxa in alphabetical order or not. Enabled in
+#'        functions
 #'        \code{getUnique}, and \code{getTop}.
 #'        (Default: \code{FALSE})
 #'        \item \code{na.rm}: \code{Logical scalar}. Specify
@@ -25,7 +26,8 @@
 #'    
 #' @details
 #' The \code{getTop} extracts the most \code{top} abundant \dQuote{FeatureID}s
-#' in a \code{\link[SummarizedExperiment:SummarizedExperiment-class]{SummarizedExperiment}}
+#' in a
+#' \code{\link[SummarizedExperiment:SummarizedExperiment-class]{SummarizedExperiment}}
 #' object.
 #'
 #' The \code{getUnique} is a basic function to access different taxa at a
@@ -38,7 +40,7 @@
 #' @seealso
 #' \code{\link[=getPrevalence]{getPrevalent}}
 #'
-#' @name summaries
+#' @name summary
 #'
 #' @examples
 #' data(GlobalPatterns)
@@ -86,14 +88,6 @@
 #'
 NULL
 
-#' @rdname summaries
-#' @export
-setGeneric("getTop", signature = "x",
-           function(x, top= 5L, method = c("mean","sum","median"),
-                    assay.type = assay_name, assay_name = "counts", 
-                    na.rm = TRUE, ...)
-               standardGeneric("getTop"))
-
 .check_max_taxa <- function(x, top, assay.type){
     if(!is.numeric(top) || as.integer(top) != top){
         stop("'top' must be integer value", call. = FALSE)
@@ -103,16 +97,17 @@ setGeneric("getTop", signature = "x",
     }
 }
 
-#' @rdname summaries
+#' @rdname summary
 #'
 #' @importFrom DelayedMatrixStats rowSums2 rowMeans2 rowMedians
 #' @importFrom utils head
 #'
 #' @export
 setMethod("getTop", signature = c(x = "SummarizedExperiment"),
-    function(x, top = 5L, method = c("mean","sum","median","prevalence"),
-             assay.type = assay_name, assay_name = "counts", 
-             na.rm = TRUE, ...){
+    function(
+        x, top = 5L, method = c("mean", "sum", "median", "prevalence"),
+        assay.type = assay_name, assay_name = "counts", 
+        na.rm = TRUE, ...){
         # input check
         method <- match.arg(method, c("mean","sum","median","prevalence"))
         # check max taxa
@@ -121,15 +116,16 @@ setMethod("getTop", signature = c(x = "SummarizedExperiment"),
         .check_assay_present(assay.type, x)
         #
         if(method == "prevalence"){
-            taxs <- getPrevalence(assay(x, assay.type), sort = TRUE,
-                                  include.lowest = TRUE, ...)
+            taxs <- getPrevalence(
+                assay(x, assay.type), sort = TRUE, include.lowest = TRUE, ...)
             # If there are taxa with prevalence of 0, remove them
             taxs <- taxs[ taxs > 0 ]
         } else {
-            taxs <- switch(method,
-                           mean = rowMeans2(assay(x, assay.type), na.rm = na.rm),
-                           sum = rowSums2(assay(x, assay.type), na.rm = na.rm),
-                           median = rowMedians(assay(x, assay.type)), na.rm = na.rm)
+            taxs <- switch(
+                method,
+                mean = rowMeans2(assay(x, assay.type), na.rm = na.rm),
+                sum = rowSums2(assay(x, assay.type), na.rm = na.rm),
+                median = rowMedians(assay(x, assay.type)), na.rm = na.rm)
             names(taxs) <- rownames(assay(x))
             taxs <- sort(taxs,decreasing = TRUE)
         }
@@ -140,22 +136,19 @@ setMethod("getTop", signature = c(x = "SummarizedExperiment"),
     }
 )
 
-#' @rdname summaries
+#' @name summary
 #'
-#' @param rank \code{Character scalar}. Defines a taxonomic rank. Must be a value of
-#' the output of \code{taxonomyRanks()}. (Default: \code{NULl})
+#' @param rank \code{Character scalar}. Defines a taxonomic rank. Must be a
+#' value of the output of \code{taxonomyRanks()}. (Default: \code{NULl})
 #'
 #' @return
 #' The \code{getUnique} returns a vector of unique taxa present at a
 #' particular rank
 #' 
 #' @export
-setGeneric("getUnique",
-           signature = c("x"),
-           function(x, ...)
-               standardGeneric("getUnique"))
+NULL
 
-#' @rdname summaries
+#' @rdname summary
 #' @export
 setMethod("getUnique", signature = c(x = "SummarizedExperiment"),
     function(x, rank = NULL, ...){
@@ -167,13 +160,14 @@ setMethod("getUnique", signature = c(x = "SummarizedExperiment"),
     }
 )
 
-#' @rdname summaries
+#' @name summary
 #'
 #' @param group With group, it is possible to group the observations in an
 #'   overview. Must be one of the column names of \code{colData}.
 #'   
 #' @param name \code{Character scalar}. A name for the column of the 
-#'   \code{colData} where results will be stored. (Default: \code{"dominant_taxa"})
+#' \code{colData} where results will be stored.
+#' (Default: \code{"dominant_taxa"})
 #'
 #' @param ... Additional arguments passed on to \code{agglomerateByRank()} when
 #'   \code{rank} is specified for \code{summarizeDominance}.
@@ -186,16 +180,14 @@ setMethod("getUnique", signature = c(x = "SummarizedExperiment"),
 #'
 #'
 #' @return
-#' The \code{summarizeDominance} returns an overview in a tibble. It contains dominant taxa
-#' in a column named \code{*name*} and its abundance in the data set.
+#' The \code{summarizeDominance} returns an overview in a tibble. It contains
+#' dominant taxa in a column named \code{*name*} and its abundance in the data
+#' set.
 #' 
 #' @export
-setGeneric("summarizeDominance",signature = c("x"),
-           function(x, group = NULL, name = "dominant_taxa", ...)
-               standardGeneric("summarizeDominance"))
+NULL
 
-
-#' @rdname summaries
+#' @rdname summary
 #' @export
 setMethod("summarizeDominance", signature = c(x = "SummarizedExperiment"),
     function(x, group = NULL, name = "dominant_taxa", ...){
@@ -204,29 +196,35 @@ setMethod("summarizeDominance", signature = c(x = "SummarizedExperiment"),
         if(!is.null(group)){
             if(isFALSE(any(group %in% colnames(colData(x))))){
                 stop("'group' variable must be in colnames(colData(x))",
-                     call. = FALSE)
+                    call. = FALSE)
             }
         }
         # name check
         if(!.is_non_empty_string(name)){
             stop("'name' must be a non-empty single character value.",
-                 call. = FALSE)
+                call. = FALSE)
         }
         # Adds dominant taxa to colData
         dominant_taxa <- getDominant(x, ...)
         data <- colData(x)
-        # If the length of dominant taxa is not equal to number of rows, then add rows
+        # If the length of dominant taxa is not equal to number of rows, then
+        # add rows
         # because there are multiple dominant taxa
         if(length(unlist(dominant_taxa)) > nrow(data) ){
             # Get the order
             order <- unique(names(dominant_taxa))
-            # there are multiple dominant taxa in one sample (counts are equal), length
-            # of dominant is greater than rows in colData. --> create a list that contain
+            # there are multiple dominant taxa in one sample
+            # (counts are equal), length
+            # of dominant is greater than rows in colData. --> create a list
+            # that contain
             # dominant taxa, and is as long as there are rows in colData
-            dominant_taxa_list <- split(dominant_taxa, rep(names(dominant_taxa), lengths(dominant_taxa)) )
+            dominant_taxa_list <- split(
+                dominant_taxa,
+                rep(names(dominant_taxa), lengths(dominant_taxa)) )
             # Order the data
             dominant_taxa_list <- dominant_taxa_list[order]
-            data <- data[rep(seq_len(nrow(data)), lengths(dominant_taxa_list)), ]
+            data <- data[
+                rep(seq_len(nrow(data)), lengths(dominant_taxa_list)), ]
         }
         # Add dominant taxa to data
         colname <- "dominant_taxa"
@@ -247,8 +245,8 @@ setMethod("summarizeDominance", signature = c(x = "SummarizedExperiment"),
     data <- as.data.frame(data)
     
     # # If there are multiple dominant taxa in one sample, the column is a list.
-    # # Convert it so that there are multiple rows for sample and each row contains
-    # # one dominant taxa.
+    # # Convert it so that there are multiple rows for sample and each row
+    # contains one dominant taxa.
     if( is.list(data[[colname]]) ){
         # Get dominant taxa as a vector
         dominant_taxa <- unlist(data[[colname]])
@@ -291,10 +289,11 @@ setMethod("summarizeDominance", signature = c(x = "SummarizedExperiment"),
     return(tallied_data)
 }
 
-#' @rdname summaries
+#' @rdname summary
 #'
 #' @param object A
-#'  \code{\link[SummarizedExperiment:SummarizedExperiment-class]{SummarizedExperiment}} object.
+#' \code{\link[SummarizedExperiment:SummarizedExperiment-class]{SummarizedExperiment}}
+#' object.
 #'
 #' @param assay.type \code{Character scalar}. Specifies the name of the
 #'   assay used in calculation. (Default: \code{"counts"})
@@ -339,12 +338,13 @@ setMethod("summary", signature = c(object = "SummarizedExperiment"),
 .get_summary_col_data <- function(x, assay.type){
     # should check and extract assay
     assay.x <- .get_assay(x, assay.type)
-    summary_col_data <- tibble(total_counts = sum(colSums2(assay.x)),
-                               min_counts = min(colSums2(assay.x)),
-                               max_counts = max(colSums2(assay.x)),
-                               median_counts = median(colSums2(assay.x)),
-                               mean_counts = mean(colSums2(assay.x)),
-                               stdev_counts = sd(colSums2(assay.x)))
+    summary_col_data <- tibble(
+        total_counts = sum(colSums2(assay.x)),
+        min_counts = min(colSums2(assay.x)),
+        max_counts = max(colSums2(assay.x)),
+        median_counts = median(colSums2(assay.x)),
+        mean_counts = mean(colSums2(assay.x)),
+        stdev_counts = sd(colSums2(assay.x)))
     return(summary_col_data)
 }
 
@@ -354,9 +354,10 @@ setMethod("summary", signature = c(object = "SummarizedExperiment"),
     # Should check and extract assay
     # Internal from agglomerateByRanks
     assay.x <- .get_assay(x, assay.type)
-    summary_row_data <- tibble(total = nrow(assay.x),
-                               singletons = .get_singletons(assay.x),
-                               per_sample_avg = mean(colSums2(assay.x != 0)))
+    summary_row_data <- tibble(
+        total = nrow(assay.x),
+        singletons = .get_singletons(assay.x),
+        per_sample_avg = mean(colSums2(assay.x != 0)))
     return(summary_row_data)
 }
 
@@ -373,8 +374,7 @@ setMethod("summary", signature = c(object = "SummarizedExperiment"),
     assay.x <- .get_assay(x, assay.type)
     if(any(colSums2(assay.x) < 1) | any(colSums2(assay.x) < 0)){
         stop("There are samples that sum to 1 or less counts. ",
-             "Try to supply raw counts",
-             call. = FALSE)
+            "Try to supply raw counts", call. = FALSE)
     }
 }
 
@@ -404,9 +404,8 @@ setMethod("summary", signature = c(object = "SummarizedExperiment"),
     assay.x <- .get_assay(x, assay.type)
     if(any(is.na(assay.x))) {
         stop("There are samples with NAs in 'assay': ", assay.type,
-             " . This function is limited to sequencing data only. ",
-             "Where raw counts do not usually have NAs. ",
-             "Try to supply raw counts",
-             call. = FALSE)
+            " . This function is limited to sequencing data only. ",
+            "Where raw counts do not usually have NAs. ",
+            "Try to supply raw counts", call. = FALSE)
     }
 }

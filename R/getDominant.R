@@ -74,14 +74,6 @@
 NULL
 
 #' @rdname getDominant
-#' @export
-setGeneric("getDominant",signature = c("x"),
-    function(x, assay.type = assay_name, assay_name = "counts",
-            group = rank, rank = NULL, other.name = "Other", n = NULL, 
-            complete = TRUE, ...)
-    standardGeneric("getDominant"))
-
-#' @rdname getDominant
 #' @importFrom IRanges relist
 #' @export
 setMethod("getDominant", signature = c(x = "SummarizedExperiment"),
@@ -168,12 +160,6 @@ setMethod("getDominant", signature = c(x = "SummarizedExperiment"),
         return(taxa)
     }
 )
-
-#' @rdname getDominant
-#' @export
-setGeneric("addDominant", signature = c("x"),
-    function(x, name = "dominant_taxa", other.name = "Other", n = NULL, ...)
-    standardGeneric("addDominant"))
 
 #' @rdname getDominant
 #' @export
