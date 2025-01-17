@@ -43,7 +43,8 @@ converted into a TreeSummarizedExperiment from the \pkg{phyloseq} package.
 Arumugam, M., et al. (2011). Enterotypes of the human gut microbiome.
 Nature, 473(7346), 174-180. \url{https://doi.org/10.1038/nature09944}
 
-Arumugam, M., et al. (2014). Addendum: Enterotypes of the human gut microbiome.
+Arumugam, M., et al. (2014). Addendum: Enterotypes of the human gut
+microbiome.
 Nature 506, 516 (2014). \url{https://doi.org/10.1038/nature13075}
 }
 \seealso{

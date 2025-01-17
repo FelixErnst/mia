@@ -5,8 +5,8 @@
 #' package
 #'
 #' @param x a numeric matrix with samples as rows or a
-#'   \code{\link[SummarizedExperiment:SummarizedExperiment-class]{SummarizedExperiment}}
-#'   object.
+#' \code{\link[SummarizedExperiment:SummarizedExperiment-class]{SummarizedExperiment}}
+#' object.
 #'
 #' @param assay.type \code{Character scalar}. Specifies the name of the
 #'   assay used in calculation. (Default: \code{"counts"})
@@ -15,24 +15,24 @@
 #'   
 #' @param assay_name Deprecated. Use \code{assay.type} instead.
 #'
-#' @param k \code{Numeric scalar}. The number of Dirichlet components to fit. See
-#'   \code{\link[DirichletMultinomial:dmn]{dmn}}. (Default: \code{1})
+#' @param k \code{Numeric scalar}. The number of Dirichlet components to fit.
+#' See \code{\link[DirichletMultinomial:dmn]{dmn}}. (Default: \code{1})
 #'
 #' @param BPPARAM A
 #'   \code{\link[BiocParallel:BiocParallelParam-class]{BiocParallelParam}}
 #'   object specifying whether the calculation should be parallelized.
 #'
-#' @param transposed \code{Logical scalar}. Is \code{x} transposed with samples in rows?
-#' (Default: \code{FALSE})
+#' @param transposed \code{Logical scalar}. Is \code{x} transposed with samples
+#' in rows? (Default: \code{FALSE})
 #'
-#' @param type \code{Character scalar}. The type of measure used for the goodness of fit. One of
-#'   \sQuote{laplace}, \sQuote{AIC} or \sQuote{BIC}.
+#' @param type \code{Character scalar}. The type of measure used for the
+#' goodness of fit. One of \sQuote{laplace}, \sQuote{AIC} or \sQuote{BIC}.
 #'
 #' @param name \code{Character scalar}. The name to store the result in
-#'   \code{\link[SummarizedExperiment:RangedSummarizedExperiment-class]{metadata}}
+#' \code{\link[SummarizedExperiment:RangedSummarizedExperiment-class]{metadata}}
 #'
-#' @param variable \code{Character scalar}. A variable from \code{colData} to use as a 
-#'   grouping variable. Must be a character of factor.
+#' @param variable \code{Character scalar}. A variable from \code{colData} to
+#' use as a grouping variable. Must be a character of factor.
 #'
 #' @param seed \code{Numeric scalar}. Random number seed. See
 #'   \code{\link[DirichletMultinomial:dmn]{dmn}}
@@ -96,12 +96,6 @@
 #' # Get the weight of each component for the best model
 #' bestModel@mixture$Weight
 NULL
-
-#' @rdname calculateDMN
-#' @export
-setGeneric("calculateDMN", signature = c("x"),
-    function(x, ...)
-            standardGeneric("calculateDMN"))
 
 #' @importFrom DirichletMultinomial dmn
 #' @importFrom stats runif
@@ -190,12 +184,6 @@ runDMN <- function(x, name = "DMN", ...){
 }
 
 #' @rdname calculateDMN
-#' @export
-setGeneric("getDMN", signature = "x",
-            function(x, name = "DMN", ...)
-                standardGeneric("getDMN"))
-
-#' @rdname calculateDMN
 #' @importFrom DirichletMultinomial laplace AIC BIC
 #' @export
 setMethod("getDMN", signature = c(x = "SummarizedExperiment"),
@@ -215,12 +203,6 @@ setMethod("getDMN", signature = c(x = "SummarizedExperiment"),
 }
 
 #' @rdname calculateDMN
-#' @export
-setGeneric("bestDMNFit", signature = "x",
-            function(x, name = "DMN", type = c("laplace","AIC","BIC"), ...)
-                standardGeneric("bestDMNFit"))
-
-#' @rdname calculateDMN
 #' @importFrom DirichletMultinomial laplace AIC BIC
 #' @export
 setMethod("bestDMNFit", signature = c(x = "SummarizedExperiment"),
@@ -236,12 +218,6 @@ setMethod("bestDMNFit", signature = c(x = "SummarizedExperiment"),
                 .get_best_dmn_fit(dmn, fit_FUN)
             }
 )
-
-#' @rdname calculateDMN
-#' @export
-setGeneric("getBestDMNFit", signature = "x",
-            function(x, name = "DMN", type = c("laplace","AIC","BIC"), ...)
-                standardGeneric("getBestDMNFit"))
 
 #' @rdname calculateDMN
 #' @importFrom DirichletMultinomial laplace AIC BIC
@@ -260,12 +236,6 @@ setMethod("getBestDMNFit", signature = c(x = "SummarizedExperiment"),
 
 ################################################################################
 # DMN group
-
-#' @rdname calculateDMN
-#' @export
-setGeneric("calculateDMNgroup", signature = c("x"),
-            function(x, ...)
-                standardGeneric("calculateDMNgroup"))
 
 #' @importFrom DirichletMultinomial dmngroup
 #' @importFrom stats runif
@@ -307,12 +277,6 @@ setMethod("calculateDMNgroup", signature = c(x = "SummarizedExperiment"),
 
 ################################################################################
 # DMN group cross validations
-
-#' @rdname calculateDMN
-#' @export
-setGeneric("performDMNgroupCV", signature = c("x"),
-            function(x, ...)
-                standardGeneric("performDMNgroupCV"))
 
 #' @importFrom DirichletMultinomial cvdmngroup
 #' @importFrom stats runif
