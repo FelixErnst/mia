@@ -21,7 +21,7 @@ transformAssay(x, ...)
   ...
 )
 
-\S4method{transformAssay}{SingleCellExperiment}(x, altexp = altExpNames(x), ...)
+\S4method{transformAssay}{SingleCellExperiment}(x, altexp = NULL, ...)
 }
 \arguments{
 \item{x}{\code{\link[TreeSummarizedExperiment:TreeSummarizedExperiment-class]{TreeSummarizedExperiment}}.}
@@ -72,7 +72,7 @@ Alternatively, a user-specified numeric value can be added as pseudocount.
 \item{altexp}{\code{Character vector} or \code{NULL}. Specifies the names
 of alternative experiments to which the transformation should also be
 applied. If \code{NULL}, the transformation is only applied to the main
-experiment. (Default: \code{altExpNames(x)}).}
+experiment. (Default: \code{NULL}).}
 }
 \value{
 \code{transformAssay} returns the input object \code{x}, with a new
@@ -127,7 +127,7 @@ where \eqn{x} is a single value of data.
 data(GlobalPatterns)
 tse <- GlobalPatterns
 
-# By specifying 'method', it is possible to apply different transformations, 
+# By specifying 'method', it is possible to apply different transformations,
 # e.g. compositional transformation.
 tse <- transformAssay(tse, method = "relabundance")
 
@@ -136,10 +136,10 @@ tse <- transformAssay(tse, method = "relabundance")
 
 # Perform CLR with half of the smallest positive value as pseudocount
 tse <- transformAssay(
-    tse, assay.type = "counts", method = "clr", 
+    tse, assay.type = "counts", method = "clr",
     pseudocount = TRUE
     )
-                      
+
 head(assay(tse, "clr"))
 
 # Perform CSS normalization.
@@ -165,7 +165,7 @@ head(assay(tse, "rank"))
 
 # In order to use other ranking variants, modify the chosen assay directly:
 assay(tse, "rank_average", withDimnames = FALSE) <- colRanks(
-    assay(tse, "counts"), ties.method = "average", preserveShape = TRUE)  
+    assay(tse, "counts"), ties.method = "average", preserveShape = TRUE)
 
 # Using altexp parameter. First agglomerate the data and then apply
 # transformation.
