@@ -1,9 +1,9 @@
 #' @name
 #' agglomerate-methods
-#' 
+#'
 #' @title
 #' Agglomerate data using taxonomic information or other grouping
-#' 
+#'
 #' @description
 #' Agglomeration functions can be used to sum-up data based on specific criteria
 #' such as taxonomic ranks, variables or prevalence.
@@ -21,7 +21,7 @@
 #' \code{\link[SummarizedExperiment:SummarizedExperiment-class]{assay}} are
 #' agglomerated, i.e. summed up. If the assay contains values other than counts
 #' or absolute values, this can lead to meaningless values being produced.
-#' 
+#'
 #' @details
 #' Agglomeration sums up the values of assays at the specified taxonomic level.
 #' With certain assays, e.g. those that include binary or negative values, this
@@ -43,19 +43,19 @@
 #' with the specified entries merged into one entry in all relevant components.
 #' \code{agglomerateByRank} returns a taxonomically-agglomerated,
 #' optionally-pruned object of the same class as \code{x}.
-#'  
+#'
 #' @inheritParams getPrevalence
 #'
 #' @param empty.fields \code{Character vector}. Defines which values should be
 #'   regarded as empty. (Default: \code{c(NA, "", " ", "\t")}). They will be
 #'   removed if \code{na.rm = TRUE} before agglomeration.
-#'   
+#'
 #' @param empty.rm \code{Logical scalar}. Defines whether rows including
 #' \code{empty.fields} in specified \code{rank} will be excluded.
 #' (Default: \code{TRUE})
 #'
 #' @param agglomerateTree Deprecated. Use \code{update.tree} instead.
-#' 
+#'
 #' @param agglomerate.tree Deprecated. Use \code{update.tree} instead.
 #'
 #' @param ... arguments passed to \code{agglomerateByRank} function for
@@ -68,32 +68,32 @@
 #'        \item \code{empty.ranks.rm}: \code{Logical scalar}. Determines
 #'        whether to remove those columns of rowData that include only NAs after
 #'        agglomeration. (Default: \code{FALSE})
-#'        
+#'
 #'        \item \code{empty.rm}: \code{Logical scalar}. Determines
 #'        whether to remove rows that do not belong to any group, i.e., that
 #'        have \code{NA} value. (Default: \code{FALSE})
-#'        
+#'
 #'        \item \code{make.unique}: \code{Logical scalar}. Determines
 #'        whether to make rownames unique. (Default: \code{TRUE})
-#'        
+#'
 #'        \item \code{detection}: The threshold value for determining presence
 #'        or absence. A value in \code{x} must exceed this threshold to be
 #'        considered present.
-#'        
+#'
 #'        \item \code{assay.type}: \code{Character scalar}. Specifies the assay
 #'        used to calculate prevalence. (Default: \code{"counts"})
-#'        
+#'
 #'        \item \code{prevalence}: Prevalence threshold (in 0 to 1). The
 #'        required prevalence is strictly greater by default. To include the
 #'        limit, set \code{include.lowest} to \code{TRUE}.
-#'        
+#'
 #'        \item \code{update.refseq}: \code{Logical scalar}. Should a
 #'        consensus sequence be calculated? If set to \code{FALSE}, the result
 #'        from \code{archetype} is returned; If set to \code{TRUE} the result
 #'        from
 #'        \code{\link[DECIPHER:ConsensusSequence]{DECIPHER::ConsensusSequence}}
 #'        is returned. (Default: \code{FALSE})
-#'        
+#'
 #'        \item \code{archetype} Of each level of \code{group}, which element
 #'        should be regarded as the archetype and metadata in the columns or
 #'        rows kept, while merging? This can be single integer value or an
@@ -102,14 +102,14 @@
 #'        factor level will be kept)
 #'    }
 #'
-#' @param altexp \code{Character scalar} or \code{integer scalar}. 
+#' @param altexp \code{Character scalar} or \code{integer scalar}.
 #'   Specifies an alternative experiment containing the input data.
 #'
 #' @param altexp.rm \code{Logical scalar}. Should alternative
 #'   experiments be removed prior to agglomeration? This prevents too many
 #'   nested alternative experiments by default. (Default:
 #'   \code{TRUE})
-#' 
+#'
 #' @param strip_altexp Deprecated. Use \code{altexp.rm} instead.
 #'
 #' @param by \code{Character scalar}. Determines if data is merged
@@ -123,12 +123,12 @@
 #' \code{nrow(x)/ncol(x)}. Rows/Cols corresponding to the same level will be
 #' merged. If \code{length(levels(group)) == nrow(x)/ncol(x)}, \code{x} will be
 #' returned unchanged.
-#'  
+#'
 #' @param f Deprecated. Use \code{group} instead.
 #'
 #' @param update.tree \code{Logical scalar}. Should
-#'   \code{rowTree()} also be merged? (Default: \code{FALSE})
-#' 
+#' \code{rowTree()} also be merged? (Default: \code{TRUE})
+#'
 #' @param mergeTree Deprecated. Use \code{update.tree} instead.
 #'
 #' @examples
@@ -146,9 +146,9 @@
 #' nrow(GlobalPatterns)
 #' nrow(x1)
 #'
-#' # agglomerate the tree as well
-#' x2 <- agglomerateByRank(GlobalPatterns, rank="Family",
-#'                        update.tree = TRUE)
+#' # Do not agglomerate the tree
+#' x2 <- agglomerateByRank(
+#'     GlobalPatterns, rank="Family", update.tree = FALSE)
 #' nrow(x2) # same number of rows, but
 #' rowTree(x1) # ... different
 #' rowTree(x2) # ... tree
@@ -212,7 +212,7 @@
 #' merged <- agglomerateByVariable(
 #'     GlobalPatterns, by = "cols", colData(GlobalPatterns)$SampleType)
 #' merged
-#' 
+#'
 #' @seealso
 #' \code{\link[=splitOn]{splitOn}}
 #' \code{\link[=unsplitOn]{unsplitOn}}
@@ -221,20 +221,15 @@
 #' \code{\link[=agglomerate-methods]{agglomerateByRank}},
 #' \code{\link[SingleCellExperiment:altExps]{altExps}},
 #' \code{\link[SingleCellExperiment:splitAltExps]{splitAltExps}}
-#' 
+#'
 NULL
-
-#' @rdname agglomerate-methods
-#' @export
-setGeneric("agglomerateByRank", signature = "x", function(x, ...)
-    standardGeneric("agglomerateByRank"))
 
 #' @rdname agglomerate-methods
 #' @export
 setMethod(
     "agglomerateByRank", signature = c(x = "TreeSummarizedExperiment"),
     function(x, rank = taxonomyRanks(x)[1], update.tree = agglomerateTree,
-        agglomerate.tree = agglomerateTree, agglomerateTree = FALSE, ...){
+        agglomerate.tree = agglomerateTree, agglomerateTree = TRUE, ...){
         # Input check
         if(!.is_a_bool(update.tree)){
             stop("'update.tree' must be TRUE or FALSE.", call. = FALSE)
@@ -250,6 +245,8 @@ setMethod(
         }
         # Agglomerate data by using SCE method
         x <- callNextMethod(x, rank = rank, update.tree = update.tree, ...)
+        # Rename tree to correspond the current rownames
+        x <- .rename_all_tree_nodes(x, by = 1L)
         return(x)
     }
 )
@@ -310,7 +307,7 @@ setMethod("agglomerateByRank", signature = c(x = "SummarizedExperiment"),
         col_idx <- which( taxonomyRanks(x) %in% rank )
         # Get the indices of detected rank columns from rowData
         tax_cols <- .get_tax_cols_from_se(x)
-        
+
         # if empty.rm is TRUE, remove those rows that have empty,
         # white-space, NA values in rank information. I.e., they do not have
         # taxonomy information in specified taxonomy level.
@@ -325,7 +322,7 @@ setMethod("agglomerateByRank", signature = c(x = "SummarizedExperiment"),
                 !anyDuplicated(rowData(x)[,taxonomyRanks(x)]) ){
             return(x)
         }
-        
+
         # Get groups of taxonomy entries, i.e., get the specified rank
         # column from rowData
         tax_factors <- .get_tax_groups(x, col = col_idx, ...)
@@ -333,12 +330,12 @@ setMethod("agglomerateByRank", signature = c(x = "SummarizedExperiment"),
         # preserved. i.e. they are not converted into character values.
         # NA values are handled earlier in this function.
         tax_factors <- .norm_f(nrow(x), tax_factors, empty.rm = TRUE)
-        
+
         # Agglomerate data by utilizing agglomerateByVariable
         args <- c(list(
             x, by = "rows", group = tax_factors, empty.rm = TRUE), list(...))
         x <- do.call(agglomerateByVariable, args)
-        
+
         # Replace the values to the right of the rank with NA_character_.
         # These columns no longer represent the agglomerated data, as they
         # previously corresponded to specific lower taxonomic ranks that are
@@ -363,15 +360,9 @@ setMethod("agglomerateByRank", signature = c(x = "SummarizedExperiment"),
 #' @rdname agglomerate-methods
 #' @aliases agglomerateByVariable
 #' @export
-setGeneric("agglomerateByVariable", signature = "x", function(x, ...)
-    standardGeneric("agglomerateByVariable"))
-
-#' @rdname agglomerate-methods
-#' @aliases agglomerateByVariable
-#' @export
 setMethod("agglomerateByVariable",
     signature = c(x = "TreeSummarizedExperiment"),
-    function(x, by, group = f, f, update.tree = mergeTree, mergeTree = FALSE,
+    function(x, by, group = f, f, update.tree = mergeTree, mergeTree = TRUE,
         ...){
         # Check by
         by <- .check_MARGIN(by)
@@ -494,7 +485,81 @@ setMethod("agglomerateByVariable", signature = c(x = "SummarizedExperiment"),
             x <- do.call(subsetByLeaf, args)
         }
     }
+    # Rename all tree nodes
+    x <- .rename_all_tree_nodes(x, by)
     return(x)
+}
+
+# This function loops through all trees and replace their node names by
+# corresponding feature / sample name found in data.
+.rename_all_tree_nodes <- function(x, by = 1L){
+    # Loop through tree names
+    tree_names_FUN <- switch(by, rowTreeNames, colTreeNames)
+    tree_names <- tree_names_FUN(x)
+    for( name in tree_names ){
+        # Rename nodes
+        x <- .rename_tree_nodes(x, name, by)
+    }
+    return(x)
+}
+
+# This function renames the nodes of tree based on the row/colnames of TreeSE so
+# that the names of nodes match with row/colnames.
+.rename_tree_nodes <- function(tse, tree.name, by){
+    # Get correct functions based on MARGIN/by
+    names_FUN <- switch(by, rownames, colnames)
+    links_FUN <- switch(by, rowLinks, colLinks)
+    tree_FUN <- switch(by, rowTree, colTree)
+    #
+    # Get rowlinks for the tree
+    links <- links_FUN(tse) |> DataFrame()
+    links <- links[links[["whichTree"]] == tree.name, ]
+    rownames(links) <- names_FUN(tse)
+    # The rownames must be unique in order to use them as names of the nodes.
+    # Moreover, rows must have one-to-one matching.
+    if( !is.null(rownames(links)) && !anyDuplicated(rownames(links)) &&
+            nrow(links) > 0L && !anyDuplicated(links[["nodeLab"]]) ){
+        # Get the tree
+        tree <- tree_FUN(tse, tree.name)
+        # Rename tips
+        if( any(links[["isLeaf"]]) ){
+            # Get new labels
+            new_labels <- links[
+                match(tree[["tip.label"]], links[["nodeLab"]]), ]
+            new_labels[["nodeLab"]] <- rownames(new_labels)
+            missing <- is.na(new_labels[["nodeLab"]])
+            new_labels[missing, "nodeLab"] <- tree[["tip.label"]][missing]
+            # Rename
+            tree[["tip.label"]] <- new_labels[["nodeLab"]]
+            # Update rowlinks
+            new_labels <- new_labels[
+                match(rownames(links), rownames(new_labels)), ]
+            not_missing <- !is.na(new_labels[["nodeLab"]])
+            links[not_missing, ] <- new_labels[not_missing, ]
+        }
+        # Rename internal nodes
+        if( any(!links[["isLeaf"]]) ){
+            # Get new labels
+            new_labels <- links[
+                match(tree[["node.label"]], links[["nodeLab"]]), ]
+            new_labels[["nodeLab"]] <- rownames(new_labels)
+            missing <- is.na(new_labels[["nodeLab"]])
+            new_labels[missing, "nodeLab"] <- tree[["node.label"]][missing]
+            # Rename
+            tree[["node.label"]] <- new_labels[["nodeLab"]]
+            # Update rowlinks
+            new_labels <- new_labels[
+                match(rownames(links), rownames(new_labels)), ]
+            not_missing <- !is.na(new_labels[["nodeLab"]])
+            links[not_missing, ] <- new_labels[not_missing, ]
+        }
+        # Assign the tree back
+        args <- list(tse, tree, links[["nodeLab"]])
+        names(args) <- c("x", paste0(
+            ifelse(by == 1L, "row", "col"), c("Tree", "NodeLab")))
+        tse <- do.call(changeTree, args)
+    }
+    return(tse)
 }
 
 # This function trims tips until all tips can be found from provided set of

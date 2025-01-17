@@ -27,7 +27,7 @@
 #' \code{convertToPhyloseq} returns an object of class 
 #' \code{\link[phyloseq:phyloseq-class]{phyloseq}}
 #'
-#' @rdname convertFromPhyloseq
+#' @name convertFromPhyloseq
 #' @export
 #'
 #' @examples
@@ -50,29 +50,25 @@
 #' phy2
 #' 
 #' @export
-setGeneric("convertToPhyloseq", signature = c("x"),
-           function(x, ...)
-               standardGeneric("convertToPhyloseq"))
-
+NULL
 
 #' @rdname convertFromPhyloseq
 #' @export
-setMethod("convertToPhyloseq",
-          signature = c(x = "SummarizedExperiment"),
+setMethod("convertToPhyloseq", signature = c(x = "SummarizedExperiment"),
     function(x, assay.type = "counts", assay_name = NULL, ...){
         # Input check
         .require_package("phyloseq")
         # Check that tse do not have zero rows
         if(!all(dim(x) > 0)){
             stop("'x' contains zero rows. 'x' can not be converted
-                 to a phyloseq object.",
-                 call. = FALSE)
+                to a phyloseq object.", call. = FALSE)
         }
 
         if (!is.null(assay_name)) {
-            .Deprecated(old="assay_name", new="assay.type", "Now assay_name is deprecated. Use assay.type instead.")
+            .Deprecated(old="assay_name", new="assay.type",
+                "Now assay_name is deprecated. Use assay.type instead.")
         }
-	
+        
         # Check assay.type
         .check_assay_present(assay.type, x)
         
@@ -82,7 +78,7 @@ setMethod("convertToPhyloseq",
             rownames(x) <- getTaxonomyLabels(x)
         }
         # List of arguments
-        args = list()
+        args <- list()
         # Gets the abundance data from assay, and converts it to otu_table
         otu_table <- as.matrix(assay(x, assay.type))
         otu_table <- phyloseq::otu_table(otu_table, taxa_are_rows = TRUE)
@@ -91,7 +87,7 @@ setMethod("convertToPhyloseq",
 
         # If rowData includes information
         if(!( length(rowData(x)[,taxonomyRanks(x)]) == 0 ||
-              is.null((rowData(x)[,taxonomyRanks(x)])) )){
+                is.null((rowData(x)[,taxonomyRanks(x)])) )){
             # Converts taxonomy table to characters if it's not already
             rowData(x) <- DataFrame(lapply(rowData(x), as.character))
             # Gets the taxonomic data from rowData, and converts it to tax_table
@@ -118,11 +114,10 @@ setMethod("convertToPhyloseq",
 
 #' @rdname convertFromPhyloseq
 #' @export
-setMethod("convertToPhyloseq",
-          signature = c(x = "TreeSummarizedExperiment"),
+setMethod("convertToPhyloseq", signature = c(x = "TreeSummarizedExperiment"),
     function(x, tree.name = tree_name, tree_name = "phylo", ...){
         # If rowTrees exist, check tree.name
-        if( length(x@rowTree) > 0 ){
+        if( length(rowTreeNames(x)) > 0 ){
             .check_rowTree_present(tree.name, x)
             # Subset the data based on the tree
             x <- x[ rowLinks(x)$whichTree == tree.name, ]
@@ -132,7 +127,7 @@ setMethod("convertToPhyloseq",
         }
         #
         
-        # phyloseq and tree objects require nonduplicated rownames. If there are 
+        # phyloseq and tree objects require nonduplicated rownames. If there are
         # duplicated rownames, they are converted so that they are unique
         if( any(duplicated(rownames(x))) ){
             rownames(x) <- getTaxonomyLabels(x)
@@ -143,7 +138,7 @@ setMethod("convertToPhyloseq",
         # and/or sample_data
         obj <- callNextMethod()
         # List of arguments
-        args = list()
+        args <- list()
         # Adds to the list of arguments, if 'obj' is not a phyloseq object
         # i.e. is an otu_table
         if(!is(obj,"phyloseq")){
@@ -235,24 +230,26 @@ setMethod("convertToPhyloseq",
     # Take only one set, if it is a list
     if( is_list ){
         # Check referenceSeq
-        if( !( (.is_non_empty_string(referenceSeq) && referenceSeq %in% names(refSeqs)) ||
-            (.is_an_integer(referenceSeq) && (referenceSeq>0 && referenceSeq<=length(refSeqs))) )
+        if( !( (.is_non_empty_string(referenceSeq) &&
+                referenceSeq %in% names(refSeqs)) ||
+            (.is_an_integer(referenceSeq) && (referenceSeq>0 &&
+                referenceSeq<=length(refSeqs))) )
             ){
-            stop("'referenceSeq' must be a non-empty single character value or an integer ",
-                 "specifying the DNAStringSet from DNAStringSetList.",
-                 call. = FALSE)
+            stop("'referenceSeq' must be a non-empty single character value ",
+                "or an integer specifying the DNAStringSet from ",
+                "DNAStringSetList.", call. = FALSE)
         }
         # Get specified referenceSeq
         refSeqs <- refSeqs[[referenceSeq]]
-        warning("Use 'referenceSeq' to specify DNA set from DNAStringSetList. ",
-                "Current choice is '", referenceSeq, "'.", 
+        warning("Use 'referenceSeq' to specify DNA set from ",
+                "DNAStringSetList. Current choice is '", referenceSeq, "'.",
                 call. = FALSE)
     }
     # Check if all rownames have referenceSeqs
     if( !(all(rownames(x) %in% names(refSeqs)) &&
         all(names(refSeqs) %in% rownames(x) )) ){
-        warning("referenceSeq does not match with rownames so they are discarded.",
-                call. = FALSE)
+        warning("referenceSeq does not match with rownames so they are ",
+                "discarded.", call. = FALSE)
         refSeqs <- NULL
     }
     return(refSeqs)

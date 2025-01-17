@@ -80,16 +80,6 @@
 #' 
 NULL
 
-#' @rdname addNMF
-#' @export
-setGeneric(
-    "getNMF", signature = c("x"), function(x, ...) standardGeneric("getNMF"))
-
-#' @rdname addNMF
-#' @export
-setGeneric(
-    "addNMF", signature = c("x"), function(x, ...) standardGeneric("addNMF"))
-
 #' @export
 #' @rdname addNMF
 setMethod("getNMF", "SummarizedExperiment",
