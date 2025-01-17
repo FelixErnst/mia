@@ -17,14 +17,14 @@ Changes in version 1.1.x
 + added calculateOverlap
 + getUniqueTaxa & getTopTaxa: added option for alphabetical order
 
-Changes in version 1.3.x 
+Changes in version 1.3.x
 + name change: testForExperimentCrossCorrelation to testExperimentCrossCorrelation
 + getExperimentCrossCorrelation: Filtering disabled by default, option to suppress warnings
 + bugfix: taxonomyTree gave error if taxa were agglomerated at highest level (taxa name mismatch)
 + bugfix: subsampleCounts errors if no samples are found after subsampling
 + added loadFromMetaphlan
-+ renamed calculateUniFrac to calculateUnifrac 
-+ added na.rm option to getTopTaxa function   
++ renamed calculateUniFrac to calculateUnifrac
++ added na.rm option to getTopTaxa function
 + bugfix: makeTreeSEFromPseq -- orientation of assay is taken into account
 + bugfix: getExperimentCrossCorrelation's "matrix"" mode works with features named equally
 + bugfix: getExperimentCrossCorrelation's calculates correlations correctly with features named equally
@@ -45,7 +45,7 @@ Changes in version 1.3.x
 + Added mergeSE function
 + bugfix: loadFromBiom
 
-Changes in version 1.5.x 
+Changes in version 1.5.x
 + Added HintikkaXOData
 + Added sample metadata option to getExperimentCrossAssociation
 + estimateFaith: add support for multiple rowTrees
@@ -84,8 +84,8 @@ Changes in version 1.9.x
 + *RDA & *CCA: calculate also statistical significance
 + altExp support for meltAssay
 + Deprecate mergeRows, mergeCols, agglomerateByRank, agglomerateByPrevalence
-+ Removed  getAbundanceSample and getAbundanceFeature  
-+ Updated test to avoid warning from deprecated functions 
++ Removed  getAbundanceSample and getAbundanceFeature
++ Updated test to avoid warning from deprecated functions
 + Export mergeFeaturesByRank
 + *RDA & *CCA: scores parameter for specifying output
 + Improve mergeSEs and loadFromBiom
@@ -109,7 +109,7 @@ Changes in version 1.11.x
 + rename importers loadFromBiom, loadFromQIIME2, readQZA, loadFromMothur, loadFromMetaphlan, loadFromHumann
 + fix typo in loadFromBiom definition (deprecate file)
 + deprecate subsetSamples, subsetFeatures and subsetTaxa
-+ deprecate plotNMDS after moving it to miaViz 
++ deprecate plotNMDS after moving it to miaViz
 + rename estimateDivergence to addDivergence
 + Add details to documentation of function agglomerateByPrevalence
 
@@ -125,21 +125,21 @@ Changes in version 1.13.x
 + rename subsetByPrevalent* and subsetByRare* to subsetByPrevalent and subsetByRare
 + Deprecate transformFeatures, transformSamples, transformCounts, Ztransform,
   relAbundanceCounts
-+ rename getRare* functions to getRare, getUnique* functions to getUnique, 
++ rename getRare* functions to getRare, getUnique* functions to getUnique,
   getTop* functions to getTop and getPrevalent* functions to getPrevalent
 + Rename subsampleCounts to rarefyAssay
-+ Rename perSampleDominant* functions to getDominant and addPerSampleDominant* 
++ Rename perSampleDominant* functions to getDominant and addPerSampleDominant*
   functions to addDominant
 + Rename splitByRanks to agglomerateByRanks and add option as.list
-+ Explain that rarefyAssay returns a new SummarizedExperiment object that 
++ Explain that rarefyAssay returns a new SummarizedExperiment object that
   includes the newly added subsampled assay.
 + Fix bug in mergeFeaturesByPrevalence
-+ new aliases calculateDPCoA to getDPCoA, calculateNMDS to getNMDS, calculateRDA to getRDA, 
++ new aliases calculateDPCoA to getDPCoA, calculateNMDS to getNMDS, calculateRDA to getRDA,
 calculateCCA to getCCA
-+ add informative error message in rarefyAssay on assays with strictly-negative values 
++ add informative error message in rarefyAssay on assays with strictly-negative values
 + Use rbiom package in unifrac implementation
 + Updated parameter names to follow naming convention "parameter.name"
-+ rename converters makeTreeSEFrom* to convertFrom* and makePhyloseqFromTreeSE to 
++ rename converters makeTreeSEFrom* to convertFrom* and makePhyloseqFromTreeSE to
 convertToPhyloseq
 + add rowTree agglomeration and RefSeq agglomeration in agglomerateByPrevalence
 + Fix tree merging in unsplit and mergeSEs functions
@@ -162,3 +162,4 @@ Changes in version 1.15.x
 + agglomerateBy*: Add na.rm option for excluding NA counts
 + Added getPERMANOVA and addPERMANOVA functions to calculate PERMANOVA
 + update.tree = TRUE by default
++ Add functions for classifying taxa based on their average abundance

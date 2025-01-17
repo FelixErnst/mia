@@ -25,7 +25,7 @@ reference:
   - mergeSEs
   - meltSE
   - rarefyAssay
-  
+
 - title: Datasets
 - contents:
   - mia-datasets
@@ -43,6 +43,7 @@ reference:
   - getPrevalentAbundance
   - summary
   - getDominant
+  - getAbundant
 - title: Data loading
 - contents:
   - importBIOM
