@@ -33,6 +33,10 @@
 #' @param update.tree \code{Logical scalar}. Should
 #' \code{rowTree()} also be agglomerated? (Default: \code{TRUE})
 #'
+#' @param name \code{Character scalar}. Specifies name of column in
+#' \code{rowData} where the results will be stored.
+#' (Default: \code{"prevalence"})
+#'
 #' @param ... additional arguments
 #' \itemize{
 #'   \item If \code{!is.null(rank)} arguments are passed on to
@@ -176,6 +180,9 @@ NULL
 #' @export
 setMethod("addPrevalence", signature = c(x = "SummarizedExperiment"),
     function(x, name = "prevalence", ...){
+        if( !.is_a_string(name) ){
+            stop("'name' must be a single character value.", call. = FALSE)
+        }
         # Agglomerate data if specified
         x <- .merge_features(x, ...)
         # Sorting is disabled as it messes up the order of taxa. Moreover, we

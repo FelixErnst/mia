@@ -135,8 +135,9 @@ calculation. (Default: \code{"counts"})}
 
 \item{assay_name}{Deprecated. Use \code{assay.type} instead.}
 
-\item{name}{\code{Character scalar}. The name to be used to store the result
-in metadata of the output. (Default: \code{method})}
+\item{name}{\code{Character scalar}. Specifies name of column in
+\code{rowData} where the results will be stored.
+(Default: \code{"prevalence"})}
 
 \item{detection}{\code{Numeric scalar}. Detection threshold for
 absence/presence. If \code{as_relative = FALSE},
