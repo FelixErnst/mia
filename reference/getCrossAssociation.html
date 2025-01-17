@@ -44,7 +44,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Calculate correlations between features of two experiments.</h1>
-    <small class="dont-index">Source: <a href="https://github.com/microbiome/mia/blob/manual_improvements/R/AllGenerics.R" class="external-link"><code>R/AllGenerics.R</code></a>, <a href="https://github.com/microbiome/mia/blob/manual_improvements/R/getCrossAssociation.R" class="external-link"><code>R/getCrossAssociation.R</code></a></small>
+    <small class="dont-index">Source: <a href="https://github.com/microbiome/mia/blob/devel/R/AllGenerics.R" class="external-link"><code>R/AllGenerics.R</code></a>, <a href="https://github.com/microbiome/mia/blob/devel/R/getCrossAssociation.R" class="external-link"><code>R/getCrossAssociation.R</code></a></small>
     <div class="hidden name"><code>getCrossAssociation.Rd</code></div>
     </div>
 
@@ -414,6 +414,7 @@ faster solutions when running times are critical.</p>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> altexp1: -, altexp2: -, assay.type1: counts, col.var1: -, assay.type2: counts, col.var2: -</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> by: 2, function: getDissimilarity, method: bray, test.signif: FALSE, p.adj.method: -, paired: FALSE, show.warnings: TRUE</span>
 <span class="r-in"><span>                                        </span></span>
+<span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># If experiments are equal and measure is symmetric</span></span></span>
 <span class="r-in"><span><span class="co"># (e.g., taxa1 vs taxa2 == taxa2 vs taxa1),</span></span></span>
 <span class="r-in"><span><span class="co"># it is possible to speed-up calculations by calculating association only</span></span></span>
@@ -470,26 +471,6 @@ faster solutions when running times are critical.</p>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Cannot compute exact p-value with ties</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Cannot compute exact p-value with ties</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Cannot compute exact p-value with ties</span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># If your data contains TreeSE with alternative experiment in altExp,</span></span></span>
-<span class="r-in"><span><span class="co"># correlations can be calculated as follows.</span></span></span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># Create TreeSE with altExp</span></span></span>
-<span class="r-in"><span><span class="va">tse</span> <span class="op">&lt;-</span> <span class="va">mae</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span></span>
-<span class="r-in"><span><span class="fu">altExp</span><span class="op">(</span><span class="va">tse</span>, <span class="st">"metabolites"</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">mae</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span></span></span>
-<span class="r-in"><span><span class="co"># Calculate</span></span></span>
-<span class="r-in"><span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu">getCrossAssociation</span><span class="op">(</span></span></span>
-<span class="r-in"><span>    <span class="va">tse</span>,</span></span>
-<span class="r-in"><span>    altexp2 <span class="op">=</span> <span class="st">"metabolites"</span>,</span></span>
-<span class="r-in"><span>    assay.type1 <span class="op">=</span> <span class="st">"rclr"</span>,</span></span>
-<span class="r-in"><span>    assay.type2 <span class="op">=</span> <span class="st">"nmr"</span></span></span>
-<span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating correlations...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> altexp1: -, altexp2: metabolites, assay.type1: rclr, col.var1: -, assay.type2: nmr, col.var2: -</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> by: 1, function: stats::cor, method: kendall, test.signif: FALSE, p.adj.method: -, paired: FALSE, show.warnings: TRUE</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>the standard deviation is zero</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>the standard deviation is zero</span>
-<span class="r-in"><span></span></span>
 <span class="r-in"><span>                                        </span></span>
 </code></pre></div>
     </div>
