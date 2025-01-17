@@ -4,10 +4,10 @@
 #' \code{\link{SummarizedExperiment-class}} object.
 #'
 #' @inheritParams getDissimilarity
-#' 
+#'
 #' @param x
 #' \code{\link[TreeSummarizedExperiment:TreeSummarizedExperiment-class]{TreeSummarizedExperiment}}.
-#' 
+#'
 #' @param assay_name Deprecated. Use \code{assay.type} instead.
 #'
 #' @param detection \code{Numeric scalar}. Detection threshold for
@@ -18,7 +18,7 @@
 #'
 #' @param include.lowest \code{Logical scalar}. Should the lower boundary of the
 #'   detection and prevalence cutoffs be included? (Default: \code{FALSE})
-#' 
+#'
 #' @param include_lowest Deprecated. Use \code{include.lowest} instead.
 #'
 #' @param sort \code{Logical scalar}. Should the result be sorted by prevalence?
@@ -29,7 +29,7 @@
 #'
 #' @param na.rm \code{Logical scalar}. Should NA values be omitted?
 #' (Default: \code{TRUE})
-#' 
+#'
 #' @param update.tree \code{Logical scalar}. Should
 #' \code{rowTree()} also be agglomerated? (Default: \code{TRUE})
 #'
@@ -52,7 +52,7 @@
 #' the detection threshold. For \code{SummarizedExperiment} objects, the
 #' prevalence is calculated for the selected taxonomic rank, otherwise for the
 #' rows. The absolute population prevalence can be obtained by multiplying the
-#' prevalence by the number of samples (\code{ncol(x)}). 
+#' prevalence by the number of samples (\code{ncol(x)}).
 #'
 #' The core abundance index from \code{getPrevalentAbundance} gives the relative
 #' proportion of the core species (in between 0 and 1). The core taxa are
@@ -72,7 +72,8 @@
 #' \itemize{
 #'   \item \code{getPrevalence} returns a \code{numeric} vector with the
 #'     names being set to either the row names of \code{x} or the names after
-#'     agglomeration.
+#'     agglomeration. \code{addPrevalence} adds these results to
+#'     \code{rowData(x)}.
 #'
 #'   \item \code{getPrevalentAbundance} returns a \code{numeric} vector with
 #'     the names corresponding to the column name of \code{x} and include the
@@ -173,35 +174,27 @@ NULL
 
 #' @rdname getPrevalence
 #' @export
-setGeneric("addPrevalence", signature = "x", function(x, ...)
-    standardGeneric("addPrevalence"))
-
-#' @rdname getPrevalence
-#' @export
 setMethod("addPrevalence", signature = c(x = "SummarizedExperiment"),
     function(x, name = "prevalence", ...){
-        # Sorting is disabled as it messes up the order of taxa
+        # Agglomerate data if specified
+        x <- .merge_features(x, ...)
+        # Sorting is disabled as it messes up the order of taxa. Moreover, we
+        # do not want to agglomerate the data again.
         args <- c(list(x = x), list(...))
-        args <- args[ !names(args) %in% c("sort") ]
+        args <- args[ !names(args) %in% c("sort", "rank") ]
         # Calculate
         res <- do.call(getPrevalence, args)
         # Add results to rowData
         res <- list(res)
-        x <- .add_values_to_colData(x, res, name, MARGIN = 1)
+        x <- .add_values_to_colData(x, res, name, MARGIN = 1L)
         return(x)
     }
 )
 
 #' @rdname getPrevalence
 #' @export
-setGeneric("getPrevalence", signature = "x",
-    function(x, ...)
-    standardGeneric("getPrevalence"))
-
-#' @rdname getPrevalence
-#' @export
 setMethod("getPrevalence", signature = c(x = "ANY"), function(
-    x, detection = 0, include.lowest = include_lowest, include_lowest = FALSE, 
+    x, detection = 0, include.lowest = include_lowest, include_lowest = FALSE,
     sort = FALSE, na.rm = TRUE, ...){
         # input check
         if (!.is_numeric_string(detection)) {
@@ -340,7 +333,7 @@ NULL
 #' @rdname getPrevalence
 #' @export
 setMethod("getPrevalent", signature = c(x = "ANY"),
-    function(x, prevalence = 50/100, include.lowest = include_lowest, 
+    function(x, prevalence = 50/100, include.lowest = include_lowest,
         include_lowest = FALSE, ...){
             .get_prevalent_taxa(x, rank = NULL, prevalence = prevalence,
                 include.lowest = include.lowest, ...)
@@ -395,7 +388,7 @@ NULL
 #' @rdname getPrevalence
 #' @export
 setMethod("getRare", signature = c(x = "ANY"),
-    function(x, prevalence = 50/100, include.lowest = include_lowest, 
+    function(x, prevalence = 50/100, include.lowest = include_lowest,
         include_lowest = FALSE, ...){
             .get_rare_taxa(x, rank = NULL, prevalence = prevalence,
                 include.lowest = include.lowest, ...)
@@ -504,14 +497,14 @@ setMethod("getPrevalentAbundance", signature = c(x = "SummarizedExperiment"),
 ############################# agglomerateByPrevalence ##########################
 
 #' Agglomerate data based on population prevalence
-#' 
+#'
 #' @name agglomerateByPrevalence
-#'  
+#'
 #' @inheritParams agglomerateByRank
-#' 
+#'
 #' @param other.name \code{Character scalar}. Used as the label for the
 #'   summary of non-prevalent taxa. (default: \code{"Other"})
-#' 
+#'
 #' @param other_label Deprecated. use \code{other.name} instead.
 #'
 #' @details
@@ -588,7 +581,7 @@ setMethod("agglomerateByPrevalence", signature = c(x = "SummarizedExperiment"),
 
 #' @rdname agglomerateByPrevalence
 #' @export
-setMethod("agglomerateByPrevalence", 
+setMethod("agglomerateByPrevalence",
     signature = c(x = "TreeSummarizedExperiment"),
     function(x, rank = NULL, other.name = other_label, other_label = "Other",
             update.tree = TRUE, ...){

@@ -163,3 +163,4 @@ Changes in version 1.15.x
 + Added getPERMANOVA and addPERMANOVA functions to calculate PERMANOVA
 + update.tree = TRUE by default
 + Add functions for classifying taxa based on their average abundance
++ Add addPrevalence function that adds results of getPrevalence to rowData

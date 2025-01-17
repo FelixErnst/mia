@@ -388,3 +388,8 @@ setGeneric("getAbundanceClass", signature = "x", function(x, ...)
 #' @export
 setGeneric("addAbundanceClass", signature = "x", function(x, ...)
     standardGeneric("addAbundanceClass"))
+
+#' @rdname getPrevalence
+#' @export
+setGeneric("addPrevalence", signature = "x", function(x, ...)
+    standardGeneric("addPrevalence"))

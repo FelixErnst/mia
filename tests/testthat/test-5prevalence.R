@@ -117,6 +117,19 @@ test_that("getPrevalence", {
     res <- getPrevalence(
         tse, na.rm = TRUE, rank = "Genus", empty.rm = TRUE)
     expect_true( all(res == ref, na.rm = TRUE) )
+
+    # Test that results of addPrevalence equals to getPrevalence
+    # sort should be disabled
+    tse <- GlobalPatterns
+    tse2 <- addPrevalence(tse, sort = TRUE)
+    prev <- getPrevalence(tse, sort = FALSE)
+    expect_equal(rowData(tse2)[["prevalence"]], prev)
+    tse2 <- addPrevalence(tse, rank = "Family")
+    prev <- getPrevalence(tse, rank = "Family")
+    expect_equal(rowData(tse2)[["prevalence"]], prev)
+    expect_error(addPrevalence(tse, name = 1))
+    expect_error(addPrevalence(tse, name = NULL))
+    expect_error(addPrevalence(tse, name = c("asd", "test")))
 })
 
 
@@ -310,7 +323,7 @@ test_that("subsetByPrevalent", {
     alias <- subsetByPrevalent(gp_null, detection=5, prevalence = 0.33, rank = "Phylum")
     alias <- unname(assay(alias, "counts"))
     expect_equal(alias, pr2)
-    
+
     # Check that tree subsetting works
     expect_error(subsetByPrevalent(GlobalPatterns, update.tree = 1))
     expect_error(subsetByPrevalent(GlobalPatterns, update.tree = NULL))
@@ -378,7 +391,7 @@ test_that("subsetByRare", {
     alias <- subsetByRare(gp_null, detection=5, prevalence = 0.33, rank = "Phylum")
     alias <- unname(assay(alias, "counts"))
     expect_equal(alias, pr2)
-    
+
     # Check that tree subsetting works
     expect_error(subsetByRare(GlobalPatterns, update.tree = 1))
     expect_error(subsetByRare(GlobalPatterns, update.tree = NULL))
@@ -440,12 +453,12 @@ test_that("agglomerateByPrevalence", {
                                       other_label = "test",
                                       update.tree = TRUE)
     expect_equal(length(rowTree(actual)$tip.label), length(rownames(actual)))
-    
+
     # Load data from miaTime package
     skip_if_not(require("miaTime", quietly = TRUE))
     data(SilvermanAGutData)
     se <- SilvermanAGutData
-    
+
     # checking reference consensus sequence generation
     actual <- agglomerateByPrevalence(se,"Genus", update.refseq = FALSE)
     # There should be only one exact match for each sequence
@@ -454,7 +467,7 @@ test_that("agglomerateByPrevalence", {
     expect_true(all(vapply(
     seqs_test, function(seq) sum(seqs_ref %in% seq) == 1,
     FUN.VALUE = logical(1) )) )
-    
+
     # Merging creates consensus sequences.
     th <- runif(1, 0, 1)
     actual <- agglomerateByPrevalence(
@@ -470,7 +483,7 @@ test_that("agglomerateByPrevalence", {
       threshold = th)
     seqs_test <- seqs_test[ names(seqs_test) %in% feature ]
     expect_equal(seqs_test, seqs_ref)
-    
+
     # checking reference consensus sequence generation using 'Genus:Alistipes'
     actual <- agglomerateByPrevalence(se,"Genus", update.refseq = FALSE)
     expect_equal(as.character(referenceSeq(actual)[["Alistipes"]]),
