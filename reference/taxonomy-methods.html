@@ -19,7 +19,7 @@ SummarizedExperiment."><!-- mathjax --><script src="https://cdnjs.cloudflare.com
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mia</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.15.14</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.15.13</span>
       </span>
     </div>
 
@@ -46,7 +46,7 @@ SummarizedExperiment."><!-- mathjax --><script src="https://cdnjs.cloudflare.com
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Functions for accessing taxonomic data stored in <code>rowData</code>.</h1>
-    <small class="dont-index">Source: <a href="https://github.com/microbiome/mia/blob/improve_taxlabs/R/AllGenerics.R" class="external-link"><code>R/AllGenerics.R</code></a>, <a href="https://github.com/microbiome/mia/blob/improve_taxlabs/R/taxonomy.R" class="external-link"><code>R/taxonomy.R</code></a></small>
+    <small class="dont-index">Source: <a href="https://github.com/microbiome/mia/blob/fix_mediation/R/AllGenerics.R" class="external-link"><code>R/AllGenerics.R</code></a>, <a href="https://github.com/microbiome/mia/blob/fix_mediation/R/taxonomy.R" class="external-link"><code>R/taxonomy.R</code></a></small>
     <div class="hidden name"><code>taxonomy-methods.Rd</code></div>
     </div>
 
@@ -134,12 +134,7 @@ removed if <code>na.rm = TRUE</code> before agglomeration.</p></dd>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
-<dd><p>additional arguments</p><ul><li><p><code>lowest.rank</code>: A lowest taxonomy level to be considered in
-<code>getTaxonomyLabels</code>. Ranks lower than this will be collapsed into rank
-specified by <code>lowest.rank</code>. For example, if genus level is specified,
-species will be collapsed into genus. If <code>NULL</code>, the data is not
-collapsed. (Default: <code>NULL</code>)</p></li>
-</ul></dd>
+<dd><p>optional arguments not used currently.</p></dd>
 
 
 <dt id="arg-ranks">ranks<a class="anchor" aria-label="anchor" href="#arg-ranks"></a></dt>
@@ -293,31 +288,6 @@ be accessed using <code>metadata(df)$confidence</code>.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [15] "Family:Cenarchaeaceae"            "Family:Cenarchaeaceae_1"         </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [17] "Family:Cenarchaeaceae_2"          "Family:Cenarchaeaceae_3"         </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [19] "Family:Cenarchaeaceae_4"          "Family:Cenarchaeaceae_5"         </span>
-<span class="r-in"><span><span class="co"># Taxonomy labels represent the lowest taxonomy name that identifies each</span></span></span>
-<span class="r-in"><span><span class="co"># taxa. For instance, they can represent OTUs which does no necessarily</span></span></span>
-<span class="r-in"><span><span class="co"># tell much. In this case, you might want to get the labels with higher</span></span></span>
-<span class="r-in"><span><span class="co"># taxonomy rank</span></span></span>
-<span class="r-in"><span><span class="fu">getTaxonomyLabels</span><span class="op">(</span><span class="va">GlobalPatterns</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">20</span>,<span class="op">]</span>, lowest.rank <span class="op">=</span> <span class="st">"Class"</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "Thermoprotei"                                                               </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [2] "Thermoprotei_1"                                                             </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [3] "Thermoprotei_Sulfolobales_Sulfolobaceae_Sulfolobus_Sulfolobusacidocaldarius"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [4] "Sd-NA"                                                                      </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [5] "Sd-NA_1"                                                                    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [6] "Sd-NA_2"                                                                    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [7] "Sd-NA_NRP-J"                                                                </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [8] "Sd-NA_NRP-J_1"                                                              </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [9] "Sd-NA_NRP-J_2"                                                              </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [10] "Sd-NA_NRP-J_3"                                                              </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [11] "Sd-NA_NRP-J_4"                                                              </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [12] "Thaumarchaeota_Cenarchaeales_SAGMA-X"                                       </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [13] "Thaumarchaeota_Cenarchaeales_SAGMA-X_1"                                     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [14] "Thaumarchaeota_Cenarchaeales_SAGMA-X_2"                                     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [15] "Thaumarchaeota_Cenarchaeales_Cenarchaeaceae"                                </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [16] "Thaumarchaeota_Cenarchaeales_Cenarchaeaceae_1"                              </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [17] "Thaumarchaeota_Cenarchaeales_Cenarchaeaceae_2"                              </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [18] "Thaumarchaeota_Cenarchaeales_Cenarchaeaceae_3"                              </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [19] "Thaumarchaeota_Cenarchaeales_Cenarchaeaceae_4"                              </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [20] "Thaumarchaeota_Cenarchaeales_Cenarchaeaceae_5"                              </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># mapTaxonomy</span></span></span>
 <span class="r-in"><span><span class="co">## returns the unique taxonomic information</span></span></span>
@@ -370,7 +340,7 @@ be accessed using <code>metadata(df)$confidence</code>.</p>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/SummarizedExperiment/man/SummarizedExperiment-class.html" class="external-link">rowData</a></span><span class="op">(</span><span class="va">tse</span><span class="op">)</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="st">"TAXA1"</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu">setTaxonomyRanks</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/SummarizedExperiment/man/SummarizedExperiment-class.html" class="external-link">rowData</a></span><span class="op">(</span><span class="va">tse</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="co"># Taxonomy ranks set to: taxa1 phylum class order family genus species</span></span></span>
+<span class="r-in"><span><span class="co"># Taxonomy ranks set to: taxa1 phylum class order family genus species </span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># getTaxonomyRanks is to get/check if the taxonomic ranks is set to "TAXA1"</span></span></span>
 <span class="r-in"><span><span class="fu">getTaxonomyRanks</span><span class="op">(</span><span class="op">)</span></span></span>
