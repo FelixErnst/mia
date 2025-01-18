@@ -5,7 +5,8 @@
 .JSD <- function(x, y){
     # Function to compute Shannon-Jensen Divergence
     # x and y are the frequencies for the same p categories
-    # Assumes relative abundance transformation already happened (for efficiency)
+    # Assumes relative abundance transformation already happened
+    # (for efficiency)
 
     # Define the mean point
     m <- (x+y)/2
@@ -30,7 +31,7 @@
         rownames(x) <- seq_len(nrow(x))
     }
     if(missing(chunkSize) || is.na(chunkSize) || is.null(chunkSize) ||
-       !is.integer(chunkSize)){
+        !is.integer(chunkSize)){
         chunkSize <- nrow(x)
     } else if(length(chunkSize) != 1L) {
         chunkSize <- chunkSize[1L]
@@ -55,10 +56,11 @@
     FUN <- function(X, a, b){
         .JSD(X[a,,drop=FALSE], X[b,,drop=FALSE])
     }
-    distlist <- BiocParallel::bpmapply(FUN, A, B,
-                                       MoreArgs = list(X = x),
-                                       BPPARAM = BPPARAM,
-                                       SIMPLIFY = FALSE)
+    distlist <- BiocParallel::bpmapply(
+        FUN, A, B,
+        MoreArgs = list(X = x),
+        BPPARAM = BPPARAM,
+        SIMPLIFY = FALSE)
     distlist <- do.call(c, unname(distlist))
     # reformat
     # initialize distmat with NAs

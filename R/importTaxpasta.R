@@ -21,7 +21,9 @@
 #'   taxonomy table be treated as taxonomy ranks? (Default: \code{FALSE})
 #' }
 #'
-#' @return A \code{\link[TreeSummarizedExperiment:TreeSummarizedExperiment-class]{TreeSummarizedExperiment}} object.
+#' @return A
+#' \code{\link[TreeSummarizedExperiment:TreeSummarizedExperiment-class]{TreeSummarizedExperiment}}
+#' object.
 #'
 #' @examples
 #' 
@@ -52,7 +54,8 @@ importTaxpasta <- function(file, add.tree = TRUE, ...) {
     
     # Validate the input.
     if(!.is_non_empty_string(file) ){
-        stop("'filename' must be a single non-empty character value.", call. = FALSE)
+        stop("'filename' must be a single non-empty character value.",
+            call. = FALSE)
     }
     if( !file.exists(file) ){
         stop("'", file, "' not found.", call. = FALSE)
@@ -75,7 +78,7 @@ importTaxpasta <- function(file, add.tree = TRUE, ...) {
         # Create rowData and rowTree
         rowData(tse) <- .create_row_data(biom, ranks)
         .set_ranks_based_on_rowdata(tse, ...)
-	if (add.tree) tse <- addHierarchyTree(tse)
+        if (add.tree) tse <- addHierarchyTree(tse)
         # Agglomerate to all existing ranks
         tse <- agglomerateByRanks(tse, update.tree = TRUE)
     } else{

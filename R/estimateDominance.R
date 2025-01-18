@@ -121,7 +121,8 @@
 #' species.
 #'
 #' \item 'simpson_lambda': Simpson's (dominance) index or Simpson's lambda is
-#' the sum of squared relative abundances. This index gives values in the unit interval.
+#' the sum of squared relative abundances. This index gives values in the unit
+#' interval.
 #' This value equals the probability that two randomly chosen individuals
 #' belongs to the
 #' same species. The higher the probability, the greater the dominance (See
@@ -214,20 +215,6 @@
 #'
 NULL
 
-setGeneric(
-    ".estimate_dominance", signature = c("x"),
-    function(x, ...) standardGeneric(".estimate_dominance"))
-
-setGeneric(
-    ".estimate_dominance",signature = c("x"),
-    function(
-        x, assay.type = assay_name, assay_name = "counts",
-        index = c(
-            "absolute", "dbp", "core_abundance", "gini", "dmn", "relative",
-            "simpson_lambda"),
-        ntaxa = 1, aggregate = TRUE, name = index, BPPARAM = SerialParam(), ...)
-    standardGeneric(".estimate_dominance"))
-
 .estimate_dominance <- function(
         x, assay.type = assay_name, assay_name = "counts",
         index = c(
@@ -242,8 +229,7 @@ setGeneric(
     index <- match.arg(index, several.ok = TRUE)
     if(!.is_non_empty_character(name) || length(name) != length(index)){
         stop("'name' must be a non-empty character value and have the 
-             same length as 'index'",
-             call. = FALSE)
+            same length as 'index'", call. = FALSE)
     }
 
     # Check aggregate

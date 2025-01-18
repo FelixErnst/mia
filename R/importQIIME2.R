@@ -31,8 +31,8 @@
 #' 
 #' @param featureNamesAsRefSeq Deprecated. Use \code{as.refseq} instead.
 #'
-#' @param refseq.file \code{Character scalar} or \code{NULL}. Defines the file path of
-#'   the reference sequences for each feature. (Default: \code{NULL}).
+#' @param refseq.file \code{Character scalar} or \code{NULL}. Defines the file
+#' path of the reference sequences for each feature. (Default: \code{NULL}).
 #' 
 #' @param refSeqFile Deprecated. Use \code{refseq.file} instead.
 #'
@@ -95,7 +95,7 @@
 #'
 #' tse
 
-#' @importFrom S4Vectors make_zero_col_DFrame
+#' @importFrom S4Vectors make_zero_col_DFrame SimpleList
 importQIIME2 <- function(assay.file = featureTableFile,
                             featureTableFile,
                             row.file = taxonomyTableFile,
@@ -108,7 +108,7 @@ importQIIME2 <- function(assay.file = featureTableFile,
                             refSeqFile = NULL,
                             tree.file = phyTreeFile,
                             phyTreeFile = NULL,
-                           ...) {
+                            ...) {
     .require_package("yaml")
     # input check
     if(!.is_non_empty_string(assay.file)){
@@ -140,16 +140,15 @@ importQIIME2 <- function(assay.file = featureTableFile,
 
     if (!is.null(row.file)) {
         taxa_tab <- importQZA(row.file, ...)
-        taxa_tab <- .subset_taxa_in_feature(taxa_tab, feature_tab)
     } else {
-        taxa_tab <- S4Vectors::make_zero_col_DFrame(nrow(feature_tab))
+        taxa_tab <- make_zero_col_DFrame(nrow(feature_tab))
         rownames(taxa_tab) <- rownames(feature_tab)
     }
 
     if (!is.null(col.file)) {
         sample_meta <- .read_q2sample_meta(col.file)
     } else {
-        sample_meta <- S4Vectors::make_zero_col_DFrame(ncol(feature_tab))
+        sample_meta <- make_zero_col_DFrame(ncol(feature_tab))
         rownames(sample_meta) <- colnames(feature_tab)
     }
 
@@ -168,14 +167,16 @@ importQIIME2 <- function(assay.file = featureTableFile,
         refseq <- NULL
     }
     
-    feature_tab <- .set_feature_tab_dimnames(feature_tab, sample_meta, taxa_tab)
-    TreeSummarizedExperiment(
-        assays = S4Vectors::SimpleList(counts = feature_tab),
-        rowData = taxa_tab,
-        colData = sample_meta,
+    data_list <- .set_feature_tab_dimnames(
+        feature_tab, sample_meta, taxa_tab, refseq, ...)
+    tse <- TreeSummarizedExperiment(
+        assays = SimpleList(counts = data_list[["assay"]]),
+        rowData = data_list[["rowData"]],
+        colData = data_list[["colData"]],
         rowTree = tree,
-        referenceSeq = refseq
+        referenceSeq = data_list[["referenceSeq"]]
     )
+    return(tse)
 }
 
 #' Read the qza file output from QIIME2
@@ -187,8 +188,8 @@ importQIIME2 <- function(assay.file = featureTableFile,
 #'   table), `NewickDirectoryFormat` (phylogenetic tree ) and
 #'   `DNASequencesDirectoryFormat` (representative sequences) are supported
 #'    right now.
-#' @param temp.dir character, a temporary directory in which the qza file will be
-#'   decompressed to, default `tempdir()`.
+#' @param temp.dir character, a temporary directory in which the qza file will
+#' be decompressed to, default `tempdir()`.
 #' 
 #' @param temp Deprecated. Use \code{temp.dir} instead.
 #' 
@@ -217,7 +218,8 @@ importQIIME2 <- function(assay.file = featureTableFile,
 #' coldata <- coldata[match(colnames(assay), rownames(coldata)), ]
 #' 
 #' # Create SE from individual files
-#' se <- SummarizedExperiment(assays = list(assay), rowData = rowdata, colData = coldata)
+#' se <- SummarizedExperiment(
+#'     assays = list(assay), rowData = rowdata, colData = coldata)
 #' se
 #' 
 #' @importFrom utils unzip
@@ -228,8 +230,8 @@ importQZA <- function(file, temp.dir = temp, temp = tempdir(), ...) {
         stop(file, " does not exist", call. = FALSE)
     }
     if (.get_ext(file) != "qza") {
-        stop("The input '", file, "' must be in `qza` format (QIIME2 Artifact)",
-            call. = FALSE)
+        stop("The input '", file, "' must be in `qza` format ",
+            "(QIIME2 Artifact)", call. = FALSE)
     }
 
     unzipped_file <- unzip(file, exdir = temp.dir)
@@ -253,7 +255,8 @@ importQZA <- function(file, temp.dir = temp, temp = tempdir(), ...) {
         "BIOMV", "TSVTaxonomyDirectoryFormat",
         "NewickDirectoryFormat", "DNASequencesDirectoryFormat"
     )
-    file <- file.path(temp.dir, uuid, "data", format_files[match(format, formats)])
+    file <- file.path(
+        temp.dir, uuid, "data", format_files[match(format, formats)])
 
     res <- switch (
         format,
@@ -299,7 +302,8 @@ importQZA <- function(file, temp.dir = temp, temp = tempdir(), ...) {
         featureID <- taxa_tab[,"Feature.ID"]
     }
     
-    taxa_tab <- .parse_taxonomy(taxa_tab, sep = "; |;", column_name = "Taxon", ...)
+    taxa_tab <- .parse_taxonomy(
+        taxa_tab, sep = "; |;", column_name = "Taxon", ...)
     
     rownames(taxa_tab) <- featureID
     taxa_tab$Confidence <- confidence
@@ -326,29 +330,17 @@ importQZA <- function(file, temp.dir = temp, temp = tempdir(), ...) {
     S4Vectors::DataFrame(sam)
 }
 
-
-#' Subset taxa according to the taxa in feature table
-#' @keywords internal
-#' @noRd
-.subset_taxa_in_feature <- function(taxa_tab, feature_tab) {
-    idx <- match( rownames(feature_tab), rownames(taxa_tab) )
-    taxa_tab <- taxa_tab[idx, , drop = FALSE]
-
-    taxa_tab
-}
-
 #' check the row.names of feature table is DNA sequence or not
 #' @keywords internal
 #' @importFrom Biostrings DNAStringSet
 #' @noRd
 .rownames_as_dna_seq <- function(seq){
-    names(seq) <- paste0("seq_", seq_along(seq))
+    names(seq) <- seq
     seq <- try({DNAStringSet(seq)}, silent = TRUE)
     if (is(seq, "try-error")) {
-        return(NULL)
+        seq <- NULL
     }
-
-    seq
+    return(seq)
 }
 
 #' extract file extension

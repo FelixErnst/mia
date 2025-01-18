@@ -44,10 +44,13 @@
 #' The available evenness indices include the following (all in lowercase):
 #' \itemize{
 #'   \item 'camargo': Camargo's evenness (Camargo 1992)
-#'   \item 'simpson_evenness': Simpson’s evenness is calculated as inverse Simpson diversity (1/lambda) divided by
+#'   \item 'simpson_evenness': Simpson’s evenness is calculated as inverse
+#'   Simpson diversity (1/lambda) divided by
 #'   observed species richness S: (1/lambda)/S.
-#'   \item 'pielou': Pielou's evenness (Pielou, 1966), also known as Shannon or Shannon-Weaver/Wiener/Weiner
-#'     evenness; H/ln(S). The Shannon-Weaver is the preferred term; see Spellerberg and Fedor (2003).
+#'   \item 'pielou': Pielou's evenness (Pielou, 1966), also known as Shannon or
+#'   Shannon-Weaver/Wiener/Weiner
+#'   evenness; H/ln(S). The Shannon-Weaver is the preferred term; see
+#'   Spellerberg and Fedor (2003).
 #'   \item 'evar': Smith and Wilson’s Evar index (Smith & Wilson 1996).
 #'   \item 'bulla': Bulla’s index (O) (Bulla 1994).
 #' }

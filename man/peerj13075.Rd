@@ -31,9 +31,11 @@ association of skin microbiota with individual’s geographical location.
 }
 \references{
 Potbhare, R., RaviKumar, A., Munukka, E., Lahti, L., & Ashma, R. (2022).
-Skin microbiota diversity among genetically unrelated individuals of Indian origin.
+Skin microbiota diversity among genetically unrelated individuals of Indian
+origin.
 PeerJ, 10, e13075. \url{https://doi.org/10.7717/peerj.13075}
-Supplemental information includes OTU table and taxonomy table publicly-accessible from:
+Supplemental information includes OTU table and taxonomy table
+publicly-accessible from:
 \url{https://www.doi.org/10.7717/peerj.13075/supp-1}
 \url{https://www.doi.org/10.7717/peerj.13075/supp-2}
 }
