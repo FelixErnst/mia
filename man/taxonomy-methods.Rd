@@ -184,6 +184,11 @@ table(taxonomyRankEmpty(GlobalPatterns,"Kingdom"))
 table(taxonomyRankEmpty(GlobalPatterns,"Species"))
 
 getTaxonomyLabels(GlobalPatterns[1:20,])
+# Taxonomy labels represent the lowest taxonomy name that identifies each
+# taxa. For instance, they can represent OTUs which does no necessarily
+# tell much. In this case, you might want to get the labels with higher
+# taxonomy rank
+getTaxonomyLabels(GlobalPatterns[1:20,], lowest.rank = "Class")
 
 # mapTaxonomy
 ## returns the unique taxonomic information
@@ -198,7 +203,7 @@ tse <- GlobalPatterns
 colnames(rowData(tse))[1] <- "TAXA1"
 
 setTaxonomyRanks(colnames(rowData(tse)))
-# Taxonomy ranks set to: taxa1 phylum class order family genus species 
+# Taxonomy ranks set to: taxa1 phylum class order family genus species
 
 # getTaxonomyRanks is to get/check if the taxonomic ranks is set to "TAXA1"
 getTaxonomyRanks()
