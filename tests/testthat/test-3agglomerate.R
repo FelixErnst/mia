@@ -69,7 +69,7 @@ test_that("agglomerate", {
     data(GlobalPatterns, package="mia")
     se <- GlobalPatterns
     actual <- agglomerateByRank(se, rank = "Family", 
-        ignore.taxonomy = FALSE, empty.rm = FALSE)
+        ignore.taxonomy = FALSE, empty.rm = FALSE, update.tree = FALSE)
     expect_equal(dim(actual),c(603,26))
     expect_equal(length(rowTree(actual)$tip.label),
                  length(rowTree(se)$tip.label))
@@ -112,6 +112,10 @@ test_that("agglomerate", {
     # Test that dimensionality is the same when NA values are removed.
     expect_equal(nrow(test0), length( all_phyla[!is.na(all_phyla)] ))
     expect_equal(nrow(test1), length( all_phyla[!is.na(all_phyla)] ))
+    
+    # Check that the names of tree tips correspond to rownames
+    expect_true( all(rowTree(test0)$tip %in% rownames(test0)) )
+    expect_true( all(rowTree(test1)$tip %in% rownames(test1)) )
     
     # Check that there are more taxa when agglomeration is to "Species" level
     test0 <- agglomerateByVariable(tse, by = 1, group = "Species", empty.rm = FALSE)
