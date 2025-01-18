@@ -200,11 +200,7 @@ setGeneric("mergeSEs", signature = c("x"), function(x, ... )
 
 #' @rdname rarefyAssay
 #' @export
-setGeneric("rarefyAssay", signature = c("x"),
-    function(
-        x, assay.type = assay_name, assay_name = "counts",
-        sample = min_size, min_size = min(colSums2(assay(x))),
-        replace = TRUE, name = "subsampled", verbose = TRUE, ...)
+setGeneric("rarefyAssay", signature = c("x"), function(x, ...)
     standardGeneric("rarefyAssay"))
 
 #' @rdname runCCA

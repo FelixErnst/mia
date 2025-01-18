@@ -302,6 +302,7 @@ res <- getCrossAssociation(
 
 # To calculate correlation of features to principal coordinates, you have to
 # first calculate PCoA...
+library(scater)
 tse <- runMDS(
     tse, assay.type = "rclr", FUN = getDissimilarity, method = "euclidean")
 # ...then calculate the correlation.

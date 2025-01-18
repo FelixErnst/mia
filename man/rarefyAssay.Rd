@@ -5,32 +5,27 @@
 \alias{rarefyAssay,SummarizedExperiment-method}
 \title{Subsample Counts}
 \usage{
-rarefyAssay(
-  x,
-  assay.type = assay_name,
-  assay_name = "counts",
-  sample = min_size,
-  min_size = min(colSums2(assay(x))),
-  replace = TRUE,
-  name = "subsampled",
-  verbose = TRUE,
-  ...
-)
+rarefyAssay(x, ...)
 
 \S4method{rarefyAssay}{SummarizedExperiment}(
   x,
   assay.type = assay_name,
   assay_name = "counts",
   sample = min_size,
-  min_size = min(colSums2(assay(x))),
-  replace = TRUE,
+  min_size = min(colSums2(assay(x, assay.type))),
+  replace = FALSE,
   name = "subsampled",
-  verbose = TRUE,
   ...
 )
 }
 \arguments{
 \item{x}{\code{\link[TreeSummarizedExperiment:TreeSummarizedExperiment-class]{TreeSummarizedExperiment}}.}
+
+\item{...}{optional arguments:
+\itemize{
+\item \code{verbose}: \code{Logical scalar}. Choose whether to show
+messages. (Default: \code{TRUE})
+}}
 
 \item{assay.type}{\code{Character scalar}. Specifies which assay to use for
 calculation. (Default: \code{"counts"})}
@@ -49,12 +44,6 @@ replacement. Ths works similarly to \code{sample(..., replace = TRUE)}.
 
 \item{name}{\code{Character scalar}. The name for the transformed assay to
 be stored. (Default: \code{method})}
-
-\item{...}{optional arguments:
-\itemize{
-\item \code{verbose}: \code{Logical scalar}. Choose whether to show
-messages. (Default: \code{TRUE})
-}}
 }
 \value{
 \code{rarefyAssay} return \code{x} with subsampled data.
