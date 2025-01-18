@@ -10,9 +10,10 @@ rarefyAssay(
   assay.type = assay_name,
   assay_name = "counts",
   sample = min_size,
-  min_size = min(colSums2(assay(x, assay.type))),
-  replace = FALSE,
+  min_size = min(colSums2(assay(x))),
+  replace = TRUE,
   name = "subsampled",
+  verbose = TRUE,
   ...
 )
 
@@ -21,9 +22,10 @@ rarefyAssay(
   assay.type = assay_name,
   assay_name = "counts",
   sample = min_size,
-  min_size = min(colSums2(assay(x, assay.type))),
-  replace = FALSE,
+  min_size = min(colSums2(assay(x))),
+  replace = TRUE,
   name = "subsampled",
+  verbose = TRUE,
   ...
 )
 }
