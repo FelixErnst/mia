@@ -424,35 +424,96 @@
 
 # keep dimnames of feature table (assay) consistent with the meta data 
 # of sample (colData) and feature (rowData)
-.set_feature_tab_dimnames <- function(feature_tab, sample_meta, feature_meta) {
-    if (nrow(sample_meta) > 0 || ncol(sample_meta) > 0) {
-        if (ncol(feature_tab) != nrow(sample_meta) 
-            || !setequal(colnames(feature_tab), rownames(sample_meta))) {
-            stop(
-                "The sample ids in feature table are not incompatible ",
-                "with those in sample meta",
-                call. = FALSE
-            )
-        }
-        if (!identical(colnames(feature_tab), rownames(sample_meta))) {
-            feature_tab <- feature_tab[, rownames(sample_meta), drop = FALSE]
-        }
+.set_feature_tab_dimnames <- function(
+        feature_tab, sample_meta, feature_meta, refseq = NULL,
+        include.all = FALSE, ...) {
+    #
+    if( !.is_a_bool(include.all) ){
+        stop("'include.all' must be TRUE or FALSE.", call. = FALSE)
+    }
+    # Sample and feature names must be present
+    if( is.null(colnames(feature_tab)) || is.null(rownames(sample_meta)) ){
+        stop("Sample ids must be present.", call. = FALSE)
+    }
+    if( is.null(rownames(feature_tab)) || is.null(rownames(feature_meta)) ){
+        stop("Feature ids must be present.", call. = FALSE)
+    }
+    #
+    # Metadata can include features that are not present in abundance table.
+    # With 'include.all', it is possible to include them in the dataset.
+    if( include.all ){
+        samples <- union(colnames(feature_tab), rownames(sample_meta))
+        features <- union(rownames(feature_tab), rownames(feature_meta))
+        # Add additional columns and sort data
+        feature_tab <- feature_tab[
+            match(features, rownames(feature_tab)),
+            match(samples, colnames(feature_tab)), drop = FALSE]
+        sample_meta <- sample_meta[
+            match(samples, rownames(sample_meta)), , drop = FALSE]
+        feature_meta <- feature_meta[
+            match(features, rownames(feature_meta)), , drop = FALSE]
+        # Add correct names
+        colnames(feature_tab) <- rownames(sample_meta) <- samples
+        rownames(feature_tab) <- rownames(feature_meta) <- features
     }
     
-    if (nrow(feature_meta) > 0 || ncol(feature_meta) > 0) {
-        if (nrow(feature_tab) != nrow(feature_meta)
-            || !setequal(rownames(feature_tab), rownames(feature_meta))) {
-            stop(
-                "The feature names in feature table are not incompatible ",
-                "with those in feature meta",
-                call. = FALSE
-            )
-        }
-        if (!identical(rownames(feature_tab), rownames(feature_meta))) {
-            feature_tab <- feature_tab[rownames(feature_meta), , drop = FALSE]
-        }
+    # The abundance table takes the precedence, and metadata is modified
+    # accordingly. Give warning if there are samples or features that are not
+    # included in the metadata.
+    not_found <- sum(!colnames(feature_tab) %in% rownames(sample_meta))
+    if( not_found != 0 ){
+        warning("The dataset includes ", not_found, " samples that do not ",
+                "have metadata. Please check for errors.", call. = FALSE)
     }
-    feature_tab
+    not_found <- sum(!rownames(feature_tab) %in% rownames(feature_meta))
+    if( not_found != 0 ){
+        warning("The dataset includes ", not_found, " features that are not ",
+                "included in the taxonomy table. Please check for errors.",
+                call. = FALSE)
+    }
+    # If the metadata includes samples or features that will be removed give
+    # warning for the user.
+    not_found <- sum(!rownames(sample_meta) %in% colnames(feature_tab))
+    if( not_found != 0 ){
+        warning("The sample metadata includes ", not_found, " samples that ",
+                "are not included in the abundance table and thus being ",
+                "removed. Please check for errors.", call. = FALSE)
+    }
+    not_found <- sum(!rownames(feature_meta) %in% rownames(feature_tab))
+    if( not_found != 0 ){
+        warning("The taxonomy table includes ", not_found, " features that ",
+                "are not present in the abundance table and thus being ",
+                "removed. Please check for errors.", call. = FALSE)
+    }
+    
+    # We order the metadata based on abundance table. Moreover, we subset
+    # the metadata to match with abundance table if there are additional data.
+    ind <- match(colnames(feature_tab), rownames(sample_meta))
+    sample_meta <- sample_meta[ind, , drop = FALSE]
+    rownames(sample_meta) <- colnames(feature_tab)
+    ind <- match(rownames(feature_tab), rownames(feature_meta))
+    feature_meta <- feature_meta[ind, , drop = FALSE]
+    rownames(feature_meta) <- rownames(feature_tab)
+    # Reference sequences are optional and all the features must have sequences.
+    # This is because DNAStringSet object cannot have empty element for
+    # features that were not included.
+    if( !is.null(refseq) && all(rownames(feature_tab) %in% names(refseq)) ){
+        refseq <- refseq[ rownames(feature_tab) ]
+    } else if( !is.null(refseq) ){
+        warning("Reference sequences are incompatible with the data.",
+                call. = FALSE)
+        refseq <- NULL
+    } else{
+        refseq <- NULL
+    }
+    # Return a list of these tables
+    data_list <- list(
+        assay = feature_tab,
+        rowData = feature_meta,
+        colData = sample_meta,
+        referenceSeq = refseq
+    )
+    return(data_list)
 }
 
 #' Parse taxa in different taxonomic levels

@@ -5,17 +5,7 @@
 \alias{rarefyAssay,SummarizedExperiment-method}
 \title{Subsample Counts}
 \usage{
-rarefyAssay(
-  x,
-  assay.type = assay_name,
-  assay_name = "counts",
-  sample = min_size,
-  min_size = min(colSums2(assay(x))),
-  replace = TRUE,
-  name = "subsampled",
-  verbose = TRUE,
-  ...
-)
+rarefyAssay(x, ...)
 
 \S4method{rarefyAssay}{SummarizedExperiment}(
   x,
@@ -23,14 +13,19 @@ rarefyAssay(
   assay_name = "counts",
   sample = min_size,
   min_size = min(colSums2(assay(x, assay.type))),
-  replace = TRUE,
+  replace = FALSE,
   name = "subsampled",
-  verbose = TRUE,
   ...
 )
 }
 \arguments{
 \item{x}{\code{\link[TreeSummarizedExperiment:TreeSummarizedExperiment-class]{TreeSummarizedExperiment}}.}
+
+\item{...}{optional arguments:
+\itemize{
+\item \code{verbose}: \code{Logical scalar}. Choose whether to show
+messages. (Default: \code{TRUE})
+}}
 
 \item{assay.type}{\code{Character scalar}. Specifies which assay to use for
 calculation. (Default: \code{"counts"})}
@@ -43,18 +38,12 @@ counts found in a sample or a user specified number.}
 
 \item{min_size}{Deprecated. Use \code{sample} instead.}
 
-\item{replace}{\code{Logical scalar}. The default is with
-replacement (\code{replace=TRUE}).
-See \code{\link[phyloseq:rarefy_even_depth]{phyloseq::rarefy_even_depth}}
-for details on implications of this parameter. (Default: \code{TRUE})}
+\item{replace}{\code{Logical scalar}. Whether to åperform subsampling with
+replacement. Ths works similarly to \code{sample(..., replace = TRUE)}.
+(Default: \code{FALSE})}
 
 \item{name}{\code{Character scalar}. The name for the transformed assay to
 be stored. (Default: \code{method})}
-
-\item{verbose}{\code{Logical scalar}. Choose whether to show messages.
-(Default: \code{TRUE})}
-
-\item{...}{additional arguments not used}
 }
 \value{
 \code{rarefyAssay} return \code{x} with subsampled data.
@@ -78,6 +67,10 @@ your data.
 
 To maintain the reproducibility, please define the seed using set.seed()
 before implement this function.
+
+When \code{replace = FALSE}, the function uses internally
+\code{vegan::rarefy} while with replacement enabled the function utilizes
+own implementation, inspired by \code{phyloseq::rarefy_even_depth}.
 }
 \examples{
 # When samples in TreeSE are less than specified sample, they will be
@@ -104,4 +97,10 @@ Weiss S, Xu ZZ, Peddada S, Amir A, Bittinger K, Gonzalez A, Lozupone C,
 Zaneveld JR, Vázquez-Baeza Y, Birmingham A, Hyde ER. Normalization and
 microbial differential abundance strategies depend upon data characteristics.
 Microbiome. 2017 Dec;5(1):1-8.
+}
+\seealso{
+\itemize{
+\item \code{\link[vegan:rrarefy]{vegan::rrarefy}}
+\item \code{\link[phyloseq:rarefy_even_depth]{phyloseq::rarefy_even_depth}}
+}
 }

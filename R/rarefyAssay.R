@@ -18,7 +18,11 @@
 #'
 #' To maintain the reproducibility, please define the seed using set.seed() 
 #' before implement this function.
-#'
+#' 
+#' When \code{replace = FALSE}, the function uses internally
+#' \code{vegan::rarefy} while with replacement enabled the function utilizes
+#' own implementation, inspired by \code{phyloseq::rarefy_even_depth}.
+#' 
 #' @inheritParams transformAssay
 #' @inheritParams getDominant
 #' 
@@ -28,15 +32,15 @@
 #' 
 #' @param min_size Deprecated. Use \code{sample} instead. 
 #'   
-#' @param replace \code{Logical scalar}. The default is with 
-#'   replacement (\code{replace=TRUE}). 
-#'   See \code{\link[phyloseq:rarefy_even_depth]{phyloseq::rarefy_even_depth}}
-#'   for details on implications of this parameter. (Default: \code{TRUE})   
+#' @param replace \code{Logical scalar}. Whether to åperform subsampling with
+#' replacement. Ths works similarly to \code{sample(..., replace = TRUE)}.
+#' (Default: \code{FALSE})
 #' 
-#' @param verbose \code{Logical scalar}. Choose whether to show messages. 
-#' (Default: \code{TRUE})
-#' 
-#' @param ... additional arguments not used
+#' @param ... optional arguments:
+#' \itemize{
+#'   \item \code{verbose}: \code{Logical scalar}. Choose whether to show
+#'   messages. (Default: \code{TRUE})
+#' }
 #' 
 #' @references
 #' McMurdie PJ, Holmes S. Waste not, want not: why rarefying microbiome data 
@@ -67,6 +71,12 @@
 #' dim(tse)
 #' dim(assay(tse_subsampled, "subsampled"))
 #' 
+#' @seealso
+#' \itemize{
+#'   \item \code{\link[vegan:rrarefy]{vegan::rrarefy}}
+#'   \item \code{\link[phyloseq:rarefy_even_depth]{phyloseq::rarefy_even_depth}}
+#' }
+#' 
 NULL
 
 #' @importFrom SummarizedExperiment assay assay<-
@@ -76,22 +86,20 @@ NULL
 setMethod("rarefyAssay", signature = c(x = "SummarizedExperiment"),
     function(x, assay.type = assay_name, assay_name = "counts", 
             sample = min_size, min_size = min(colSums2(assay(x, assay.type))),
-            replace = TRUE, name = "subsampled", verbose = TRUE, ...){
+            replace = FALSE, name = "subsampled", ...){
         # Input check
         # Check that assay name is correct and that assay is counts table.
         .check_assay_present(assay.type, x)
-        if( any(assay(x, assay.type) %% 1 != 0) ){
-            warning("assay contains non-integer values. Only counts table ",
-                    "is applicable...", call. = FALSE)
+        if( any(assay(x, assay.type) %% 1 != 0 &
+                !is.na(assay(x, assay.type)) ) ){
+            stop("assay contains non-integer values. Only counts table ",
+                "is applicable.", call. = FALSE)
         }
-        if(any(assay(x, assay.type) < 0)){
+        if( any(assay(x, assay.type) < 0 & !is.na(assay(x, assay.type))) ){
             stop("assay contains strictly-negative values. Only counts ",
                 "table is applicable...", call. = FALSE)
         }
-        # Check that verbose and replace are boolean values
-        if( !.is_a_bool(verbose) ){
-            stop("'verbose' must be TRUE or FALSE.", call. = FALSE)
-        }
+        # Check that replace is boolean values
         if( !.is_a_bool(replace) ){
             stop("`replace` must be TRUE or FALSE.", call. = FALSE)
         } 
@@ -101,60 +109,89 @@ setMethod("rarefyAssay", signature = c(x = "SummarizedExperiment"),
                 "different from 'assay.type'.", call. = FALSE)
         }
         # Check sample. It must be single positive integer value.
-        if(!is.numeric(sample) || length(sample) != 1 ||
+        if( is.na(sample) || !is.numeric(sample) || length(sample) != 1 ||
                 sample %% 1 != 0 && sample <= 0  ){
             stop("'sample' needs to be a positive integer value.",
                 call. = FALSE)
         }
         # Input check end
-        
-        # 'sample' determines the number of reads subsampled from samples.
-        # This means that every samples should have at least 'sample' of reads.
-        # If they do not have, drop those samples at this point.
-        # Get those sample names that we are going to remove due to too
-        # small number of reads.
-        rm_samples <- colSums2(assay(x, assay.type)) < sample
-        if( any(rm_samples) ){
-            # Remove sample(s) from TreeSE (or keep rest of the samples)
-            x <- x[ , !rm_samples, drop = FALSE]
-            # Return NULL, if no samples were found after subsampling
-            if( ncol(x) == 0 ){
-                stop("No samples were found after subsampling. Consider ",
-                    "lower 'sample'.", call. = FALSE)
-            }
-            # Give message which samples were removed
-            if( verbose ){
-                message(
-                    sum(rm_samples), " samples removed because they contained ",
-                    "fewer reads than `sample`.")
-            }
-        }
-        # Subsample specified assay.
-        mat <- apply(
-            assay(x, assay.type), 2,
-            .subsample_assay, sample = sample, replace = replace)
-        # Add rownames to new assay. The returned value from .subsample_assay
-        # is a vector that do not have feature names.
-        rownames(mat) <- rownames(x)
-        # remove features not present in any samples after subsampling
-        feat_inc <- rowSums2(mat, na.rm = TRUE) > 0
-        mat <- mat[feat_inc, ]
-        # Give message if some features were dropped
-        if( verbose && any(!feat_inc) ){
-            message(
-                sum(!feat_inc), " features removed because they are not ",
-                "present in any of the samples after subsampling."
-                )
-        }
+        # Remove samples that do not have enoguh counts
+        x <- .remove_samples_below_counts_th(x, assay.type, sample, ...)
+        # Subsample specified assay
+        mat <- .get_subsamples_matrix(x, assay.type, sample, replace, ...)
         # Subset the TreeSE based on new feature-set
         x <- x[rownames(mat), ]
         # Add new assay to TreeSE
         assay(x, name, withDimnames = FALSE) <- mat
-        # Add info on sample to metadata
-        x <- .add_values_to_metadata(x, "rarefyAssay_sample", min_size)
         return(x)
     }
 )
+
+# 'sample' determines the number of reads subsampled from samples.
+# This means that every samples should have at least 'sample' of reads.
+# If they do not have, drop those samples at this point.
+# Get those sample names that we are going to remove due to too
+# small number of reads.
+.remove_samples_below_counts_th <- function(
+        x, assay.type, sample, verbose = TRUE, ...){
+    #
+    if( !.is_a_bool(verbose) ){
+        stop("'verbose' must be TRUE or FALSE.", call. = FALSE)
+    }
+    #
+    rm_samples <- colSums2(assay(x, assay.type), na.rm = TRUE) < sample
+    if( any(rm_samples) ){
+        # Remove sample(s) from TreeSE (or keep rest of the samples)
+        x <- x[ , !rm_samples, drop = FALSE]
+        # Return NULL, if no samples were found after subsampling
+        if( ncol(x) == 0 ){
+            stop("No samples were found after subsampling. Consider ",
+                 "lower 'sample'.", call. = FALSE)
+        }
+        # Give message which samples were removed
+        if( verbose ){
+            message(
+                sum(rm_samples), " samples removed because they contained ",
+                "fewer reads than `sample`.")
+        }
+    }
+    return(x)
+}
+
+# This function gets abundance table as input and returns subsampled matrix.
+#' @importFrom vegan rrarefy
+.get_subsamples_matrix <- function(
+        x, assay.type, sample, replace, verbose = TRUE, ...){
+    #
+    if( !.is_a_bool(verbose) ){
+        stop("'verbose' must be TRUE or FALSE.", call. = FALSE)
+    }
+    #
+    # We use vegan::rrarefy by default. However, as it does not support
+    # replace=TRUE, we use our own implementation in this case.
+    mat <- assay(x, assay.type)
+    if( replace ){
+        # Loop throguh samples and subsample samples one-by-one
+        mat <- apply(
+            mat, 2, .subsample_assay, sample = sample, replace = replace)
+        rownames(mat) <- rownames(x)
+    } else{
+        mat <- t( vegan::rrarefy(t(mat), sample) )
+    }
+    # remove features not present in any samples after subsampling
+    feat_inc <- rowSums2(mat, na.rm = TRUE) > 0
+    mat <- mat[feat_inc, ]
+    # Give message if some features were dropped
+    if( verbose && any(!feat_inc) ){
+        message(
+            sum(!feat_inc), " features removed because they are not ",
+            "present in any of the samples after subsampling."
+        )
+    }
+    # Add info on sample to attributes
+    attr(mat, "subsample") <- sample
+    return(mat)
+}
 
 ## Modified Sub sampling function from phyloseq internals
 .subsample_assay <- function(x, sample, replace){

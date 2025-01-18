@@ -66,6 +66,16 @@ corresponding variable-pair. This decreases the number of calculations in
 and give numeric values as an output. Adjust \code{method} and other
 parameters correspondingly. Supported functions are, for example,
 \code{stats::dist} and \code{vegan::vegdist}.
+
+\item \code{dimred1} \code{Character scalar} or \code{numeric scalar}.
+Specifies reduced dimensionality from the \code{reducedDim} of experiment
+\enumerate{
+\item (Default: \code{NULL})
+}
+
+\item \code{dimred2} \code{Character scalar} or \code{numeric scalar}.
+Specifies reduced dimensionality from the \code{reducedDim} of experiment
+2. (Default: \code{NULL})
 }}
 
 \item{experiment1}{\code{Character scalar} or \code{numeric scalar}.
@@ -91,12 +101,14 @@ assay in experiment 2 to be transformed.. (Default: \code{"counts"})}
 \item{assay_name2}{Deprecated. Use \code{assay.type2} instead.}
 
 \item{altexp1}{\code{Character scalar} or \code{numeric scalar}. Specifies
-alternative experiment from the altExp of experiment 1. If NULL, then the
-experiment is itself and altExp option is disabled. (Default: \code{NULL})}
+alternative experiment from the \code{altExp} of experiment 1. If NULL, then
+the experiment is itself and altExp option is disabled.
+(Default: \code{NULL})}
 
 \item{altexp2}{\code{Character scalar} or \code{numeric scalar}. Specifies
-alternative experiment from the altExp of experiment 2. If NULL, then the
-experiment is itself and altExp option is disabled. (Default: \code{NULL})}
+alternative experiment from the \code{altExp} of experiment 2. If NULL, then
+the experiment is itself and altExp option is disabled.
+(Default: \code{NULL})}
 
 \item{col.var1}{\code{Character scalar}. Specifies column(s) from
 \code{colData} of experiment 1. If col.var1 is used, assay.type1 is disabled.
@@ -224,7 +236,7 @@ result <- getCrossAssociation(
 # Show first 5 entries
 head(result, 5)
 
-# If test.signif = TRUE, then getCrossAssociation additionally returns 
+# If test.signif = TRUE, then getCrossAssociation additionally returns
 # significances
 # filter.self.cor = TRUE filters self correlations
 # p.adj.threshold can be used to filter those features that do not
@@ -234,7 +246,7 @@ result <- getCrossAssociation(
     filter.self.cor = TRUE, p.adj.threshold = 0.05, test.signif = TRUE)
 # Show first 5 entries
 head(result, 5)
-                                        
+
 # Returned value is a list of matrices
 names(result)
 
@@ -243,19 +255,19 @@ names(result)
 result <- getCrossAssociation(
     mae[[1]], mae[[1]], by = 2, paired = FALSE,
     association.fun = getDissimilarity, method = "bray")
-                                        
+
 # If experiments are equal and measure is symmetric
 # (e.g., taxa1 vs taxa2 == taxa2 vs taxa1),
 # it is possible to speed-up calculations by calculating association only
 # for unique variable-pairs. Use "symmetric" to choose whether to measure
 # association for only other half of of variable-pairs.
 result <- getCrossAssociation(
-    mae, experiment1 = "microbiota", experiment2 = "microbiota", 
+    mae, experiment1 = "microbiota", experiment2 = "microbiota",
     assay.type1 = "counts", assay.type2 = "counts", symmetric = TRUE)
 
 # For big data sets, the calculations might take a long time.
-# To speed them up, you can take a random sample from the data. 
-# When dealing with complex biological problems, random samples can be 
+# To speed them up, you can take a random sample from the data.
+# When dealing with complex biological problems, random samples can be
 # enough to describe the data. Here, our random sample is 30 \% of whole data.
 sample_size <- 0.3
 tse <- mae[[1]]
@@ -270,7 +282,7 @@ mae[[1]] <- addAlpha(mae[[1]])
 # an assay named assay.type from assay slot, it fetches a column named
 # col.var from colData.
 result <- getCrossAssociation(
-    mae[[1]], assay.type1 = "counts", 
+    mae[[1]], assay.type1 = "counts",
     col.var2 = c("shannon_diversity", "coverage_diversity"),
     test.signif = TRUE)
 
@@ -288,5 +300,13 @@ res <- getCrossAssociation(
     assay.type2 = "nmr"
 )
 
-                                        
+# To calculate correlation of features to principal coordinates, you have to
+# first calculate PCoA...
+library(scater)
+tse <- runMDS(
+    tse, assay.type = "rclr", FUN = getDissimilarity, method = "euclidean")
+# ...then calculate the correlation.
+res <- getCrossAssociation(tse, assay.type1 = "rclr", dimred2 = "MDS")
+head(res)
+
 }
