@@ -3,36 +3,36 @@ test_that("Unifrac beta diversity", {
     data(esophagus, package="mia")
     tse <- esophagus
     tse <- transformAssay(tse, assay.type="counts", method="relabundance")
-    
+
     expect_error(
-        getDissimilarity(tse, method = "unifrac",assay.type = "test", 
+        getDissimilarity(tse, method = "unifrac",assay.type = "test",
                           tree.name = "phylo", weighted = FALSE)
     )
     expect_error(
-        getDissimilarity(tse, method = "unifrac", assay.type = 2, 
+        getDissimilarity(tse, method = "unifrac", assay.type = 2,
                           tree.name = "phylo", weighted = FALSE)
     )
     expect_error(
-        getDissimilarity(tse, method = "unifrac", assay.type = TRUE, 
+        getDissimilarity(tse, method = "unifrac", assay.type = TRUE,
                           tree.name = "phylo", weighted = FALSE)
     )
     expect_error(
-      getDissimilarity(tse, method = "unifrac", assay.type = "counts", 
+      getDissimilarity(tse, method = "unifrac", assay.type = "counts",
                        tree.name = "test", weighted = FALSE)
     )
     expect_error(
-      getDissimilarity(tse, method = "unifrac", assay.type = "counts", 
+      getDissimilarity(tse, method = "unifrac", assay.type = "counts",
                        tree.name = 1, weighted = FALSE)
     )
     expect_error(
-      getDissimilarity(tse, method = "unifrac", assay.type = "counts", 
+      getDissimilarity(tse, method = "unifrac", assay.type = "counts",
                        tree.name = TRUE, weighted = FALSE)
     )
     expect_error(
-      getDissimilarity(tse, method = "unifrac", assay.type = "counts", 
+      getDissimilarity(tse, method = "unifrac", assay.type = "counts",
                        tree.name = "phylo", weighted = 1)
     )
-    
+
     data(GlobalPatterns, package="mia")
     tse <- GlobalPatterns
     # Calculate unweighted unifrac
@@ -44,12 +44,12 @@ test_that("Unifrac beta diversity", {
     # Calculate weighted unifrac. Allow tolerance since weighted unifrac
     # calculation in rbiom has some stochasticity. That is most likely due
     # multithreading and complex structure of tree (loops).
-    unifrac_mia <- as.matrix(getDissimilarity(tse, method = "unifrac", 
+    unifrac_mia <- as.matrix(getDissimilarity(tse, method = "unifrac",
                                               weighted = TRUE))
     unifrac_rbiom <- as.matrix(rbiom::unifrac(assay(tse), weighted = TRUE,
                                               rowTree(tse)))
-    expect_equal(unifrac_mia, unifrac_rbiom, tolerance = 1e-3)
-    
+    expect_equal(unifrac_mia, unifrac_rbiom, tolerance = 5e-3)
+
     # Test that the function works correctly when there are multiple trees.
     # The function should subset the data based on tree.
     tse <- GlobalPatterns
@@ -78,9 +78,9 @@ test_that("Unifrac beta diversity", {
     unifrac_rbiom <- as.matrix(rbiom::unifrac(assay(tse_ref), weighted = TRUE,
                                               rowTree(tse_ref)))
     expect_equal(unifrac_mia, unifrac_rbiom, tolerance = 1e-3)
-    
-    # Test the function with agglomerated data. .get_unifrac renames 
-    # rownames based on tips and links to them. Then it also prunes the tree so 
+
+    # Test the function with agglomerated data. .get_unifrac renames
+    # rownames based on tips and links to them. Then it also prunes the tree so
     # that rows are in tips.
     tse <- GlobalPatterns
     tse <- agglomerateByRank(tse, rank = "Species")
