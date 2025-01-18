@@ -628,8 +628,8 @@ setMethod("getAlpha", signature = c(x = "SummarizedExperiment"),
         return(temp)
     }, BPPARAM = BPPARAM)
     # Combine list of matrices from multiple iterations
-    res <- do.call(rbind, res)
-    cnames <- colnames(res)
+    res <- do.call(cbind, res)
+    cnames <- unique(colnames(res))
     # There might be multiple indices; for instance chao1 has 2 values. For
     # every index calculate mean for each sample.
     res <- lapply(cnames, function(cname){

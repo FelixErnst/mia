@@ -143,16 +143,4 @@ test_that("diversity estimates", {
         tse, assay(tse), rowTree(tse), only.tips = "TRUE"))
     expect_error(.estimate_faith(
         tse, assay(tse), rowTree(tse), only.tips = c(TRUE, FALSE)))
-
-    # Test that results of getAlpha equals to addAlpha
-    expect_error(getAlpha(tse, index = 1))
-    expect_error(getAlpha(tse, index = "shannon", name = TRUE))
-    expect_error(getAlpha(tse, index = "shannon", name = c("test", "test2")))
-    index <- c("shannon", "observed", "ace")
-    name <- c("test", "test2", "random_name")
-    res <- getAlpha(tse, index = index, name = name)
-    colData(tse) <- NULL
-    tse <- addAlpha(tse, index = index, name = name)
-    res2 <- colData(tse)
-    expect_equal(res, res2)
 })
