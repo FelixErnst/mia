@@ -3,22 +3,14 @@
 #' @rdname addAlpha
 #' @export
 setGeneric(
-    "addAlpha", signature = c("x"),
-    function(
-        x, assay.type = "counts",
-        index = c(
-            "coverage_diversity", "fisher_diversity", "faith_diversity",
-            "gini_simpson_diversity", "inverse_simpson_diversity",
-            "log_modulo_skewness_diversity", "shannon_diversity",
-            "absolute_dominance", "dbp_dominance",
-            "core_abundance_dominance", "gini_dominance",
-            "dmn_dominance", "relative_dominance",
-            "simpson_lambda_dominance", "camargo_evenness",
-            "pielou_evenness", "simpson_evenness",
-            "evar_evenness", "bulla_evenness", "ace_richness",
-            "chao1_richness", "hill_richness", "observed_richness"),
-        name = index, niter = NULL, ...)
+    "addAlpha", signature = c("x"), function(x, ...)
     standardGeneric("addAlpha"))
+
+#' @rdname addAlpha
+#' @export
+setGeneric(
+    "getAlpha", signature = c("x"), function(x, ...)
+    standardGeneric("getAlpha"))
 
 #' @rdname getDissimilarity
 #' @export

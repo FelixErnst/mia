@@ -2,30 +2,16 @@
 % Please edit documentation in R/AllGenerics.R, R/addAlpha.R
 \name{addAlpha}
 \alias{addAlpha}
-\alias{addAlpha,SummarizedExperiment-method}
 \alias{getAlpha}
+\alias{addAlpha,SummarizedExperiment-method}
 \alias{getAlpha,SummarizedExperiment-method}
 \title{Estimate alpha diversity indices}
 \usage{
 addAlpha(x, ...)
 
-\S4method{addAlpha}{SummarizedExperiment}(x, ...)
+getAlpha(x, ...)
 
-getAlpha(
-  x,
-  assay.type = "counts",
-  index = c("coverage_diversity", "fisher_diversity", "faith_diversity",
-    "gini_simpson_diversity", "inverse_simpson_diversity",
-    "log_modulo_skewness_diversity", "shannon_diversity", "absolute_dominance",
-    "dbp_dominance", "core_abundance_dominance", "gini_dominance", "dmn_dominance",
-    "relative_dominance", "simpson_lambda_dominance", "camargo_evenness",
-    "pielou_evenness", "simpson_evenness", "evar_evenness", "bulla_evenness",
-    "ace_richness", "chao1_richness", "hill_richness", "observed_richness"),
-  name = index,
-  niter = NULL,
-  BPPARAM = SerialParam(),
-  ...
-)
+\S4method{addAlpha}{SummarizedExperiment}(x, ...)
 
 \S4method{getAlpha}{SummarizedExperiment}(
   x,
@@ -109,11 +95,13 @@ rarefaction rounds. Rarefaction is not applied when \code{niter=NULL}
 (see Details section). (Default: \code{NULL})}
 }
 \value{
-\code{x} with additional \code{colData} column(s) named \code{code}
+\code{getAlpha} returns a \code{DataFrame}.
+\code{addAlpha} returns a \code{x} with additional \code{colData} column(s)
+named \code{name}.
 }
 \description{
-The function estimates alpha diversity indices optionally using rarefaction,
-then stores results in \code{\link{colData}}.
+These functions estimates alpha diversity indices optionally using
+rarefaction.
 }
 \details{
 \subsection{Diversity}{
@@ -389,6 +377,11 @@ tse <- addAlpha(tse,
 
 # Shows the estimated observed richness
 tse$observed_richness
+
+# One can also calculate the indices and get the results without adding
+# them to colData
+res <- getAlpha(tse, index = "shannon")
+res |> head()
 
 }
 \references{
