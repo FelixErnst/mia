@@ -18,7 +18,7 @@ in a SummarizedExperiment."><!-- mathjax --><script src="https://cdnjs.cloudflar
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mia</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.15.12</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.15.13</span>
       </span>
     </div>
 
@@ -45,7 +45,7 @@ in a SummarizedExperiment."><!-- mathjax --><script src="https://cdnjs.cloudflar
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Canonical Correspondence Analysis and Redundancy Analysis</h1>
-    <small class="dont-index">Source: <a href="https://github.com/microbiome/mia/blob/devel/R/AllGenerics.R" class="external-link"><code>R/AllGenerics.R</code></a>, <a href="https://github.com/microbiome/mia/blob/devel/R/runCCA.R" class="external-link"><code>R/runCCA.R</code></a></small>
+    <small class="dont-index">Source: <a href="https://github.com/microbiome/mia/blob/fix_rarefy/R/AllGenerics.R" class="external-link"><code>R/AllGenerics.R</code></a>, <a href="https://github.com/microbiome/mia/blob/fix_rarefy/R/runCCA.R" class="external-link"><code>R/runCCA.R</code></a></small>
     <div class="hidden name"><code>runCCA.Rd</code></div>
     </div>
 
@@ -255,13 +255,13 @@ test specified by <code>homogeneity.test</code> parameter.</p>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/SingleCellExperiment/man/reducedDims.html" class="external-link">reducedDim</a></span><span class="op">(</span><span class="va">tse</span>, <span class="st">"CCA"</span><span class="op">)</span>, <span class="st">"significance"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $permanova</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                Df ChiSquare         F Pr(&gt;F) Total variance Explained variance</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Model           4  0.150386 0.7379888  0.676         1.8825         0.07988631</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> ClinicalStatus  4  0.150386 0.7379888  0.651         1.8825         0.07988631</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Model           4  0.150386 0.7379888  0.655         1.8825         0.07988631</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ClinicalStatus  4  0.150386 0.7379888  0.644         1.8825         0.07988631</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Residual       34  1.732114        NA     NA         1.8825         0.92011369</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $homogeneity</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                Df    Sum Sq    Mean Sq        F N.Perm Pr(&gt;F) Total variance</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> ClinicalStatus  4 0.2184213 0.05460533 1.757098    999  0.152       1.275039</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ClinicalStatus  4 0.2184213 0.05460533 1.757098    999  0.141       1.275039</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                Explained variance</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ClinicalStatus          0.1713056</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>

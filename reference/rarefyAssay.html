@@ -20,7 +20,7 @@ subsampled assay."><!-- mathjax --><script src="https://cdnjs.cloudflare.com/aja
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mia</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.15.12</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.15.13</span>
       </span>
     </div>
 
@@ -47,7 +47,7 @@ subsampled assay."><!-- mathjax --><script src="https://cdnjs.cloudflare.com/aja
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Subsample Counts</h1>
-    <small class="dont-index">Source: <a href="https://github.com/microbiome/mia/blob/devel/R/AllGenerics.R" class="external-link"><code>R/AllGenerics.R</code></a>, <a href="https://github.com/microbiome/mia/blob/devel/R/rarefyAssay.R" class="external-link"><code>R/rarefyAssay.R</code></a></small>
+    <small class="dont-index">Source: <a href="https://github.com/microbiome/mia/blob/fix_rarefy/R/AllGenerics.R" class="external-link"><code>R/AllGenerics.R</code></a>, <a href="https://github.com/microbiome/mia/blob/fix_rarefy/R/rarefyAssay.R" class="external-link"><code>R/rarefyAssay.R</code></a></small>
     <div class="hidden name"><code>rarefyAssay.Rd</code></div>
     </div>
 
@@ -59,17 +59,7 @@ subsampled assay.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">rarefyAssay</span><span class="op">(</span></span>
-<span>  <span class="va">x</span>,</span>
-<span>  assay.type <span class="op">=</span> <span class="va">assay_name</span>,</span>
-<span>  assay_name <span class="op">=</span> <span class="st">"counts"</span>,</span>
-<span>  sample <span class="op">=</span> <span class="va">min_size</span>,</span>
-<span>  min_size <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">min</a></span><span class="op">(</span><span class="fu">colSums2</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/SummarizedExperiment/man/SummarizedExperiment-class.html" class="external-link">assay</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>  replace <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  name <span class="op">=</span> <span class="st">"subsampled"</span>,</span>
-<span>  verbose <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  <span class="va">...</span></span>
-<span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">rarefyAssay</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S4 method for class 'SummarizedExperiment'</span></span>
 <span><span class="fu">rarefyAssay</span><span class="op">(</span></span>
@@ -78,9 +68,8 @@ subsampled assay.</p>
 <span>  assay_name <span class="op">=</span> <span class="st">"counts"</span>,</span>
 <span>  sample <span class="op">=</span> <span class="va">min_size</span>,</span>
 <span>  min_size <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">min</a></span><span class="op">(</span><span class="fu">colSums2</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/SummarizedExperiment/man/SummarizedExperiment-class.html" class="external-link">assay</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">assay.type</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>  replace <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  replace <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  name <span class="op">=</span> <span class="st">"subsampled"</span>,</span>
-<span>  verbose <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -91,6 +80,12 @@ subsampled assay.</p>
 
 <dl><dt id="arg-x">x<a class="anchor" aria-label="anchor" href="#arg-x"></a></dt>
 <dd><p><code><a href="https://rdrr.io/pkg/TreeSummarizedExperiment/man/TreeSummarizedExperiment-class.html" class="external-link">TreeSummarizedExperiment</a></code>.</p></dd>
+
+
+<dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
+<dd><p>optional arguments:</p><ul><li><p><code>verbose</code>: <code>Logical scalar</code>. Choose whether to show
+messages. (Default: <code>TRUE</code>)</p></li>
+</ul></dd>
 
 
 <dt id="arg-assay-type">assay.type<a class="anchor" aria-label="anchor" href="#arg-assay-type"></a></dt>
@@ -113,24 +108,14 @@ counts found in a sample or a user specified number.</p></dd>
 
 
 <dt id="arg-replace">replace<a class="anchor" aria-label="anchor" href="#arg-replace"></a></dt>
-<dd><p><code>Logical scalar</code>. The default is with
-replacement (<code>replace=TRUE</code>).
-See <code><a href="https://rdrr.io/pkg/phyloseq/man/rarefy_even_depth.html" class="external-link">phyloseq::rarefy_even_depth</a></code>
-for details on implications of this parameter. (Default: <code>TRUE</code>)</p></dd>
+<dd><p><code>Logical scalar</code>. Whether to åperform subsampling with
+replacement. Ths works similarly to <code>sample(..., replace = TRUE)</code>.
+(Default: <code>FALSE</code>)</p></dd>
 
 
 <dt id="arg-name">name<a class="anchor" aria-label="anchor" href="#arg-name"></a></dt>
 <dd><p><code>Character scalar</code>. The name for the transformed assay to
 be stored. (Default: <code>method</code>)</p></dd>
-
-
-<dt id="arg-verbose">verbose<a class="anchor" aria-label="anchor" href="#arg-verbose"></a></dt>
-<dd><p><code>Logical scalar</code>. Choose whether to show messages.
-(Default: <code>TRUE</code>)</p></dd>
-
-
-<dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
-<dd><p>additional arguments not used</p></dd>
 
 </dl></div>
     <div id="value">
@@ -149,6 +134,9 @@ consequences. Therefore, make sure this normalization is appropriate for
 your data.</p>
 <p>To maintain the reproducibility, please define the seed using set.seed()
 before implement this function.</p>
+<p>When <code>replace = FALSE</code>, the function uses internally
+<code><a href="https://rdrr.io/pkg/vegan/man/rarefy.html" class="external-link">vegan::rarefy</a></code> while with replacement enabled the function utilizes
+own implementation, inspired by <code><a href="https://rdrr.io/pkg/phyloseq/man/rarefy_even_depth.html" class="external-link">phyloseq::rarefy_even_depth</a></code>.</p>
     </div>
     <div id="references">
     <h2>References</h2>
@@ -162,6 +150,13 @@ Zaneveld JR, Vázquez-Baeza Y, Birmingham A, Hyde ER. Normalization and
 microbial differential abundance strategies depend upon data characteristics.
 Microbiome. 2017 Dec;5(1):1-8.</p>
     </div>
+    <div id="see-also">
+    <h2>See also</h2>
+    <div class="dont-index">
+<ul><li><p><code><a href="https://rdrr.io/pkg/vegan/man/rarefy.html" class="external-link">vegan::rrarefy</a></code></p></li>
+<li><p><code><a href="https://rdrr.io/pkg/phyloseq/man/rarefy_even_depth.html" class="external-link">phyloseq::rarefy_even_depth</a></code></p></li>
+</ul></div>
+    </div>
 
     <div id="ref-examples">
     <h2>Examples</h2>
@@ -173,27 +168,27 @@ Microbiome. 2017 Dec;5(1):1-8.</p>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">123</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">tse_subsampled</span> <span class="op">&lt;-</span> <span class="fu">rarefyAssay</span><span class="op">(</span><span class="va">tse</span>, sample <span class="op">=</span> <span class="fl">60000</span>, name <span class="op">=</span> <span class="st">"subsampled"</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> 1 samples removed because they contained fewer reads than `sample`.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 6808 features removed because they are not present in any of the samples after subsampling.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 6726 features removed because they are not present in any of the samples after subsampling.</span>
 <span class="r-in"><span><span class="va">tse_subsampled</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> class: TreeSummarizedExperiment </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> dim: 12408 25 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> metadata(1): rarefyAssay_sample</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> dim: 12490 25 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> metadata(0):</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> assays(2): counts subsampled</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> rownames(12408): 549322 255340 ... 200359 271582</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> rownames(12490): 549322 522457 ... 200359 271582</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> rowData names(7): Kingdom Phylum ... Genus Species</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> colnames(25): CL3 CC1 ... Even2 Even3</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> colData names(7): X.SampleID Primer ... SampleType Description</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> reducedDimNames(0):</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> mainExpName: NULL</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> altExpNames(0):</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> rowLinks: a LinkDataFrame (12408 rows)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> rowLinks: a LinkDataFrame (12490 rows)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> rowTree: 1 phylo tree(s) (19216 leaves)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> colLinks: NULL</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> colTree: NULL</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">tse</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 19216    26</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/SummarizedExperiment/man/SummarizedExperiment-class.html" class="external-link">assay</a></span><span class="op">(</span><span class="va">tse_subsampled</span>, <span class="st">"subsampled"</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 12408    25</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 12490    25</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

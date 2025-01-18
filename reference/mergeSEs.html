@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mia</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.15.12</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.15.13</span>
       </span>
     </div>
 
@@ -44,7 +44,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Merge SE objects into single SE object.</h1>
-    <small class="dont-index">Source: <a href="https://github.com/microbiome/mia/blob/devel/R/AllGenerics.R" class="external-link"><code>R/AllGenerics.R</code></a>, <a href="https://github.com/microbiome/mia/blob/devel/R/mergeSEs.R" class="external-link"><code>R/mergeSEs.R</code></a></small>
+    <small class="dont-index">Source: <a href="https://github.com/microbiome/mia/blob/fix_rarefy/R/AllGenerics.R" class="external-link"><code>R/AllGenerics.R</code></a>, <a href="https://github.com/microbiome/mia/blob/fix_rarefy/R/mergeSEs.R" class="external-link"><code>R/mergeSEs.R</code></a></small>
     <div class="hidden name"><code>mergeSEs.Rd</code></div>
     </div>
 
@@ -141,8 +141,8 @@ taxonomy information along with OTU number matches.
 
 
 <dt id="arg-verbose">verbose<a class="anchor" aria-label="anchor" href="#arg-verbose"></a></dt>
-<dd><p><code>Logical scalar</code>. Choose whether to show messages.
-(Default: <code>TRUE</code>)</p></dd>
+<dd><p><code>Logical scalar</code>. Choose whether to show
+messages. (Default: <code>TRUE</code>)</p></dd>
 
 
 <dt id="arg-y">y<a class="anchor" aria-label="anchor" href="#arg-y"></a></dt>
@@ -281,7 +281,7 @@ objects belong to <code>TreeSummarizedExperiment</code>, the output will be
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># If your objects contain samples that describe one and same sample,</span></span></span>
 <span class="r-in"><span><span class="co"># you can collapse equally named samples to one by specifying 'collapse.cols'</span></span></span>
-<span class="r-in"><span><span class="va">tse_temp</span> <span class="op">&lt;-</span> <span class="fu">mergeSEs</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">tse</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span>, <span class="fl">1</span><span class="op">]</span>, <span class="va">tse</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">20</span>, <span class="fl">1</span><span class="op">]</span>, <span class="va">tse</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, <span class="fl">1</span><span class="op">]</span><span class="op">)</span>, </span></span>
+<span class="r-in"><span><span class="va">tse_temp</span> <span class="op">&lt;-</span> <span class="fu">mergeSEs</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">tse</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span>, <span class="fl">1</span><span class="op">]</span>, <span class="va">tse</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">20</span>, <span class="fl">1</span><span class="op">]</span>, <span class="va">tse</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, <span class="fl">1</span><span class="op">]</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>                       collapse.cols <span class="op">=</span> <span class="cn">TRUE</span>,</span></span>
 <span class="r-in"><span>                       join <span class="op">=</span> <span class="st">"inner"</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Merging with inner join...</span>

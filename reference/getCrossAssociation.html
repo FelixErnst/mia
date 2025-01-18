@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mia</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.15.12</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.15.13</span>
       </span>
     </div>
 
@@ -44,7 +44,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Calculate correlations between features of two experiments.</h1>
-    <small class="dont-index">Source: <a href="https://github.com/microbiome/mia/blob/devel/R/AllGenerics.R" class="external-link"><code>R/AllGenerics.R</code></a>, <a href="https://github.com/microbiome/mia/blob/devel/R/getCrossAssociation.R" class="external-link"><code>R/getCrossAssociation.R</code></a></small>
+    <small class="dont-index">Source: <a href="https://github.com/microbiome/mia/blob/fix_rarefy/R/AllGenerics.R" class="external-link"><code>R/AllGenerics.R</code></a>, <a href="https://github.com/microbiome/mia/blob/fix_rarefy/R/getCrossAssociation.R" class="external-link"><code>R/getCrossAssociation.R</code></a></small>
     <div class="hidden name"><code>getCrossAssociation.Rd</code></div>
     </div>
 
@@ -119,6 +119,12 @@ corresponding variable-pair. This decreases the number of calculations in
 and give numeric values as an output. Adjust <code>method</code> and other
 parameters correspondingly. Supported functions are, for example,
 <code><a href="https://rdrr.io/r/stats/dist.html" class="external-link">stats::dist</a></code> and <code><a href="https://rdrr.io/pkg/vegan/man/vegdist.html" class="external-link">vegan::vegdist</a></code>.</p></li>
+<li><p><code>dimred1</code> <code>Character scalar</code> or <code>numeric scalar</code>.
+Specifies reduced dimensionality from the <code>reducedDim</code> of experiment</p><ol><li><p>(Default: <code>NULL</code>)</p></li>
+</ol></li>
+<li><p><code>dimred2</code> <code>Character scalar</code> or <code>numeric scalar</code>.
+Specifies reduced dimensionality from the <code>reducedDim</code> of experiment
+2. (Default: <code>NULL</code>)</p></li>
 </ul></dd>
 
 
@@ -158,14 +164,16 @@ assay in experiment 2 to be transformed.. (Default: <code>"counts"</code>)</p></
 
 <dt id="arg-altexp-">altexp1<a class="anchor" aria-label="anchor" href="#arg-altexp-"></a></dt>
 <dd><p><code>Character scalar</code> or <code>numeric scalar</code>. Specifies
-alternative experiment from the altExp of experiment 1. If NULL, then the
-experiment is itself and altExp option is disabled. (Default: <code>NULL</code>)</p></dd>
+alternative experiment from the <code>altExp</code> of experiment 1. If NULL, then
+the experiment is itself and altExp option is disabled.
+(Default: <code>NULL</code>)</p></dd>
 
 
 <dt id="arg-altexp-">altexp2<a class="anchor" aria-label="anchor" href="#arg-altexp-"></a></dt>
 <dd><p><code>Character scalar</code> or <code>numeric scalar</code>. Specifies
-alternative experiment from the altExp of experiment 2. If NULL, then the
-experiment is itself and altExp option is disabled. (Default: <code>NULL</code>)</p></dd>
+alternative experiment from the <code>altExp</code> of experiment 2. If NULL, then
+the experiment is itself and altExp option is disabled.
+(Default: <code>NULL</code>)</p></dd>
 
 
 <dt id="arg-col-var-">col.var1<a class="anchor" aria-label="anchor" href="#arg-col-var-"></a></dt>
@@ -373,7 +381,7 @@ faster solutions when running times are critical.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> D_1__Firmicutes     -0.03341937 -0.3118914 -0.005711173  0.09035227 -0.01673503</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> D_1__Proteobacteria  0.03341937  0.3118914  0.005711173 -0.09035227  0.01673503</span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># If test.signif = TRUE, then getCrossAssociation additionally returns </span></span></span>
+<span class="r-in"><span><span class="co"># If test.signif = TRUE, then getCrossAssociation additionally returns</span></span></span>
 <span class="r-in"><span><span class="co"># significances</span></span></span>
 <span class="r-in"><span><span class="co"># filter.self.cor = TRUE filters self correlations</span></span></span>
 <span class="r-in"><span><span class="co"># p.adj.threshold can be used to filter those features that do not</span></span></span>
@@ -400,7 +408,7 @@ faster solutions when running times are critical.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 63 0.03377000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 69 0.02309142</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 75 0.00000000</span>
-<span class="r-in"><span>                                        </span></span>
+<span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Returned value is a list of matrices</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">result</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Var1"  "Var2"  "cor"   "pval"  "p_adj"</span>
@@ -413,22 +421,22 @@ faster solutions when running times are critical.</p>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating correlations...</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> altexp1: -, altexp2: -, assay.type1: counts, col.var1: -, dimred1: -, assay.type2: counts, col.var2: -, dimred2: -</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> by: 2, function: getDissimilarity, method: bray, test.signif: FALSE, p.adj.method: -, paired: FALSE, show.warnings: TRUE</span>
-<span class="r-in"><span>                                        </span></span>
+<span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># If experiments are equal and measure is symmetric</span></span></span>
 <span class="r-in"><span><span class="co"># (e.g., taxa1 vs taxa2 == taxa2 vs taxa1),</span></span></span>
 <span class="r-in"><span><span class="co"># it is possible to speed-up calculations by calculating association only</span></span></span>
 <span class="r-in"><span><span class="co"># for unique variable-pairs. Use "symmetric" to choose whether to measure</span></span></span>
 <span class="r-in"><span><span class="co"># association for only other half of of variable-pairs.</span></span></span>
 <span class="r-in"><span><span class="va">result</span> <span class="op">&lt;-</span> <span class="fu">getCrossAssociation</span><span class="op">(</span></span></span>
-<span class="r-in"><span>    <span class="va">mae</span>, experiment1 <span class="op">=</span> <span class="st">"microbiota"</span>, experiment2 <span class="op">=</span> <span class="st">"microbiota"</span>, </span></span>
+<span class="r-in"><span>    <span class="va">mae</span>, experiment1 <span class="op">=</span> <span class="st">"microbiota"</span>, experiment2 <span class="op">=</span> <span class="st">"microbiota"</span>,</span></span>
 <span class="r-in"><span>    assay.type1 <span class="op">=</span> <span class="st">"counts"</span>, assay.type2 <span class="op">=</span> <span class="st">"counts"</span>, symmetric <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating correlations...</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> altexp1: -, altexp2: -, assay.type1: counts, col.var1: -, dimred1: -, assay.type2: counts, col.var2: -, dimred2: -</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> by: 1, function: stats::cor, method: kendall, test.signif: FALSE, p.adj.method: -, paired: FALSE, show.warnings: TRUE</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># For big data sets, the calculations might take a long time.</span></span></span>
-<span class="r-in"><span><span class="co"># To speed them up, you can take a random sample from the data. </span></span></span>
-<span class="r-in"><span><span class="co"># When dealing with complex biological problems, random samples can be </span></span></span>
+<span class="r-in"><span><span class="co"># To speed them up, you can take a random sample from the data.</span></span></span>
+<span class="r-in"><span><span class="co"># When dealing with complex biological problems, random samples can be</span></span></span>
 <span class="r-in"><span><span class="co"># enough to describe the data. Here, our random sample is 30 % of whole data.</span></span></span>
 <span class="r-in"><span><span class="va">sample_size</span> <span class="op">&lt;-</span> <span class="fl">0.3</span></span></span>
 <span class="r-in"><span><span class="va">tse</span> <span class="op">&lt;-</span> <span class="va">mae</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span></span>
@@ -447,7 +455,7 @@ faster solutions when running times are critical.</p>
 <span class="r-in"><span><span class="co"># an assay named assay.type from assay slot, it fetches a column named</span></span></span>
 <span class="r-in"><span><span class="co"># col.var from colData.</span></span></span>
 <span class="r-in"><span><span class="va">result</span> <span class="op">&lt;-</span> <span class="fu">getCrossAssociation</span><span class="op">(</span></span></span>
-<span class="r-in"><span>    <span class="va">mae</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>, assay.type1 <span class="op">=</span> <span class="st">"counts"</span>, </span></span>
+<span class="r-in"><span>    <span class="va">mae</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>, assay.type1 <span class="op">=</span> <span class="st">"counts"</span>,</span></span>
 <span class="r-in"><span>    col.var2 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"shannon_diversity"</span>, <span class="st">"coverage_diversity"</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>    test.signif <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating correlations...</span>
@@ -490,7 +498,27 @@ faster solutions when running times are critical.</p>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>the standard deviation is zero</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>the standard deviation is zero</span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span>                                        </span></span>
+<span class="r-in"><span><span class="co"># To calculate correlation of features to principal coordinates, you have to</span></span></span>
+<span class="r-in"><span><span class="co"># first calculate PCoA...</span></span></span>
+<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="http://bioconductor.org/packages/scater/" class="external-link">scater</a></span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Loading required package: scuttle</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Loading required package: ggplot2</span>
+<span class="r-in"><span><span class="va">tse</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/scater/man/runMDS.html" class="external-link">runMDS</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>    <span class="va">tse</span>, assay.type <span class="op">=</span> <span class="st">"rclr"</span>, FUN <span class="op">=</span> <span class="va">getDissimilarity</span>, method <span class="op">=</span> <span class="st">"euclidean"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="co"># ...then calculate the correlation.</span></span></span>
+<span class="r-in"><span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu">getCrossAssociation</span><span class="op">(</span><span class="va">tse</span>, assay.type1 <span class="op">=</span> <span class="st">"rclr"</span>, dimred2 <span class="op">=</span> <span class="st">"MDS"</span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating correlations...</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> altexp1: -, altexp2: -, assay.type1: rclr, col.var1: -, dimred1: -, assay.type2: -, col.var2: -, dimred2: MDS</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> by: 1, function: stats::cor, method: kendall, test.signif: FALSE, p.adj.method: -, paired: FALSE, show.warnings: TRUE</span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">res</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                    Var1 Var2         cor</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1  CVJT01000011.50.2173    1  0.64450339</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 AYSG01000002.292.2076    1 -0.14907120</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3 CCPS01000022.154.1916    1 -0.07161149</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4       EU622687.1.1587    1  0.11111111</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5       KY646024.1.1591    1  0.34783280</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6  JUOP01000215.81.1657    1  0.54433105</span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>
