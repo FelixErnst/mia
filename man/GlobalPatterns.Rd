@@ -3,7 +3,8 @@
 \docType{data}
 \name{GlobalPatterns}
 \alias{GlobalPatterns}
-\title{Global patterns of 16S rRNA diversity at a depth of millions of sequences per sample.}
+\title{Global patterns of 16S rRNA diversity at a depth of millions of sequences per
+sample.}
 \format{
 A TreeSummarizedExperiment with 19216 features and 26 samples. The
 rowData contains taxonomic information at Kingdom, Phylum, Class, Order,
@@ -15,7 +16,8 @@ Family, Genus and Species levels. The colData includes:
 \item{Final_Barcode}{final barcode (6 nucleotides)}
 \item{Barcode_truncated_plus_T}{truncated barcode with an added tyrosine
 (6 nucleotides)}
-\item{Barcode_full_length}{complete barcode with a length of 11 nucleotides}
+\item{Barcode_full_length}{complete barcode with a length of 11
+nucleotides}
 \item{SampleType}{sampling type by collection site (Soil, Feces, Skin,
 Tongue, Freshwater, Creek Freshwater, Ocean, Estuary Sediment and Mock)}
 \item{Description}{additional information (sampling location, environmental
@@ -26,7 +28,8 @@ factors and study type)}
 data(GlobalPatterns)
 }
 \description{
-GlobalPatterns compared the microbial communities from 25 environmental samples
+GlobalPatterns compared the microbial communities from 25 environmental
+samples
 and three known "mock communities" at a an average depth of 3.1 million reads
 per sample. Authors reproduced diversity patterns seen in many other
 published studies, while investigating technical bias by applying the same
@@ -37,7 +40,8 @@ converted to \code{TreeSummarizedExperiment}.
 }
 \references{
 Caporaso, J. G., et al. (2011).
-Global patterns of 16S rRNA diversity at a depth of millions of sequences per sample.
+Global patterns of 16S rRNA diversity at a depth of millions of sequences per
+sample.
 PNAS, 108, 4516-4522. \url{https://doi.org/10.1073/pnas.1000080107}
 }
 \seealso{

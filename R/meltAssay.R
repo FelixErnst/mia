@@ -71,11 +71,6 @@
 NULL
 
 #' @rdname meltSE
-#' @export
-setGeneric("meltSE", signature = "x", function(x, ...)
-    standardGeneric("meltSE"))
-
-#' @rdname meltSE
 #'
 #' @export
 setMethod("meltSE", signature = c(x = "SummarizedExperiment"),
