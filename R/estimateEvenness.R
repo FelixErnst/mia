@@ -10,7 +10,7 @@
 #' @param assay.type A single character value for selecting the
 #'   \code{\link[SummarizedExperiment:SummarizedExperiment-class]{assay}} used
 #'   for calculation of the sample-wise estimates.
-#'   
+#'
 #' @param assay_name a single \code{character} value for specifying which
 #'   assay to use for calculation.
 #'   (Please use \code{assay.type} instead. At some point \code{assay_name}
@@ -54,7 +54,7 @@
 #'   \item 'evar': Smith and Wilson’s Evar index (Smith & Wilson 1996).
 #'   \item 'bulla': Bulla’s index (O) (Bulla 1994).
 #' }
-#'   
+#'
 #' Desirable statistical evenness metrics avoid strong bias towards very
 #' large or very small abundances; are independent of richness; and range
 #' within the unit interval with increasing evenness (Smith & Wilson 1996).
@@ -149,7 +149,7 @@ NULL
 .calc_bulla_evenness <- function(mat, ...) {
     # Apply threshold, i.e., set values under and equal this threshold to 0
     mat <- .apply_threshold(mat, ...)
-    
+
     # Species richness (number of species)
     S <- colSums2(mat > 0, na.rm = TRUE)
 
@@ -194,7 +194,7 @@ NULL
 .calc_simpson_evenness <- function(mat, ...) {
     # Apply threshold, i.e., set values under and equal this threshold to 0
     mat <- .apply_threshold(mat, ...)
-    
+
     # Species richness (number of detected species)
     S <- colSums2(mat > 0, na.rm = TRUE)
 
@@ -206,7 +206,7 @@ NULL
 .calc_pielou_evenness <- function(mat, ...) {
     # Apply threshold, i.e., set values under and equal this threshold to 0
     mat <- .apply_threshold(mat, ...)
-    
+
     # Remove zeroes
     mat[mat == 0] <- NA
 
@@ -249,10 +249,10 @@ NULL
 # This function keeps only values over threshold and sets other to 0.
 .apply_threshold <- function(mat, threshold = 0, ...){
     #
-    if(!is.numeric(threshold) || length(threshold) != 1L){
+    if( !.is_a_numeric(threshold) ){
         stop("'threshold' must be a single numeric value.", call. = FALSE)
     }
-    if(threshold > 0){
+    if( threshold > 0 ){
         mat[mat <= threshold] <- 0
     }
     return(mat)
