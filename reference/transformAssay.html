@@ -18,7 +18,7 @@ See details for options."><!-- mathjax --><script src="https://cdnjs.cloudflare.
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mia</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.15.14</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.15.15</span>
       </span>
     </div>
 
@@ -45,7 +45,7 @@ See details for options."><!-- mathjax --><script src="https://cdnjs.cloudflare.
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Transform assay</h1>
-    <small class="dont-index">Source: <a href="https://github.com/microbiome/mia/blob/devel/R/AllGenerics.R" class="external-link"><code>R/AllGenerics.R</code></a>, <a href="https://github.com/microbiome/mia/blob/devel/R/transformCounts.R" class="external-link"><code>R/transformCounts.R</code></a></small>
+    <small class="dont-index">Source: <a href="https://github.com/microbiome/mia/blob/transformassay_fix/R/AllGenerics.R" class="external-link"><code>R/AllGenerics.R</code></a>, <a href="https://github.com/microbiome/mia/blob/transformassay_fix/R/transformCounts.R" class="external-link"><code>R/transformCounts.R</code></a></small>
     <div class="hidden name"><code>transformAssay.Rd</code></div>
     </div>
 
@@ -72,7 +72,7 @@ See details for options.</p>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S4 method for class 'SingleCellExperiment'</span></span>
-<span><span class="fu">transformAssay</span><span class="op">(</span><span class="va">x</span>, altexp <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/SingleCellExperiment/man/altExps.html" class="external-link">altExpNames</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">transformAssay</span><span class="op">(</span><span class="va">x</span>, altexp <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -142,7 +142,7 @@ Alternatively, a user-specified numeric value can be added as pseudocount.
 <dd><p><code>Character vector</code> or <code>NULL</code>. Specifies the names
 of alternative experiments to which the transformation should also be
 applied. If <code>NULL</code>, the transformation is only applied to the main
-experiment. (Default: <code>altExpNames(x)</code>).</p></dd>
+experiment. (Default: <code>NULL</code>).</p></dd>
 
 </dl></div>
     <div id="value">
@@ -193,7 +193,7 @@ doi:10.1038/nmeth.2658</p>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">GlobalPatterns</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">tse</span> <span class="op">&lt;-</span> <span class="va">GlobalPatterns</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># By specifying 'method', it is possible to apply different transformations, </span></span></span>
+<span class="r-in"><span><span class="co"># By specifying 'method', it is possible to apply different transformations,</span></span></span>
 <span class="r-in"><span><span class="co"># e.g. compositional transformation.</span></span></span>
 <span class="r-in"><span><span class="va">tse</span> <span class="op">&lt;-</span> <span class="fu">transformAssay</span><span class="op">(</span><span class="va">tse</span>, method <span class="op">=</span> <span class="st">"relabundance"</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
@@ -202,11 +202,11 @@ doi:10.1038/nmeth.2658</p>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Perform CLR with half of the smallest positive value as pseudocount</span></span></span>
 <span class="r-in"><span><span class="va">tse</span> <span class="op">&lt;-</span> <span class="fu">transformAssay</span><span class="op">(</span></span></span>
-<span class="r-in"><span>    <span class="va">tse</span>, assay.type <span class="op">=</span> <span class="st">"counts"</span>, method <span class="op">=</span> <span class="st">"clr"</span>, </span></span>
+<span class="r-in"><span>    <span class="va">tse</span>, assay.type <span class="op">=</span> <span class="st">"counts"</span>, method <span class="op">=</span> <span class="st">"clr"</span>,</span></span>
 <span class="r-in"><span>    pseudocount <span class="op">=</span> <span class="cn">TRUE</span></span></span>
 <span class="r-in"><span>    <span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> A pseudocount of 0.5 was applied.</span>
-<span class="r-in"><span>                      </span></span>
+<span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/SummarizedExperiment/man/SummarizedExperiment-class.html" class="external-link">assay</a></span><span class="op">(</span><span class="va">tse</span>, <span class="st">"clr"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>              CL3       CC1        SV1    M31Fcsw    M11Fcsw    M31Plmr</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 549322 -1.168523 -1.361753 -0.9147168 -0.3661082 -0.3363033 -0.4485277</span>
@@ -389,7 +389,7 @@ doi:10.1038/nmeth.2658</p>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># In order to use other ranking variants, modify the chosen assay directly:</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/pkg/SummarizedExperiment/man/SummarizedExperiment-class.html" class="external-link">assay</a></span><span class="op">(</span><span class="va">tse</span>, <span class="st">"rank_average"</span>, withDimnames <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu">colRanks</span><span class="op">(</span></span></span>
-<span class="r-in"><span>    <span class="fu"><a href="https://rdrr.io/pkg/SummarizedExperiment/man/SummarizedExperiment-class.html" class="external-link">assay</a></span><span class="op">(</span><span class="va">tse</span>, <span class="st">"counts"</span><span class="op">)</span>, ties.method <span class="op">=</span> <span class="st">"average"</span>, preserveShape <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>  </span></span>
+<span class="r-in"><span>    <span class="fu"><a href="https://rdrr.io/pkg/SummarizedExperiment/man/SummarizedExperiment-class.html" class="external-link">assay</a></span><span class="op">(</span><span class="va">tse</span>, <span class="st">"counts"</span><span class="op">)</span>, ties.method <span class="op">=</span> <span class="st">"average"</span>, preserveShape <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Using altexp parameter. First agglomerate the data and then apply</span></span></span>
 <span class="r-in"><span><span class="co"># transformation.</span></span></span>
@@ -401,7 +401,7 @@ doi:10.1038/nmeth.2658</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> class: TreeSummarizedExperiment </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> dim: 944 26 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> metadata(1): agglomerated_by_rank</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> assays(2): counts relabundance</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> assays(1): counts</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> rownames(944): Abiotrophiadefectiva Achromatiumoxaliferum ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   proteobacteriumsymbiontofOsedaxsp.MB4 symbiontofNoeetapupillata</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> rowData names(7): Kingdom Phylum ... Genus Species</span>
