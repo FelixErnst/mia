@@ -32,7 +32,7 @@ getMediation(x, ...)
   outcome,
   treatment,
   mediator = NULL,
-  assay.type = "counts",
+  assay.type = NULL,
   dimred = NULL,
   family = gaussian(),
   covariates = NULL,
@@ -62,7 +62,7 @@ used as treatment in the model.}
 as mediator in the model. (Default: \code{NULL})}
 
 \item{assay.type}{\code{Character scalar}. Specifies the assay used for
-feature-wise mediation analysis. (Default: \code{"counts"})}
+feature-wise mediation analysis. (Default: \code{NULL})}
 
 \item{dimred}{\code{Character scalar}. Indicates the reduced dimension
 result in \code{reducedDims(object)} for component-wise mediation analysis.
