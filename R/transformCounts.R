@@ -152,7 +152,8 @@
 #' # transformation.
 #' tse <- GlobalPatterns
 #' tse <- agglomerateByRanks(tse)
-#' tse <- transformAssay(tse, method = "relabundance")
+#' tse <- transformAssay(
+#'     tse, method = "relabundance", altexp = altExpNames(tse))
 #' # The transformation is applied to all alternative experiments
 #' altExp(tse, "Species")
 #'
@@ -195,7 +196,13 @@ setMethod("transformAssay", signature = c(x = "SingleCellExperiment"),
         x <- .transform_assay(x, ...)
         # Transform alternative experiments
         altExps(x)[altexp] <- lapply(altExps(x)[altexp], function(y){
-            .transform_assay(y, ...)
+            # Give informative error message that states that the error
+            # happened during processing alternative experiments.
+            tryCatch({.transform_assay(y, ...)},
+                error = function(e){
+                    stop("Transforming altExps: ", conditionMessage(e),
+                        call. = FALSE)
+                })
         })
         return(x)
     }
