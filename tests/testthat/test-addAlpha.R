@@ -45,7 +45,7 @@ test_that("Estimate Alpha Diversity Indices with Rarefaction", {
     expect_false(all(tse$gini_dominance == tse$gini_dominance_10))
     # However, they should be the same with some tolerance
     expect_equal(tse$gini_dominance, tse$gini_dominance_10, tolerance = 1e-2)
-    
+
     ## Testing evenness
     # Calculate the default pielou index with no rarefaction
     tse <- addAlpha(tse, assay.type = "counts", index = "pielou")
@@ -61,7 +61,7 @@ test_that("Estimate Alpha Diversity Indices with Rarefaction", {
     expect_false(all(tse$pielou == tse$pielou_10))
     # However, they should be the same with some tolerance
     expect_equal(tse$pielou, tse$pielou_10, tolerance = 1e-1)
-    
+
     ## Testing richness
     # Calculate the default chao1 index with no rarefaction
     tse <- addAlpha(tse, assay.type = "counts", index = "chao1")
