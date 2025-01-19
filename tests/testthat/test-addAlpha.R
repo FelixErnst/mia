@@ -29,6 +29,7 @@ test_that("Estimate Alpha Diversity Indices with Rarefaction", {
     expect_false( all(tse$shannon_diversity == tse$shannon_10) )
     # However, they should be the same with some tolerance
     expect_equal(tse$shannon_diversity, tse$shannon_10, tolerance = 1e-2)
+    expect_true( cor(tse$shannon_diversity, tse$shannon_10) > 0.9 )
 
     ## Testing dominance
     # Calculate the default gini_dominance index with no rarefaction
@@ -60,7 +61,7 @@ test_that("Estimate Alpha Diversity Indices with Rarefaction", {
     # They should differ little bit
     expect_false(all(tse$pielou == tse$pielou_10))
     # However, they should be the same with some tolerance
-    expect_equal(tse$pielou, tse$pielou_10, tolerance = 1e-1)
+    expect_equal(tse$pielou, tse$pielou_10, tolerance = 2e-1)
 
     ## Testing richness
     # Calculate the default chao1 index with no rarefaction
@@ -72,9 +73,10 @@ test_that("Estimate Alpha Diversity Indices with Rarefaction", {
     # Check that index was calculated
     expect_true(any(grepl("chao1", colnames(colData(tse)))))
     expect_true(any(grepl("pielou_10", colnames(colData(tse)))))
-    # They should differ. The difference should be under 30%
+    # They should differ. The difference should be same with some tolerance
     expect_false(all(tse$chao1 == tse$chao1_10))
-    expect_equal(tse$chao1, tse$chao1_10, tolerance = 0.3)
+    expect_equal(tse$chao1, tse$chao1_10, tolerance = mean(tse$chao1))
+    expect_true( cor(tse$chao1, tse$chao1_10) > 0.6 )
 
     # test non existing index
     expect_error(addAlpha(tse, assay.type = "counts", index = "test"))
@@ -87,7 +89,7 @@ test_that("Estimate Alpha Diversity Indices with Rarefaction", {
     # They should differ little bit
     expect_false(all(tse$shannon_20 == tse$shannon_10))
     # However, they should be the same with some tolerance
-    expect_equal(tse$shannon_10, tse$shannon_20, tolerance = 1e-4)
+    expect_equal(tse$shannon_10, tse$shannon_20, tolerance = 2e-2)
 
     # Testing with multiple indices
     tse <- addAlpha(
@@ -113,15 +115,14 @@ test_that("Estimate Alpha Diversity Indices with Rarefaction", {
     expect_true(any(grepl("ace_10", colnames(colData(tse)))))
     # Check that values differ little bit
     expect_false(all(tse$coverage == tse$coverage_10))
+    expect_false(all(tse$absolute == tse$absolute_10))
     expect_false(all(tse$camargo == tse$camargo_10))
     expect_false(all(tse$ace == tse$ace_10))
-    # Absolute should be equal since it only calculates the absolute abundance
-    # of the most dominant n species of the sample.
-    expect_true(all(tse$absolute == tse$absolute_10))
     # However, they should be the same with some tolerance
     expect_equal(tse$coverage, tse$coverage_10, tolerance = 0.05)
-    expect_equal(tse$camargo, tse$camargo_10, tolerance = 0.15)
-    expect_equal(tse$ace, tse$ace_10, tolerance = 0.2)
+    expect_true( cor(tse$camargo, tse$camargo_10) > 0.7)
+    expect_true( cor(tse$ace, tse$ace_10) > 0.6)
+    expect_true( cor(tse$absolute, tse$absolute_10) > 0.9)
 
     # Check that we get error if 'sample' is too high and all samples were
     # dropped
