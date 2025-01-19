@@ -171,7 +171,8 @@ assay(tse, "rank_average", withDimnames = FALSE) <- colRanks(
 # transformation.
 tse <- GlobalPatterns
 tse <- agglomerateByRanks(tse)
-tse <- transformAssay(tse, method = "relabundance")
+tse <- transformAssay(
+    tse, method = "relabundance", altexp = altExpNames(tse))
 # The transformation is applied to all alternative experiments
 altExp(tse, "Species")
 

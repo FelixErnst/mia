@@ -3,6 +3,8 @@
 #' These functions estimates alpha diversity indices optionally using
 #' rarefaction.
 #'
+#' @inheritParams calculateDMN
+#'
 #' @param x a \code{\link{SummarizedExperiment}} object.
 #'
 #' @param assay.type \code{Character scalar}. Specifies the name of assay
@@ -622,9 +624,13 @@ setMethod("getAlpha", signature = c(x = "SummarizedExperiment"),
 #' @importFrom BiocParallel bplapply
 .alpha_rarefaction <- function(x, assay.type, index, name, niter, BPPARAM, ...){
     # Subsample the data and then calculate index based on the rarified data
+    temp_assay <- "temporary_assay_name"
     res <- bplapply(seq(niter), function(i){
-        x_sub <- rarefyAssay(x, assay.type = assay.type, verbose = FALSE, ...)
-        temp <- .calculate_alpha(x_sub, "subsampled", index, name, ...)
+        args <- c(list(x = x, assay.type = assay.type), list(...))
+        args[["name"]] <- temp_assay
+        args[["verbose"]] <- FALSE
+        x_sub <- do.call(rarefyAssay, args)
+        temp <- .calculate_alpha(x_sub, temp_assay, index, name, ...)
         return(temp)
     }, BPPARAM = BPPARAM)
     # Combine list of matrices from multiple iterations

@@ -93,6 +93,10 @@ indices to be calculated.}
 \item{niter}{\code{Integer scalar}. Specifies the number of
 rarefaction rounds. Rarefaction is not applied when \code{niter=NULL}
 (see Details section). (Default: \code{NULL})}
+
+\item{BPPARAM}{A
+\code{\link[BiocParallel:BiocParallelParam-class]{BiocParallelParam}}
+object specifying whether the calculation should be parallelized.}
 }
 \value{
 \code{getAlpha} returns a \code{DataFrame}.
