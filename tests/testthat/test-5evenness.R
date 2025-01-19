@@ -43,9 +43,9 @@ test_that(".estimate_evenness", {
 
     # TSE object
     data(esophagus, package="mia")
-    tse <- esophagus 
+    tse <- esophagus
     test_internal_.estimate_evenness(tse)
-    
+
     assay(tse,"counts") <- DelayedArray(assay(tse,"counts"))
     test_internal_.estimate_evenness(tse)
 })

@@ -18,7 +18,7 @@ test_that(".estimate_dominance", {
 
         #Checks that the type of output is the same as the type of input.
         expect_true(typeof(tse_idx) == typeof(tse))
-	
+
         #Checks that every index is calculated by checking the column names from
         #colData.
         #Checks also, that the order of indices is right / the same as the order

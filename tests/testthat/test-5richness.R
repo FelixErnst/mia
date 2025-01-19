@@ -5,10 +5,10 @@ test_that(".estimate_richness", {
 
     skip_if_not(requireNamespace("vegan", quietly = TRUE))
     data(esophagus, package="mia")
-    
+
     indices <- c("ace", "chao1", "hill", "observed")
     tse <- addAlpha(esophagus, index = indices, detection = 1)
-    cd <- colData(tse)    
+    cd <- colData(tse)
     expect_equal(unname(round(cd$observed, 0)), c(15, 24, 16))
     # These are unaffected by detection parameter
     expect_equal(unname(round(cd$chao1, 4)), c(39.1429, 37.5000, 71.0000))
@@ -50,7 +50,7 @@ test_that(".estimate_richness", {
         expect_equal(
             unname(mia:::.calc_observed(mat, detection = 0)), c(28, 33, 38))
         expect_equal(
-            unname(mia:::.calc_observed(mat, detection = 1)), c(15, 24, 16))	
+            unname(mia:::.calc_observed(mat, detection = 1)), c(15, 24, 16))
 
         s <- mia:::.calc_chao1(mat)
         expect_equal(ncol(s), 2)
@@ -71,7 +71,7 @@ test_that(".estimate_richness", {
 
     # Standard tse
     test_internal_.estimate_richness(tse)
-    
+
     # DelayedArray version of the assay
     assay(tse,"counts") <- DelayedArray(assay(tse,"counts"))
     test_internal_.estimate_richness(tse)
