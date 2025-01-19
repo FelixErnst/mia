@@ -68,6 +68,18 @@ test_that("taxonomy", {
     expect_equal(getTaxonomyLabels(xtse, resolve.loops = TRUE),
                  c("Family:j","Phylum:a","Family:k","Family:l","Family:m",
                    "Family:n","Family:o_1","Phylum:c","Family:o_2"))
+    # Check that lowest.rank works
+    data(GlobalPatterns)
+    tse <- GlobalPatterns
+    labs <- getTaxonomyLabels(tse, lowest.rank = "Kingdom", with.rank = TRUE)
+    expect_true( all(unlist(lapply(labs, grepl, pattern = "Kingdom:"))) )
+    labs <- getTaxonomyLabels(tse, lowest.rank = "Class", with.rank = TRUE)
+    expect_true( all(!unlist(lapply(labs, grepl, pattern = "Order|FamilySpecies|Genus"))) )
+    #
+    tse <- agglomerateByRank(tse, rank = "Phylum")
+    labs <- getTaxonomyLabels(tse)
+    labs1 <- getTaxonomyLabels(tse, lowest.rank = "Class")
+    expect_equal(labs, labs1)
 
     # addHierarchyTree
     data(GlobalPatterns, package="mia")
