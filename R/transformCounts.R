@@ -5,34 +5,34 @@
 #'
 #' @inheritParams getDominant
 #' @inheritParams getDissimilarity
-#'   
+#'
 #' @param method \code{Character scalar}. Specifies the transformation
 #'   method.
-#' 
+#'
 #' @param MARGIN \code{Character scalar}. Determines whether the
 #'   transformation is applied sample (column) or feature (row) wise.
 #'   (Default: \code{"samples"})
-#' 
-#' @param pseudocount \code{Logical scalar} or \code{numeric scalar}. 
-#'   When \code{TRUE}, automatically adds half of the minimum positive 
-#'   value of \code{assay.type} (missing values ignored by default: 
+#'
+#' @param pseudocount \code{Logical scalar} or \code{numeric scalar}.
+#'   When \code{TRUE}, automatically adds half of the minimum positive
+#'   value of \code{assay.type} (missing values ignored by default:
 #'   \code{na.rm = TRUE}).
 #'   When FALSE, does not add any pseudocount (pseudocount = 0).
 #'   Alternatively, a user-specified numeric value can be added as pseudocount.
 #'   (Default: \code{FALSE}).
-#' 
+#'
 #' @param name \code{Character scalar}. The name for the transformed assay to
 #' be stored. (Default: \code{method})
-#'   
-#' @param altexp \code{Character vector} or \code{NULL}. Specifies the names 
-#' of alternative experiments to which the transformation should also be 
-#' applied. If \code{NULL}, the transformation is only applied to the main 
-#' experiment. (Default: \code{altExpNames(x)}).
+#'
+#' @param altexp \code{Character vector} or \code{NULL}. Specifies the names
+#' of alternative experiments to which the transformation should also be
+#' applied. If \code{NULL}, the transformation is only applied to the main
+#' experiment. (Default: \code{NULL}).
 #'
 #' @param ... additional arguments passed e.g. on to \code{vegan:decostand}.
 #' \itemize{
 #'   \item \code{reference}: \code{Character scalar}. Used to
-#'   to fill reference sample's column in returned assay when calculating alr. 
+#'   to fill reference sample's column in returned assay when calculating alr.
 #'   (Default: \code{NA})
 #'   \item \code{ref_vals} Deprecated. Use \code{reference} instead.
 #'   \item \code{percentile}: \code{Numeric scalar} or \code{NULL} (css). Used
@@ -41,7 +41,7 @@
 #'   calculating the portion of samples that exceed the \code{threshold}.
 #'   (Default: \code{NULL})
 #'   \item \code{scaling}: \code{Numeric scalar}. Adjusts the normalization
-#'   scale  by dividing the calculated scaling factors, effectively changing 
+#'   scale  by dividing the calculated scaling factors, effectively changing
 #'   the magnitude of the normalized counts. (Default: \code{1000}).
 #'   \item \code{threshold}: \code{Numeric scalar}. Specifies relative
 #'   difference threshold and determines the first point where the relative
@@ -57,30 +57,30 @@
 #' The \code{transformAssay} provides sample-wise (column-wise) or feature-wise
 #' (row-wise) transformation to the abundance table
 #' (assay) based on specified \code{MARGIN}.
-#' 
+#'
 #' The available transformation methods include:
 #'
 #' \itemize{
-#' 
+#'
 #' \item 'alr', 'chi.square', 'clr', 'frequency', 'hellinger', 'log',
 #' 'normalize', 'pa', 'rank', 'rclr' relabundance', 'rrank', 'standardize',
-#' 'total': please refer to 
+#' 'total': please refer to
 #' \code{\link[vegan:decostand]{decostand}} for details.
-#' 
+#'
 #' \item 'css': Cumulative Sum Scaling (CSS) can be used to normalize count data
 #' by accounting for differences in library sizes. By default, the function
-#' determines the normalization percentile for summing and scaling 
+#' determines the normalization percentile for summing and scaling
 #' counts. If you want to specify the percentile value, good default value
 #' might be \code{0.5}.The method is inspired by the CSS methods in
 #' \code{\link[https://www.bioconductor.org/packages/metagenomeSeq/]{metagenomeSeq}}
 #' package.
-#' 
+#'
 #' \item 'log10': log10 transformation can be used for reducing the skewness
 #' of the data.
 #' \deqn{log10 = \log_{10} x}{%
 #' log10 = log10(x)}
 #' where \eqn{x} is a single value of data.
-#' 
+#'
 #' \item 'log2': log2 transformation can be used for reducing the skewness of
 #' the data.
 #' \deqn{log2 = \log_{2} x}{%
@@ -90,12 +90,12 @@
 #' }
 #'
 #' @return
-#' \code{transformAssay} returns the input object \code{x}, with a new 
+#' \code{transformAssay} returns the input object \code{x}, with a new
 #' transformed abundance table named \code{name} added in the
 #' \code{\link{assay}}.
-#' 
+#'
 #' @references
-#'  
+#'
 #' Paulson, J., Stine, O., Bravo, H. et al. (2013)
 #' Differential abundance analysis for microbial marker-gene surveys
 #' _Nature Methods_ 10, 1200–1202.
@@ -108,30 +108,30 @@
 #' data(GlobalPatterns)
 #' tse <- GlobalPatterns
 #'
-#' # By specifying 'method', it is possible to apply different transformations, 
+#' # By specifying 'method', it is possible to apply different transformations,
 #' # e.g. compositional transformation.
 #' tse <- transformAssay(tse, method = "relabundance")
-#' 
+#'
 #' # The target of transformation can be specified with "assay.type"
 #' # Pseudocount can be added by specifying 'pseudocount'.
-#' 
+#'
 #' # Perform CLR with half of the smallest positive value as pseudocount
 #' tse <- transformAssay(
-#'     tse, assay.type = "counts", method = "clr", 
+#'     tse, assay.type = "counts", method = "clr",
 #'     pseudocount = TRUE
 #'     )
-#'                       
+#'
 #' head(assay(tse, "clr"))
-#' 
+#'
 #' # Perform CSS normalization.
 #' tse <- transformAssay(tse, method = "css")
 #' head(assay(tse, "css"))
-#' 
+#'
 #' # With MARGIN, you can specify the if transformation is done for samples or
 #' # for features. Here Z-transformation is done feature-wise.
 #' tse <- transformAssay(tse, method = "standardize", MARGIN = "features")
 #' head(assay(tse, "standardize"))
-#' 
+#'
 #' # Name of the stored table can be specified.
 #' tse <- transformAssay(tse, method="hellinger", name="test")
 #' head(assay(tse, "test"))
@@ -139,23 +139,24 @@
 #' # pa returns presence absence table.
 #' tse <- transformAssay(tse, method = "pa")
 #' head(assay(tse, "pa"))
-#' 
+#'
 #' # rank returns ranks of taxa.
 #' tse <- transformAssay(tse, method = "rank")
 #' head(assay(tse, "rank"))
 #'
 #' # In order to use other ranking variants, modify the chosen assay directly:
 #' assay(tse, "rank_average", withDimnames = FALSE) <- colRanks(
-#'     assay(tse, "counts"), ties.method = "average", preserveShape = TRUE)  
-#' 
+#'     assay(tse, "counts"), ties.method = "average", preserveShape = TRUE)
+#'
 #' # Using altexp parameter. First agglomerate the data and then apply
 #' # transformation.
 #' tse <- GlobalPatterns
 #' tse <- agglomerateByRanks(tse)
-#' tse <- transformAssay(tse, method = "relabundance")
+#' tse <- transformAssay(
+#'     tse, method = "relabundance", altexp = altExpNames(tse))
 #' # The transformation is applied to all alternative experiments
 #' altExp(tse, "Species")
-#' 
+#'
 NULL
 
 #' @rdname transformAssay
@@ -163,8 +164,8 @@ NULL
 setMethod("transformAssay", signature = c(x = "SummarizedExperiment"),
     function(x,
         assay.type = "counts", assay_name = NULL,
-        method = c("alr", "chi.square", "clr", "css", "frequency", 
-            "hellinger", "log", "log10", "log2", "max", "normalize", 
+        method = c("alr", "chi.square", "clr", "css", "frequency",
+            "hellinger", "log", "log10", "log2", "max", "normalize",
             "pa", "range", "rank", "rclr", "relabundance", "rrank",
             "standardize", "total", "z"),
         MARGIN = "samples",
@@ -182,9 +183,11 @@ setMethod("transformAssay", signature = c(x = "SummarizedExperiment"),
 #' @rdname transformAssay
 #' @export
 setMethod("transformAssay", signature = c(x = "SingleCellExperiment"),
-    function(x, altexp = altExpNames(x), ...){
+    function(x, altexp = NULL, ...){
         # Check altexp
-        if( !(is.null(altexp) || all(altexp %in% altExpNames(x))) ){
+        if( !(is.null(altexp) || all(altexp %in% altExpNames(x)) ||
+                (.is_integer(altexp) &&
+                all(altexp<=length(altExps(x)) & altexp>0)) ) ){
             stop("'altexp' should be NULL or specify names from ",
                 "altExpNames(x).", call. = FALSE)
         }
@@ -193,7 +196,13 @@ setMethod("transformAssay", signature = c(x = "SingleCellExperiment"),
         x <- .transform_assay(x, ...)
         # Transform alternative experiments
         altExps(x)[altexp] <- lapply(altExps(x)[altexp], function(y){
-            .transform_assay(y, ...)
+            # Give informative error message that states that the error
+            # happened during processing alternative experiments.
+            tryCatch({.transform_assay(y, ...)},
+                error = function(e){
+                    stop("Transforming altExps: ", conditionMessage(e),
+                        call. = FALSE)
+                })
         })
         return(x)
     }
@@ -208,8 +217,8 @@ setMethod("transformAssay", signature = c(x = "SingleCellExperiment"),
 .transform_assay <- function(
         x, assay.type = "counts", assay_name = NULL,
         method = c(
-            "alr", "chi.square", "clr", "css", "frequency", 
-            "hellinger", "log", "log10", "log2", "max", "normalize", 
+            "alr", "chi.square", "clr", "css", "frequency",
+            "hellinger", "log", "log10", "log2", "max", "normalize",
             "pa", "range", "rank", "rclr", "relabundance", "rrank",
             "standardize", "total", "z"),
         MARGIN = "samples",
@@ -218,7 +227,7 @@ setMethod("transformAssay", signature = c(x = "SingleCellExperiment"),
         ...){
     # Input check
     if(!is.null(assay_name)){
-        .Deprecated(old="assay_name", new="assay.type", "Now assay_name is 
+        .Deprecated(old="assay_name", new="assay.type", "Now assay_name is
                 deprecated. Use assay.type instead.")
         assay.type <- assay_name
     }
@@ -239,7 +248,7 @@ setMethod("transformAssay", signature = c(x = "SingleCellExperiment"),
     # Check that MARGIN is 1 or 2
     MARGIN <- .check_MARGIN(MARGIN)
     # Check pseudocount
-    if( !.is_a_bool(pseudocount) && !(is.numeric(pseudocount) && 
+    if( !.is_a_bool(pseudocount) && !(is.numeric(pseudocount) &&
             length(pseudocount) == 1 && pseudocount >= 0) ){
         stop("'pseudocount' must be TRUE, FALSE or a number equal to or ",
             "greater than 0.", call. = FALSE)
@@ -325,7 +334,7 @@ setMethod("transformAssay", signature = c(x = "SingleCellExperiment"),
         .Deprecated(old="z", new="standardize")
     }
     method <- ifelse(method == "z", "standardize", method)
-    
+
     # If method is ALR, vegan drops one column/sample, because it is used
     # as a reference. To work with TreeSE, reference sample must be added back.
     # Get the original order of samples/features
@@ -334,7 +343,7 @@ setMethod("transformAssay", signature = c(x = "SingleCellExperiment"),
     # Call vegan::decostand and apply transformation
     transformed_table <- vegan::decostand(
         mat, method = method, MARGIN = MARGIN, ...)
-    
+
     # Add reference sample back if ALR
     if( method %in% c("alr") ){
         transformed_table <- .adjust_alr_table(
@@ -579,7 +588,7 @@ setMethod("transformAssay", signature = c(x = "SingleCellExperiment"),
         if ( pseudocount && any(is.na(mat)) ){
             warning("The assay contains missing values (NAs). These will be ",
                 "ignored in pseudocount calculation.", call. = FALSE)
-        }    
+        }
         # If pseudocount TRUE but some negative values, numerical pseudocount
         # needed
         if ( pseudocount && any(mat < 0, na.rm = TRUE) ){
