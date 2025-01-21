@@ -35,7 +35,7 @@
 #'   (Default: \code{"holm"})
 #' 
 #' @param add.metadata \code{Logical scalar}. Should the model metadata be
-#' returned. (Default: \code{FALSE})
+#' returned. (Default: \code{TRUE})
 #' 
 #' @param verbose \code{Logical scalar}. Should execution messages be printed.
 #'   (Default: \code{TRUE})
@@ -61,7 +61,7 @@
 #' \code{addMediation} returns an updated
 #' \code{\link[SummarizedExperiment:SummarizedExperiment-class]{SummarizedExperiment}}
 #' instance with the same \code{data.frame} stored in the metadata as
-#' "mediation". Its columns include:
+#' "mediation" or as specified in the \code{name} argument. Its columns include:
 #' 
 #' \describe{
 #'   \item{Mediator}{the mediator variable}
@@ -70,6 +70,10 @@
 #'   \item{ACME_pval}{the adjusted p-value for the ACME estimate}
 #'   \item{ADE_pval}{the adjusted p-value for the ADE estimate}
 #' }
+#' 
+#' The original output of \code{\link[mediation:mediate]{mediate}} for each
+#' analysed mediator is stored as the "model metadata" attribute of the
+#' resulting \code{data.frame} and can be accessed via the \code{attr} function.
 #'
 #' @name getMediation
 #'
@@ -97,11 +101,10 @@
 #'                        covariates = c("sex", "age"),
 #'                        treat.value = "Scandinavia",
 #'                        control.value = "CentralEurope",
-#'                        boot = TRUE, sims = 100,
-#'                        add.metadata = TRUE)
+#'                        boot = TRUE, sims = 100)
 #'  
 #'  # Visualise model statistics for 1st mediator
-#'  plot(attr(med_df, "metadata")[[1]])
+#'  plotMediation(med_df)
 #' 
 #' # Apply clr transformation to counts assay
 #' tse <- transformAssay(tse,
@@ -145,6 +148,9 @@
 #' head(metadata(tse)$reddim_mediation, 5)
 #' }
 #' 
+#' # Access model metadata
+#' attr(metadata(tse)$reddim_mediation, "model metadata")
+#' 
 NULL
 
 #' @rdname getMediation
@@ -154,7 +160,7 @@ setMethod("addMediation", signature = c(x = "SummarizedExperiment"),
         function(x, outcome, treatment, name = "mediation",
             mediator = NULL, assay.type = NULL, dimred = NULL,
             family = gaussian(), covariates = NULL, p.adj.method = "holm",
-            add.metadata = FALSE, verbose = TRUE, ...) {
+            add.metadata = TRUE, verbose = TRUE, ...) {
             
             med_df <- getMediation(
                 x, outcome, treatment,
@@ -176,7 +182,7 @@ setMethod("getMediation", signature = c(x = "SummarizedExperiment"),
         function(x, outcome, treatment,
             mediator = NULL, assay.type = NULL, dimred = NULL,
             family = gaussian(), covariates = NULL, p.adj.method = "holm",
-            add.metadata = FALSE, verbose = TRUE, ...) {
+            add.metadata = TRUE, verbose = TRUE, ...) {
         ###################### Input check ########################
         if( !outcome %in% names(colData(x)) ){
             stop(outcome, " not found in colData(x).", call. = FALSE)
@@ -426,11 +432,48 @@ setMethod("getMediation", signature = c(x = "SummarizedExperiment"),
     
     if( add.metadata ){
         # models for every mediator are saved into the metadata attribute
-        attr(med_df, "metadata") <- results[["Model"]]
+        med_df <- .add.model.metadata(med_df, results[["Model"]])
     }
     
     # Order output dataframe by ACME p-values
     med_df <- med_df[order(med_df[["ACME_pval"]]), ]
     
+    return(med_df)
+}
+
+# Organise model metadata into data.frame
+.add.model.metadata <- function(med_df, models) {
+  
+    # Create empty data.frame to store model metadata
+    metadata_df <- data.frame(matrix(nrow = nrow(med_df), ncol = 56))
+  
+    # Use mediators and model properties as row and column names, respectively
+    rownames(metadata_df) <- med_df[["Mediator"]]
+    colnames(metadata_df) <- names(models[[1]])
+  
+    # Iterate over mediators or rows
+    for( row in seq_len(length(models)) ){
+        # Iterate over model metadata or columns
+        for( col in colnames(metadata_df) ){
+      
+            entry <- models[[row]][[col]]
+            
+            # If entry is null, replace with empty string
+            if( is.null(entry) ){
+                entry <- ""
+            }
+            # If entry is not a scalar, convert to list
+            if( length(entry) > 1){
+                entry <- list(entry)
+            }
+            
+            # Store entry into data.frame
+            metadata_df[[row, col]] <- I(entry)
+        }
+    }
+  
+    # Add metadata to output as an attribute
+    attr(med_df, "model metadata") <- metadata_df
+  
     return(med_df)
 }

@@ -22,7 +22,7 @@ getMediation(x, ...)
   family = gaussian(),
   covariates = NULL,
   p.adj.method = "holm",
-  add.metadata = FALSE,
+  add.metadata = TRUE,
   verbose = TRUE,
   ...
 )
@@ -37,7 +37,7 @@ getMediation(x, ...)
   family = gaussian(),
   covariates = NULL,
   p.adj.method = "holm",
-  add.metadata = FALSE,
+  add.metadata = TRUE,
   verbose = TRUE,
   ...
 )
@@ -80,7 +80,7 @@ of p-values. Passed to \code{p.adjust} function.
 (Default: \code{"holm"})}
 
 \item{add.metadata}{\code{Logical scalar}. Should the model metadata be
-returned. (Default: \code{FALSE})}
+returned. (Default: \code{TRUE})}
 
 \item{verbose}{\code{Logical scalar}. Should execution messages be printed.
 (Default: \code{TRUE})}
@@ -91,7 +91,7 @@ effect sizes for the ACMEs and ADEs of every mediator given as input, whereas
 \code{addMediation} returns an updated
 \code{\link[SummarizedExperiment:SummarizedExperiment-class]{SummarizedExperiment}}
 instance with the same \code{data.frame} stored in the metadata as
-"mediation". Its columns include:
+"mediation" or as specified in the \code{name} argument. Its columns include:
 
 \describe{
 \item{Mediator}{the mediator variable}
@@ -100,6 +100,10 @@ instance with the same \code{data.frame} stored in the metadata as
 \item{ACME_pval}{the adjusted p-value for the ACME estimate}
 \item{ADE_pval}{the adjusted p-value for the ADE estimate}
 }
+
+The original output of \code{\link[mediation:mediate]{mediate}} for each
+analysed mediator is stored as the "model metadata" attribute of the
+resulting \code{data.frame} and can be accessed via the \code{attr} function.
 }
 \description{
 \code{getMediation} and \code{addMediation} provide a wrapper of
@@ -139,11 +143,10 @@ med_df <- getMediation(tse,
                        covariates = c("sex", "age"),
                        treat.value = "Scandinavia",
                        control.value = "CentralEurope",
-                       boot = TRUE, sims = 100,
-                       add.metadata = TRUE)
+                       boot = TRUE, sims = 100)
  
  # Visualise model statistics for 1st mediator
- plot(attr(med_df, "metadata")[[1]])
+ plotMediation(med_df)
 
 # Apply clr transformation to counts assay
 tse <- transformAssay(tse,
@@ -186,5 +189,8 @@ tse <- addMediation(tse, name = "reddim_mediation",
 # Show results for first 5 mediators
 head(metadata(tse)$reddim_mediation, 5)
 }
+
+# Access model metadata
+attr(metadata(tse)$reddim_mediation, "model metadata")
 
 }

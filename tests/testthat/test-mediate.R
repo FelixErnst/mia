@@ -31,7 +31,7 @@ test_that("getMediation", {
   
   expect_error(
     getMediation(tse, outcome = "bmi_group", treatment = "nationality", assay.type = "wrong_name"),
-    "wrong_name not found in assays(x).", fixed = TRUE
+    "'assay.type' must be a valid name of assays(x)", fixed = TRUE
   )
   
   expect_error(
@@ -69,10 +69,10 @@ test_that("getMediation", {
                      treat.value = "Scandinavia", control.value = "CentralEurope",
                      boot = TRUE, sims = 1)
   
-  expect_equal(attr(med_df, "metadata")[[1]]$d.avg, med_out$d.avg)
-  expect_equal(attr(med_df, "metadata")[[1]]$d.avg.p, med_out$d.avg.p)
-  expect_equal(attr(med_df, "metadata")[[1]]$z.avg, med_out$z.avg)
-  expect_equal(attr(med_df, "metadata")[[1]]$z.avg.p, med_out$z.avg.p)
+  expect_equal(attr(med_df, "model metadata")[[1, "d.avg"]], med_out$d.avg)
+  expect_equal(attr(med_df, "model metadata")[[1, "d.avg.p"]], med_out$d.avg.p)
+  expect_equal(attr(med_df, "model metadata")[[1, "z.avg"]], med_out$z.avg)
+  expect_equal(attr(med_df, "model metadata")[[1, "z.avg.p"]], med_out$z.avg.p)
   
   ### Batch 3: check output format and dimensionality with respect to SE ###
   med_df <- getMediation(tse, outcome = "bmi_group", treatment = "nationality", assay.type = "counts",
