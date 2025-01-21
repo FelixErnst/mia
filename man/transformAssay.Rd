@@ -13,8 +13,8 @@ transformAssay(x, ...)
   assay.type = "counts",
   assay_name = NULL,
   method = c("alr", "chi.square", "clr", "css", "frequency", "hellinger", "log", "log10",
-    "log2", "max", "normalize", "pa", "range", "rank", "rclr", "relabundance", "rrank",
-    "standardize", "total", "z"),
+    "log2", "max", "normalize", "pa", "philr", "range", "rank", "rclr", "relabundance",
+    "rrank", "standardize", "total", "z"),
   MARGIN = "samples",
   name = method,
   pseudocount = FALSE,
@@ -26,7 +26,8 @@ transformAssay(x, ...)
 \arguments{
 \item{x}{\code{\link[TreeSummarizedExperiment:TreeSummarizedExperiment-class]{TreeSummarizedExperiment}}.}
 
-\item{...}{additional arguments passed e.g. on to \code{vegan:decostand}.
+\item{...}{additional arguments passed e.g. on to \code{vegan:decostand}
+or \code{philr::philr}.
 \itemize{
 \item \code{reference}: \code{Character scalar}. Used to
 to fill reference sample's column in returned assay when calculating alr.
@@ -100,6 +101,10 @@ The available transformation methods include:
 'normalize', 'pa', 'rank', 'rclr' relabundance', 'rrank', 'standardize',
 'total': please refer to
 \code{\link[vegan:decostand]{decostand}} for details.
+
+\item 'philr': See \code{\link[philr:philr{philr}]} and the package vignette
+(\url{https://bioconductor.org/packages/release/bioc/vignettes/philr/inst/doc/philr-intro.html})
+for details.
 
 \item 'css': Cumulative Sum Scaling (CSS) can be used to normalize count data
 by accounting for differences in library sizes. By default, the function
@@ -176,10 +181,26 @@ tse <- transformAssay(
 # The transformation is applied to all alternative experiments
 altExp(tse, "Species")
 
+\dontrun{
+# philr transformation can be applied if the philr package is installed.
+# Subset data b taking only prevalent taxa
+tse <- subsetByPrevalent(tse)
+# Apply transformation
+tse <- transformAssay(tse, method = "philr", pseudocount = 1, MARGIN = 1L)
+# The transformed data is added to altExp
+altExp(tse, "philr")
+}
+
 }
 \references{
 Paulson, J., Stine, O., Bravo, H. et al. (2013)
 Differential abundance analysis for microbial marker-gene surveys
 \emph{Nature Methods} 10, 1200–1202.
 doi:10.1038/nmeth.2658
+}
+\seealso{
+\itemize{
+\item \code{\link[vegan::decostand]{vegan::decostand}}
+\item \code{\link[philr::philr]{philr::philr}}
+}
 }
