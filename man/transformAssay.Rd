@@ -45,6 +45,12 @@ the magnitude of the normalized counts. (Default: \code{1000}).
 difference threshold and determines the first point where the relative
 change in  differences between consecutive quantiles exceeds this
 threshold. (Default: \code{0.1}).
+\item \code{tree}: \code{phylo}. Phylogeny used in PhILR transformation.
+If \code{NULL}, the tree is retrieved from \code{x}.
+(Default: \code{NULL}).
+\item \code{node.labels}: \code{Character vector}. Linkages between
+\code{tree} and \code{x}. Used in PhILR transformation.
+(Default: \code{NULL}).
 }}
 
 \item{assay.type}{\code{Character scalar}. Specifies which assay to use for

@@ -48,6 +48,12 @@
 #'   difference threshold and determines the first point where the relative
 #'   change in  differences between consecutive quantiles exceeds this
 #'   threshold. (Default: \code{0.1}).
+#'   \item \code{tree}: \code{phylo}. Phylogeny used in PhILR transformation.
+#'   If \code{NULL}, the tree is retrieved from \code{x}.
+#'   (Default: \code{NULL}).
+#'   \item \code{node.labels}: \code{Character vector}. Linkages between
+#'   \code{tree} and \code{x}. Used in PhILR transformation.
+#'   (Default: \code{NULL}).
 #' }
 #' @details
 #'
@@ -691,7 +697,7 @@ setMethod("transformAssay", signature = c(x = "SingleCellExperiment"),
     # Check that node.label is NULL or it specifies links between rownames and
     # node labs
     if( !( is.null(node.label) ||
-           is.character(node.label) && length(node.label) == n_FUN(x) ) ){
+            is.character(node.label) && length(node.label) == n_FUN(x) ) ){
         stop("'node.label' must be NULL or a vector specifying links between ",
             "features and node labs of 'tree'.", call. = FALSE)
     }
