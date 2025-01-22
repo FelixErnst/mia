@@ -97,6 +97,7 @@ Suggests:
     microbiomeDataSets,
     NMF,
     patchwork,
+    philr,
     phyloseq,
     reldist,
     rhdf5,
