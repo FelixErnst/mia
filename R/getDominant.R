@@ -3,35 +3,35 @@
 #' These functions return information about the most dominant taxa in a
 #' \code{\link[SummarizedExperiment:SummarizedExperiment-class]{SummarizedExperiment}}
 #' object.
-#' 
+#'
 #' @inheritParams agglomerateByVariable
 #' @inheritParams getPrevalence
 #'
-#' @param name \code{Character scalar}. A name for the column of the 
+#' @param name \code{Character scalar}. A name for the column of the
 #' \code{colData} where results will be stored.
 #' (Default: \code{"dominant_taxa"})
-#'   
-#' @param other.name \code{Character scalar}. A name for features that are not 
+#'
+#' @param other.name \code{Character scalar}. A name for features that are not
 #' included in n the most frequent dominant features in the data.
 #' (Default: \code{"Other"})
-#' 
+#'
 #' @param group \code{Character scalar}. Defines a group. Must be one of the
 #' columns from \code{rowData(x)}. (Default: \code{NULL})
-#' 
+#'
 #' @param rank Deprecated. Use \code{group} instead.
-#' 
+#'
 #' @param n \code{Numeric scalar}. The number of features that are the most
-#' frequent 
+#' frequent
 #' dominant features. Default is NULL, which defaults that each sample is
-#' assigned 
+#' assigned
 #' a dominant taxon. (Default: \code{NULL})
-#' 
+#'
 #' @param complete \code{Logical scalar}. A value to manage multiple dominant
 #' taxa for a sample.
 #' Default for getDominant is TRUE to include all equally dominant taxa
 #' for each sample. complete = FALSE samples one taxa for the samples that have
-#' multiple. 
-#' Default for addDominant is FALSE to add a column with only one 
+#' multiple.
+#' Default for addDominant is FALSE to add a column with only one
 #' dominant taxon assigned for each sample into colData. complete = TRUE adds a
 #' list that includes all dominant taxa for each sample into colData.
 #'
@@ -56,7 +56,8 @@
 #' @return \code{getDominant} returns a named character vector \code{x}
 #' while \code{addDominant} returns
 #' \code{\link[SummarizedExperiment:SummarizedExperiment-class]{SummarizedExperiment}}
-#' with additional column in \code{\link{colData}} named \code{*name*}.
+#' with additional column in
+#' \code{\link[SummarizedExperiment:colData]{colData}} named \code{*name*}.
 #'
 #' @name getDominant
 #' @export
@@ -88,7 +89,7 @@ setMethod("getDominant", signature = c(x = "SummarizedExperiment"),
                 stop("'group' must be an single character value.",
                     call. = FALSE)
             }
-        } 
+        }
         # If "group" is not NULL, species are aggregated according to the
         # taxonomic rank that is specified by user.
         if (!is.null(group) && group %in% taxonomyRanks(x)) {
@@ -105,14 +106,14 @@ setMethod("getDominant", signature = c(x = "SummarizedExperiment"),
         idx <- as.list(apply(t(mat) == colMaxs(mat),1L,which))
         # Get rownames based on indices
         taxa <- rownames(mat)[unlist(idx)]
-        
+
         # If multiple dominant taxa were found, names contain taxa in addition
-        # to 
+        # to
         # sample name. Names are converted so that they include only sample
         # names.
         names(taxa) <- rep( names(idx), times = lengths(idx) )
-        
-        # If individual sample contains multiple dominant taxa (they have equal 
+
+        # If individual sample contains multiple dominant taxa (they have equal
         # counts) and if complete is FALSE, the an arbitrarily chosen dominant
         # taxa is returned
         if( length(taxa)>ncol(x) && !complete){
@@ -125,7 +126,7 @@ setMethod("getDominant", signature = c(x = "SummarizedExperiment"),
             # Order the data
             taxa <- taxa[order]
             names <- names(taxa)
-            # If complete is set FALSE, and there are multiple dominant taxa, 
+            # If complete is set FALSE, and there are multiple dominant taxa,
             # one of them is arbitrarily chosen
             taxa <- lapply(taxa, function(item) {
                         return(sample(item, 1)) })
@@ -136,7 +137,7 @@ setMethod("getDominant", signature = c(x = "SummarizedExperiment"),
                 "Multiple dominant taxa were found for some samples. ",
                 "Use complete = TRUE for details.", call. = FALSE)
         }
-        
+
         # Name "Other" the features that are not included in n the most abundant
         # in the data
         if(!is.null(n)){
@@ -164,7 +165,7 @@ setMethod("getDominant", signature = c(x = "SummarizedExperiment"),
 #' @rdname getDominant
 #' @export
 setMethod("addDominant", signature = c(x = "SummarizedExperiment"),
-    function(x, name = "dominant_taxa", other.name = "Other", n = NULL, 
+    function(x, name = "dominant_taxa", other.name = "Other", n = NULL,
             complete = FALSE, ...) {
         # name check
         if(!.is_non_empty_string(name)){
@@ -185,7 +186,7 @@ setMethod("addDominant", signature = c(x = "SummarizedExperiment"),
             grouped <- split(dom.taxa, rep(names(dom.taxa)), lengths(dom.taxa))
             grouped <- grouped[order]
             dom.taxa <- grouped
-            warning("A new column that was added in colData(x) is a list", 
+            warning("A new column that was added in colData(x) is a list",
                     call. = FALSE)
         }
         colData(x)[[name]] <- dom.taxa
