@@ -18,7 +18,7 @@ See details for options."><!-- mathjax --><script src="https://cdnjs.cloudflare.
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mia</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.15.16</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.15.17</span>
       </span>
     </div>
 
@@ -45,7 +45,7 @@ See details for options."><!-- mathjax --><script src="https://cdnjs.cloudflare.
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Transform assay</h1>
-    <small class="dont-index">Source: <a href="https://github.com/microbiome/mia/blob/fix_mediation/R/AllGenerics.R" class="external-link"><code>R/AllGenerics.R</code></a>, <a href="https://github.com/microbiome/mia/blob/fix_mediation/R/transformCounts.R" class="external-link"><code>R/transformCounts.R</code></a></small>
+    <small class="dont-index">Source: <a href="https://github.com/microbiome/mia/blob/add_philr/R/AllGenerics.R" class="external-link"><code>R/AllGenerics.R</code></a>, <a href="https://github.com/microbiome/mia/blob/add_philr/R/transformCounts.R" class="external-link"><code>R/transformCounts.R</code></a></small>
     <div class="hidden name"><code>transformAssay.Rd</code></div>
     </div>
 
@@ -63,8 +63,8 @@ See details for options.</p>
 <span>  assay.type <span class="op">=</span> <span class="st">"counts"</span>,</span>
 <span>  assay_name <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  method <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"alr"</span>, <span class="st">"chi.square"</span>, <span class="st">"clr"</span>, <span class="st">"css"</span>, <span class="st">"frequency"</span>, <span class="st">"hellinger"</span>, <span class="st">"log"</span>, <span class="st">"log10"</span>,</span>
-<span>    <span class="st">"log2"</span>, <span class="st">"max"</span>, <span class="st">"normalize"</span>, <span class="st">"pa"</span>, <span class="st">"range"</span>, <span class="st">"rank"</span>, <span class="st">"rclr"</span>, <span class="st">"relabundance"</span>, <span class="st">"rrank"</span>,</span>
-<span>    <span class="st">"standardize"</span>, <span class="st">"total"</span>, <span class="st">"z"</span><span class="op">)</span>,</span>
+<span>    <span class="st">"log2"</span>, <span class="st">"max"</span>, <span class="st">"normalize"</span>, <span class="st">"pa"</span>, <span class="st">"philr"</span>, <span class="st">"range"</span>, <span class="st">"rank"</span>, <span class="st">"rclr"</span>, <span class="st">"relabundance"</span>,</span>
+<span>    <span class="st">"rrank"</span>, <span class="st">"standardize"</span>, <span class="st">"total"</span>, <span class="st">"z"</span><span class="op">)</span>,</span>
 <span>  MARGIN <span class="op">=</span> <span class="st">"samples"</span>,</span>
 <span>  name <span class="op">=</span> <span class="va">method</span>,</span>
 <span>  pseudocount <span class="op">=</span> <span class="cn">FALSE</span>,</span>
@@ -84,7 +84,8 @@ See details for options.</p>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
-<dd><p>additional arguments passed e.g. on to <code>vegan:decostand</code>.</p><ul><li><p><code>reference</code>: <code>Character scalar</code>. Used to
+<dd><p>additional arguments passed e.g. on to <code>vegan:decostand</code>
+or <code><a href="https://rdrr.io/pkg/philr/man/philr.html" class="external-link">philr::philr</a></code>.</p><ul><li><p><code>reference</code>: <code>Character scalar</code>. Used to
 to fill reference sample's column in returned assay when calculating alr.
 (Default: <code>NA</code>)</p></li>
 <li><p><code>ref_vals</code> Deprecated. Use <code>reference</code> instead.</p></li>
@@ -100,6 +101,12 @@ the magnitude of the normalized counts. (Default: <code>1000</code>).</p></li>
 difference threshold and determines the first point where the relative
 change in  differences between consecutive quantiles exceeds this
 threshold. (Default: <code>0.1</code>).</p></li>
+<li><p><code>tree</code>: <code>phylo</code>. Phylogeny used in PhILR transformation.
+If <code>NULL</code>, the tree is retrieved from <code>x</code>.
+(Default: <code>NULL</code>).</p></li>
+<li><p><code>node.labels</code>: <code>Character vector</code>. Linkages between
+<code>tree</code> and <code>x</code>. Used in PhILR transformation.
+(Default: <code>NULL</code>).</p></li>
 </ul></dd>
 
 
@@ -149,7 +156,7 @@ experiment. (Default: <code>NULL</code>).</p></dd>
     <h2>Value</h2>
     <p><code>transformAssay</code> returns the input object <code>x</code>, with a new
 transformed abundance table named <code>name</code> added in the
-<code><a href="https://rdrr.io/pkg/SummarizedExperiment/man/SummarizedExperiment-class.html" class="external-link">assay</a></code>.</p>
+<code><a href="https://rdrr.io/pkg/SummarizedExperiment/man/SummarizedExperiment-class.html" class="external-link">assays</a></code>.</p>
     </div>
     <div id="details">
     <h2>Details</h2>
@@ -164,11 +171,12 @@ in a new <code>assay</code>.</p>
 'normalize', 'pa', 'rank', 'rclr' relabundance', 'rrank', 'standardize',
 'total': please refer to
 <code><a href="https://rdrr.io/pkg/vegan/man/decostand.html" class="external-link">decostand</a></code> for details.</p></li>
+<li><p>'philr': please refer to <code><a href="https://rdrr.io/pkg/philr/man/philr.html" class="external-link">philr</a></code> for details.</p></li>
 <li><p>'css': Cumulative Sum Scaling (CSS) can be used to normalize count data
 by accounting for differences in library sizes. By default, the function
 determines the normalization percentile for summing and scaling
 counts. If you want to specify the percentile value, good default value
-might be <code>0.5</code>.The method is inspired by the CSS methods in
+might be <code>0.5</code>. The method is inspired by the CSS methods in
 <code>metagenomeSeq</code>
 package.</p></li>
 <li><p>'log10': log10 transformation can be used for reducing the skewness
@@ -186,6 +194,13 @@ where \(x\) is a single value of data.</p></li>
 Differential abundance analysis for microbial marker-gene surveys
 <em>Nature Methods</em> 10, 1200–1202.
 doi:10.1038/nmeth.2658</p>
+    </div>
+    <div id="see-also">
+    <h2>See also</h2>
+    <div class="dont-index">
+<ul><li><p><code><a href="https://rdrr.io/pkg/vegan/man/decostand.html" class="external-link">vegan::decostand</a></code></p></li>
+<li><p><code><a href="https://rdrr.io/pkg/philr/man/philr.html" class="external-link">philr::philr</a></code></p></li>
+</ul></div>
     </div>
 
     <div id="ref-examples">
@@ -415,6 +430,16 @@ doi:10.1038/nmeth.2658</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> rowTree: 1 phylo tree(s) (944 leaves)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> colLinks: NULL</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> colTree: NULL</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span></span>
+<span class="r-in"><span><span class="co"># philr transformation can be applied if the philr package is installed.</span></span></span>
+<span class="r-in"><span><span class="co"># Subset data b taking only prevalent taxa</span></span></span>
+<span class="r-in"><span><span class="va">tse</span> <span class="op">&lt;-</span> <span class="fu"><a href="getPrevalence.html">subsetByPrevalent</a></span><span class="op">(</span><span class="va">tse</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="co"># Apply transformation</span></span></span>
+<span class="r-in"><span><span class="va">tse</span> <span class="op">&lt;-</span> <span class="fu">transformAssay</span><span class="op">(</span><span class="va">tse</span>, method <span class="op">=</span> <span class="st">"philr"</span>, pseudocount <span class="op">=</span> <span class="fl">1</span>, MARGIN <span class="op">=</span> <span class="fl">1L</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="co"># The transformed data is added to altExp</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/pkg/SingleCellExperiment/man/altExps.html" class="external-link">altExp</a></span><span class="op">(</span><span class="va">tse</span>, <span class="st">"philr"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
