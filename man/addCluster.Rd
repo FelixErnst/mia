@@ -71,8 +71,7 @@ information in its colData or rowData
 }
 \details{
 This is a wrapper for the \code{clusterRows} function from the
-\link[https://bioconductor.org/packages/release/bioc/html/bluster.html]{bluster}
-package.
+\link[bluster]{bluster} package.
 
 When setting \code{full = TRUE}, the clustering information will be stored in
 the metadata of the object.
@@ -88,8 +87,8 @@ tse <- GlobalPatterns
 tse <- addCluster(tse, KmeansParam(centers = 3))
 
 # Clustering done on the samples using Hclust
-tse <- addCluster(tse, 
-               by = "samples", 
+tse <- addCluster(tse,
+               by = "samples",
                HclustParam(metric = "bray", dist.fun = vegan::vegdist))
 
 # Getting the clusters

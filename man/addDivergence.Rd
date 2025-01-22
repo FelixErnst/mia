@@ -30,7 +30,7 @@ getDivergence(
 )
 }
 \arguments{
-\item{x}{a \code{\link{SummarizedExperiment}} object.}
+\item{x}{a \code{\link[SummarizedExperiment]{SummarizedExperiment}} object.}
 
 \item{name}{\code{Character scalar}. The name to be used to store the result
 in metadata of the output. (Default: \code{method})}
@@ -57,7 +57,8 @@ calculation. (Default: \code{"counts"})}
 calculate. (Default: \code{"bray"})}
 }
 \value{
-\code{x} with additional \code{\link{colData}} named \code{name}
+\code{x} with additional
+\code{\link[SummarizedExperiment:colData]{colData}} named \code{name}
 }
 \description{
 Estimate divergence against a given reference sample.
@@ -77,15 +78,15 @@ data(GlobalPatterns)
 tse <- GlobalPatterns
 
 # By default, reference is median of all samples. The name of column where
-# results is "divergence" by default, but it can be specified. 
+# results is "divergence" by default, but it can be specified.
 tse <- addDivergence(tse)
 
-# The method that are used to calculate distance in divergence and 
+# The method that are used to calculate distance in divergence and
 # reference can be specified. Here, euclidean distance is used. Reference is
 # the first sample. It is recommended # to add reference to colData.
 tse[["reference"]] <- rep(colnames(tse)[[1]], ncol(tse))
 tse <- addDivergence(
-    tse, name = "divergence_first_sample", 
+    tse, name = "divergence_first_sample",
     reference = "reference",
     method = "euclidean")
 

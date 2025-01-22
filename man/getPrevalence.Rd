@@ -190,7 +190,7 @@ Otherwise an \code{integer} vector is returned matching the rows in
 }
 \description{
 These functions calculate the population prevalence for taxonomic ranks in a
-\code{\link{SummarizedExperiment-class}} object.
+\code{\link[SummarizedExperiment]{SummarizedExperiment}} object.
 }
 \details{
 \code{getPrevalence} calculates the frequency of samples that exceed

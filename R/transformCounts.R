@@ -74,15 +74,13 @@
 #' 'total': please refer to
 #' \code{\link[vegan:decostand]{decostand}} for details.
 #'
-#' \item 'philr': See \code{\link[philr:philr{philr}]} and the package vignette
-#' (\url{https://bioconductor.org/packages/release/bioc/vignettes/philr/inst/doc/philr-intro.html})
-#' for details.
+#' \item 'philr': please refer to \code{\link[philr:philr]{philr}} for details.
 #'
 #' \item 'css': Cumulative Sum Scaling (CSS) can be used to normalize count data
 #' by accounting for differences in library sizes. By default, the function
 #' determines the normalization percentile for summing and scaling
 #' counts. If you want to specify the percentile value, good default value
-#' might be \code{0.5}.The method is inspired by the CSS methods in
+#' might be \code{0.5}. The method is inspired by the CSS methods in
 #' \code{\link[https://www.bioconductor.org/packages/metagenomeSeq/]{metagenomeSeq}}
 #' package.
 #'
@@ -103,7 +101,7 @@
 #' @return
 #' \code{transformAssay} returns the input object \code{x}, with a new
 #' transformed abundance table named \code{name} added in the
-#' \code{\link{assay}}.
+#' \code{\link[SummarizedExperiment:assays]{assays}}.
 #'
 #' @references
 #'
@@ -114,8 +112,8 @@
 #'
 #' @seealso
 #' \itemize{
-#'   \item \code{\link[vegan::decostand]{vegan::decostand}}
-#'   \item \code{\link[philr::philr]{philr::philr}}
+#'   \item \code{\link[vegan:decostand]{vegan::decostand}}
+#'   \item \code{\link[philr:philr]{philr::philr}}
 #' }
 #'
 #' @name transformAssay
@@ -753,6 +751,7 @@ setMethod("transformAssay", signature = c(x = "SingleCellExperiment"),
 # features do not match with original ones, so we add philr-transformed data
 # to altExp. If philr was, applied to columns, we cannot use altExp so
 # we return only the transformed data.
+#' @importFrom stats setNames
 .add_transformed_data <- function(x, mat, name){
     rnames_ok <- nrow(x) == nrow(mat)
     cnames_ok <- ncol(x) == ncol(mat)

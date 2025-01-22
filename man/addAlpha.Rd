@@ -30,7 +30,7 @@ getAlpha(x, ...)
 )
 }
 \arguments{
-\item{x}{a \code{\link{SummarizedExperiment}} object.}
+\item{x}{a \code{\link[SummarizedExperiment]{SummarizedExperiment}} object.}
 
 \item{...}{optional arguments:
 \itemize{
