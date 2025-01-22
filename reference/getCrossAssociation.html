@@ -44,7 +44,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Calculate correlations between features of two experiments.</h1>
-    <small class="dont-index">Source: <a href="https://github.com/microbiome/mia/blob/corr_default_assay/R/AllGenerics.R" class="external-link"><code>R/AllGenerics.R</code></a>, <a href="https://github.com/microbiome/mia/blob/corr_default_assay/R/getCrossAssociation.R" class="external-link"><code>R/getCrossAssociation.R</code></a></small>
+    <small class="dont-index">Source: <a href="https://github.com/microbiome/mia/blob/fix_mediation/R/AllGenerics.R" class="external-link"><code>R/AllGenerics.R</code></a>, <a href="https://github.com/microbiome/mia/blob/fix_mediation/R/getCrossAssociation.R" class="external-link"><code>R/getCrossAssociation.R</code></a></small>
     <div class="hidden name"><code>getCrossAssociation.Rd</code></div>
     </div>
 
@@ -61,9 +61,9 @@
 <span>  experiment1 <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>  experiment2 <span class="op">=</span> <span class="fl">2</span>,</span>
 <span>  assay.type1 <span class="op">=</span> <span class="va">assay_name1</span>,</span>
-<span>  assay_name1 <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  assay_name1 <span class="op">=</span> <span class="st">"counts"</span>,</span>
 <span>  assay.type2 <span class="op">=</span> <span class="va">assay_name2</span>,</span>
-<span>  assay_name2 <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  assay_name2 <span class="op">=</span> <span class="st">"counts"</span>,</span>
 <span>  altexp1 <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  altexp2 <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  col.var1 <span class="op">=</span> <span class="va">colData_variable1</span>,</span>
@@ -146,7 +146,7 @@ Selects the experiment 2 from<code>experiments(x)</code> of
 
 <dt id="arg-assay-type-">assay.type1<a class="anchor" aria-label="anchor" href="#arg-assay-type-"></a></dt>
 <dd><p><code>Character scalar</code>. Specifies the name of the assay
-in experiment 1 to be transformed.. (Default: <code>NULL</code>)</p></dd>
+in experiment 1 to be transformed.. (Default: <code>"counts"</code>)</p></dd>
 
 
 <dt id="arg-assay-name-">assay_name1<a class="anchor" aria-label="anchor" href="#arg-assay-name-"></a></dt>
@@ -155,7 +155,7 @@ in experiment 1 to be transformed.. (Default: <code>NULL</code>)</p></dd>
 
 <dt id="arg-assay-type-">assay.type2<a class="anchor" aria-label="anchor" href="#arg-assay-type-"></a></dt>
 <dd><p><code>Character scalar</code>. Specifies the name of the
-assay in experiment 2 to be transformed.. (Default: <code>NULL</code>)</p></dd>
+assay in experiment 2 to be transformed.. (Default: <code>"counts"</code>)</p></dd>
 
 
 <dt id="arg-assay-name-">assay_name2<a class="anchor" aria-label="anchor" href="#arg-assay-name-"></a></dt>
@@ -336,8 +336,7 @@ faster solutions when running times are critical.</p>
 <span class="r-in"><span><span class="va">mae</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="transformAssay.html">transformAssay</a></span><span class="op">(</span><span class="va">mae</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>, method <span class="op">=</span> <span class="st">"rclr"</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Calculate cross-correlations</span></span></span>
-<span class="r-in"><span><span class="va">result</span> <span class="op">&lt;-</span> <span class="fu">getCrossAssociation</span><span class="op">(</span></span></span>
-<span class="r-in"><span>    <span class="va">mae</span>, method <span class="op">=</span> <span class="st">"pearson"</span>, assay.type1 <span class="op">=</span> <span class="st">"counts"</span>, assay.type2 <span class="op">=</span> <span class="st">"nmr"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">result</span> <span class="op">&lt;-</span> <span class="fu">getCrossAssociation</span><span class="op">(</span><span class="va">mae</span>, method <span class="op">=</span> <span class="st">"pearson"</span>, assay.type2 <span class="op">=</span> <span class="st">"nmr"</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating correlations...</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> altexp1: -, altexp2: -, assay.type1: counts, col.var1: -, dimred1: -, assay.type2: nmr, col.var2: -, dimred2: -</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> by: 1, function: stats::cor, method: pearson, test.signif: FALSE, p.adj.method: -, paired: FALSE, show.warnings: TRUE</span>
@@ -389,7 +388,6 @@ faster solutions when running times are critical.</p>
 <span class="r-in"><span><span class="co"># have any correlations whose p-value is lower than the threshold</span></span></span>
 <span class="r-in"><span><span class="va">result</span> <span class="op">&lt;-</span> <span class="fu">getCrossAssociation</span><span class="op">(</span></span></span>
 <span class="r-in"><span>    <span class="va">mae</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>, experiment2 <span class="op">=</span> <span class="va">mae</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>, method <span class="op">=</span> <span class="st">"pearson"</span>,</span></span>
-<span class="r-in"><span>    assay.type1 <span class="op">=</span> <span class="st">"counts"</span>, assay.type2 <span class="op">=</span> <span class="st">"counts"</span>,</span></span>
 <span class="r-in"><span>    filter.self.cor <span class="op">=</span> <span class="cn">TRUE</span>, p.adj.threshold <span class="op">=</span> <span class="fl">0.05</span>, test.signif <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating correlations...</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> altexp1: -, altexp2: -, assay.type1: counts, col.var1: -, dimred1: -, assay.type2: counts, col.var2: -, dimred2: -</span>
@@ -419,7 +417,6 @@ faster solutions when running times are critical.</p>
 <span class="r-in"><span><span class="co"># paired samples, you can use paired = TRUE.</span></span></span>
 <span class="r-in"><span><span class="va">result</span> <span class="op">&lt;-</span> <span class="fu">getCrossAssociation</span><span class="op">(</span></span></span>
 <span class="r-in"><span>    <span class="va">mae</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>, <span class="va">mae</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>, by <span class="op">=</span> <span class="fl">2</span>, paired <span class="op">=</span> <span class="cn">FALSE</span>,</span></span>
-<span class="r-in"><span>    assay.type1 <span class="op">=</span> <span class="st">"counts"</span>, assay.type2 <span class="op">=</span> <span class="st">"counts"</span>,</span></span>
 <span class="r-in"><span>    association.fun <span class="op">=</span> <span class="va">getDissimilarity</span>, method <span class="op">=</span> <span class="st">"bray"</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating correlations...</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> altexp1: -, altexp2: -, assay.type1: counts, col.var1: -, dimred1: -, assay.type2: counts, col.var2: -, dimred2: -</span>
@@ -444,8 +441,7 @@ faster solutions when running times are critical.</p>
 <span class="r-in"><span><span class="va">sample_size</span> <span class="op">&lt;-</span> <span class="fl">0.3</span></span></span>
 <span class="r-in"><span><span class="va">tse</span> <span class="op">&lt;-</span> <span class="va">mae</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span></span>
 <span class="r-in"><span><span class="va">tse_sub</span> <span class="op">&lt;-</span> <span class="va">tse</span><span class="op">[</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_len</a></span><span class="op">(</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">tse</span><span class="op">)</span> <span class="op">)</span>, <span class="va">sample_size</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">tse</span><span class="op">)</span> <span class="op">)</span>, <span class="op">]</span></span></span>
-<span class="r-in"><span><span class="va">result</span> <span class="op">&lt;-</span> <span class="fu">getCrossAssociation</span><span class="op">(</span></span></span>
-<span class="r-in"><span>    <span class="va">tse_sub</span>, assay.type1 <span class="op">=</span> <span class="st">"counts"</span>, assay.type2 <span class="op">=</span> <span class="st">"counts"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">result</span> <span class="op">&lt;-</span> <span class="fu">getCrossAssociation</span><span class="op">(</span><span class="va">tse_sub</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating correlations...</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> altexp1: -, altexp2: -, assay.type1: counts, col.var1: -, dimred1: -, assay.type2: counts, col.var2: -, dimred2: -</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> by: 1, function: stats::cor, method: kendall, test.signif: FALSE, p.adj.method: -, paired: FALSE, show.warnings: TRUE</span>

@@ -46,7 +46,7 @@ SummarizedExperiment."><!-- mathjax --><script src="https://cdnjs.cloudflare.com
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Perform mediation analysis</h1>
-    <small class="dont-index">Source: <a href="https://github.com/microbiome/mia/blob/corr_default_assay/R/AllGenerics.R" class="external-link"><code>R/AllGenerics.R</code></a>, <a href="https://github.com/microbiome/mia/blob/corr_default_assay/R/mediate.R" class="external-link"><code>R/mediate.R</code></a></small>
+    <small class="dont-index">Source: <a href="https://github.com/microbiome/mia/blob/fix_mediation/R/AllGenerics.R" class="external-link"><code>R/AllGenerics.R</code></a>, <a href="https://github.com/microbiome/mia/blob/fix_mediation/R/mediate.R" class="external-link"><code>R/mediate.R</code></a></small>
     <div class="hidden name"><code>getMediation.Rd</code></div>
     </div>
 
@@ -73,7 +73,7 @@ SummarizedExperiment."><!-- mathjax --><script src="https://cdnjs.cloudflare.com
 <span>  family <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/family.html" class="external-link">gaussian</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  covariates <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  p.adj.method <span class="op">=</span> <span class="st">"holm"</span>,</span>
-<span>  add.metadata <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  add.metadata <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  verbose <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span>
@@ -89,7 +89,7 @@ SummarizedExperiment."><!-- mathjax --><script src="https://cdnjs.cloudflare.com
 <span>  family <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/family.html" class="external-link">gaussian</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  covariates <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  p.adj.method <span class="op">=</span> <span class="st">"holm"</span>,</span>
-<span>  add.metadata <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  add.metadata <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  verbose <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
@@ -159,7 +159,7 @@ of p-values. Passed to <code>p.adjust</code> function.
 
 <dt id="arg-add-metadata">add.metadata<a class="anchor" aria-label="anchor" href="#arg-add-metadata"></a></dt>
 <dd><p><code>Logical scalar</code>. Should the model metadata be
-returned. (Default: <code>FALSE</code>)</p></dd>
+returned. (Default: <code>TRUE</code>)</p></dd>
 
 
 <dt id="arg-verbose">verbose<a class="anchor" aria-label="anchor" href="#arg-verbose"></a></dt>
@@ -174,7 +174,7 @@ effect sizes for the ACMEs and ADEs of every mediator given as input, whereas
 <code>addMediation</code> returns an updated
 <code><a href="https://rdrr.io/pkg/SummarizedExperiment/man/SummarizedExperiment-class.html" class="external-link">SummarizedExperiment</a></code>
 instance with the same <code>data.frame</code> stored in the metadata as
-"mediation". Its columns include:</p>
+"mediation" or as specified in the <code>name</code> argument. Its columns include:</p>
 <dl><dt>Mediator</dt>
 <dd><p>the mediator variable</p></dd>
 
@@ -191,7 +191,10 @@ instance with the same <code>data.frame</code> stored in the metadata as
 <dd><p>the adjusted p-value for the ADE estimate</p></dd>
 
 
-</dl></div>
+</dl><p>The original output of <code><a href="https://rdrr.io/pkg/mediation/man/mediate.html" class="external-link">mediate</a></code> for each
+analysed mediator is stored as the "model metadata" attribute of the
+resulting <code>data.frame</code> and can be accessed via the <code>attr</code> function.</p>
+    </div>
     <div id="details">
     <h2>Details</h2>
     <p>This wrapper of <code><a href="https://rdrr.io/pkg/mediation/man/mediate.html" class="external-link">mediate</a></code> for
@@ -208,6 +211,7 @@ Importantly, those three arguments are mutually exclusive.</p>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span></span>
 <span class="r-in"><span><span class="co"># Import libraries</span></span></span>
 <span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/microbiome/mia" class="external-link">mia</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">miaViz</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="http://bioconductor.org/packages/scater/" class="external-link">scater</a></span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Load dataset</span></span></span>
@@ -228,11 +232,10 @@ Importantly, those three arguments are mutually exclusive.</p>
 <span class="r-in"><span>                       covariates <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"sex"</span>, <span class="st">"age"</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>                       treat.value <span class="op">=</span> <span class="st">"Scandinavia"</span>,</span></span>
 <span class="r-in"><span>                       control.value <span class="op">=</span> <span class="st">"CentralEurope"</span>,</span></span>
-<span class="r-in"><span>                       boot <span class="op">=</span> <span class="cn">TRUE</span>, sims <span class="op">=</span> <span class="fl">100</span>,</span></span>
-<span class="r-in"><span>                       add.metadata <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-in"><span>                       boot <span class="op">=</span> <span class="cn">TRUE</span>, sims <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span></span>
 <span class="r-in"><span> </span></span>
 <span class="r-in"><span> <span class="co"># Visualise model statistics for 1st mediator</span></span></span>
-<span class="r-in"><span> <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">med_df</span>, <span class="st">"metadata"</span><span class="op">)</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span></span>
+<span class="r-in"><span> <span class="fu">plotMediation</span><span class="op">(</span><span class="va">med_df</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Apply clr transformation to counts assay</span></span></span>
 <span class="r-in"><span><span class="va">tse</span> <span class="op">&lt;-</span> <span class="fu"><a href="transformAssay.html">transformAssay</a></span><span class="op">(</span><span class="va">tse</span>,</span></span>
@@ -274,6 +277,10 @@ Importantly, those three arguments are mutually exclusive.</p>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Show results for first 5 mediators</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">metadata</span><span class="op">(</span><span class="va">tse</span><span class="op">)</span><span class="op">$</span><span class="va">reddim_mediation</span>, <span class="fl">5</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Access model metadata</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="fu">metadata</span><span class="op">(</span><span class="va">tse</span><span class="op">)</span><span class="op">$</span><span class="va">reddim_mediation</span>, <span class="st">"model metadata"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
