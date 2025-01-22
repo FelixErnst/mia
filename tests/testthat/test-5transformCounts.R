@@ -408,7 +408,7 @@ test_that("transformAssay", {
         expect_equal(assay(test, "relabundance"), assay(ref, "relabundance"))
 
         # Check that philt transformation works
-        skip_if_not(require("philr", quietly = TRUE))
+        skip_if_not_installed("philr")
         data("GlobalPatterns")
         tse <- GlobalPatterns
         # The default is columns, and colTree is not present
