@@ -123,6 +123,7 @@ Importantly, those three arguments are mutually exclusive.
 \dontrun{
 # Import libraries
 library(mia)
+library(miaViz)
 library(scater)
 
 # Load dataset
@@ -188,9 +189,10 @@ tse <- addMediation(tse, name = "reddim_mediation",
 
 # Show results for first 5 mediators
 head(metadata(tse)$reddim_mediation, 5)
-}
+
 
 # Access model metadata
 attr(metadata(tse)$reddim_mediation, "model metadata")
+}
 
 }
