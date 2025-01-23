@@ -74,12 +74,12 @@
 #'   \item{ACME_pval}{the adjusted p-value for the ACME estimate}
 #'   \item{ADE_pval}{the adjusted p-value for the ADE estimate}
 #'   \item{Total_pval}{the adjusted p-value for the Total Effect estimate}
-#'   \item{ACME_CI_lower}{the 2.5% CI for the ACME estimate}
-#'   \item{ACME_CI_upper}{the 2.5% CI for the ACME estimate}
-#'   \item{ADE_CI_lower}{the 2.5% CI for the ADE estimate}
-#'   \item{ADE_CI_upper}{the 97.5% CI for the ADE estimate}
-#'   \item{Total_CI_lower}{the 2.5 CI for the Total Effect estimate}
-#'   \item{Total_CI_upper}{the 97.5 CI for the Total Effect estimate}
+#'   \item{ACME_lower}{the 2.5% CI for the ACME estimate}
+#'   \item{ACME_upper}{the 2.5% CI for the ACME estimate}
+#'   \item{ADE_lower}{the 2.5% CI for the ADE estimate}
+#'   \item{ADE_upper}{the 97.5% CI for the ADE estimate}
+#'   \item{Total_lower}{the 2.5 CI for the Total Effect estimate}
+#'   \item{Total_upper}{the 97.5 CI for the Total Effect estimate}
 #' }
 #' 
 #' The original output of \code{\link[mediation:mediate]{mediate}} for each
@@ -456,17 +456,17 @@ setMethod("getMediation", signature = c(x = "SummarizedExperiment"),
         p.adjust, method = p.adj.method
     )
     
-    # Find CI columns
-    ci_cols <- colnames(med_df)[endsWith(colnames(med_df), "CI")]
-    for( col in ci_cols ){
+    estimates <- c("ACME", "ADE", "Total")
+    for( est in estimates ){
         # Retrieve CI columns
-        ci_list <- unlist(med_df[ , col])
+        ci_col <- paste(est, "CI", sep = "_")
+        ci_list <- unlist(med_df[ , ci_col])
         upper_cond <- seq_len(length(ci_list)) %% 2 == 0
         names(ci_list) <- NULL
         # Split lower and upper CIs
-        med_df[ , paste(col, "lower", sep = "_")] <- ci_list[!upper_cond]
-        med_df[ , paste(col, "upper", sep = "_")] <- ci_list[upper_cond]
-        med_df[ , col] <- NULL
+        med_df[ , paste(est, "lower", sep = "_")] <- ci_list[!upper_cond]
+        med_df[ , paste(est, "upper", sep = "_")] <- ci_list[upper_cond]
+        med_df[ , ci_col] <- NULL
     }
     
     if( add.metadata ){

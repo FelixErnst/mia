@@ -105,12 +105,12 @@ instance with the same \code{data.frame} stored in the metadata as
 \item{ACME_pval}{the adjusted p-value for the ACME estimate}
 \item{ADE_pval}{the adjusted p-value for the ADE estimate}
 \item{Total_pval}{the adjusted p-value for the Total Effect estimate}
-\item{ACME_CI_lower}{the 2.5\% CI for the ACME estimate}
-\item{ACME_CI_upper}{the 2.5\% CI for the ACME estimate}
-\item{ADE_CI_lower}{the 2.5\% CI for the ADE estimate}
-\item{ADE_CI_upper}{the 97.5\% CI for the ADE estimate}
-\item{Total_CI_lower}{the 2.5 CI for the Total Effect estimate}
-\item{Total_CI_upper}{the 97.5 CI for the Total Effect estimate}
+\item{ACME_lower}{the 2.5\% CI for the ACME estimate}
+\item{ACME_upper}{the 2.5\% CI for the ACME estimate}
+\item{ADE_lower}{the 2.5\% CI for the ADE estimate}
+\item{ADE_upper}{the 97.5\% CI for the ADE estimate}
+\item{Total_lower}{the 2.5 CI for the Total Effect estimate}
+\item{Total_upper}{the 97.5 CI for the Total Effect estimate}
 }
 
 The original output of \code{\link[mediation:mediate]{mediate}} for each
