@@ -38,6 +38,7 @@ getMediation(x, ...)
   covariates = NULL,
   p.adj.method = "holm",
   add.metadata = TRUE,
+  sort = FALSE,
   verbose = TRUE,
   ...
 )
@@ -84,6 +85,9 @@ returned. (Default: \code{TRUE})}
 
 \item{verbose}{\code{Logical scalar}. Should execution messages be printed.
 (Default: \code{TRUE})}
+
+\item{sort}{\code{Logical scalar}. Should the results be sorted by decreasing
+significance in terms of ACME_pval. (Default: \code{FALSE})}
 }
 \value{
 \code{getMediation} returns a \code{data.frame} of adjusted p-values and
@@ -97,12 +101,20 @@ instance with the same \code{data.frame} stored in the metadata as
 \item{Mediator}{the mediator variable}
 \item{ACME_estimate}{the Average Causal Mediation Effect (ACME) estimate}
 \item{ADE_estimate}{the Average Direct Effect (ADE) estimate}
+\item{Total_estimate}{the Total Effect estimate}
 \item{ACME_pval}{the adjusted p-value for the ACME estimate}
 \item{ADE_pval}{the adjusted p-value for the ADE estimate}
+\item{Total_pval}{the adjusted p-value for the Total Effect estimate}
+\item{ACME_CI_lower}{the 2.5\% CI for the ACME estimate}
+\item{ACME_CI_upper}{the 2.5\% CI for the ACME estimate}
+\item{ADE_CI_lower}{the 2.5\% CI for the ADE estimate}
+\item{ADE_CI_upper}{the 97.5\% CI for the ADE estimate}
+\item{Total_CI_lower}{the 2.5 CI for the Total Effect estimate}
+\item{Total_CI_upper}{the 97.5 CI for the Total Effect estimate}
 }
 
 The original output of \code{\link[mediation:mediate]{mediate}} for each
-analysed mediator is stored as the "model metadata" attribute of the
+analysed mediator is stored as the "model_metadata" attribute of the
 resulting \code{data.frame} and can be accessed via the \code{attr} function.
 }
 \description{
@@ -190,9 +202,8 @@ tse <- addMediation(tse, name = "reddim_mediation",
 # Show results for first 5 mediators
 head(metadata(tse)$reddim_mediation, 5)
 
-
 # Access model metadata
-attr(metadata(tse)$reddim_mediation, "model metadata")
+attr(metadata(tse)$reddim_mediation, "model_metadata")
 }
 
 }

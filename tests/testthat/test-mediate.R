@@ -69,10 +69,10 @@ test_that("getMediation", {
                      treat.value = "Scandinavia", control.value = "CentralEurope",
                      boot = TRUE, sims = 1)
   
-  expect_equal(attr(med_df, "model metadata")[[1, "d.avg"]], med_out$d.avg)
-  expect_equal(attr(med_df, "model metadata")[[1, "d.avg.p"]], med_out$d.avg.p)
-  expect_equal(attr(med_df, "model metadata")[[1, "z.avg"]], med_out$z.avg)
-  expect_equal(attr(med_df, "model metadata")[[1, "z.avg.p"]], med_out$z.avg.p)
+  expect_equal(attr(med_df, "model_metadata")[[1]][["d.avg"]], med_out$d.avg)
+  expect_equal(attr(med_df, "model_metadata")[[1]][["d.avg.p"]], med_out$d.avg.p)
+  expect_equal(attr(med_df, "model_metadata")[[1]][["z.avg"]], med_out$z.avg)
+  expect_equal(attr(med_df, "model_metadata")[[1]][["z.avg.p"]], med_out$z.avg.p)
   
   ### Batch 3: check output format and dimensionality with respect to SE ###
   med_df <- getMediation(tse, outcome = "bmi_group", treatment = "nationality", assay.type = "counts",
@@ -81,6 +81,9 @@ test_that("getMediation", {
   
   expect_named(tse, med_df[["Mediator"]])
   
-  expect_named(med_df, c("Mediator", "ACME_estimate", "ADE_estimate", "ACME_pval", "ADE_pval"))
+  expect_named(med_df, c("Mediator", "ACME_estimate", "ADE_estimate",
+      "Total_estimate", "ACME_pval", "ADE_pval", "Total_pval", "ACME_CI_lower",
+      "ACME_CI_upper", "ADE_CI_lower", "ADE_CI_upper", "Total_CI_lower",
+      "Total_CI_upper"))
 
 })

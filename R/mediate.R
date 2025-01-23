@@ -35,7 +35,10 @@
 #'   (Default: \code{"holm"})
 #' 
 #' @param add.metadata \code{Logical scalar}. Should the model metadata be
-#' returned. (Default: \code{TRUE})
+#'   returned. (Default: \code{TRUE})
+#' 
+#' @param sort \code{Logical scalar}. Should the results be sorted by decreasing
+#'   significance in terms of ACME_pval. (Default: \code{FALSE})
 #' 
 #' @param verbose \code{Logical scalar}. Should execution messages be printed.
 #'   (Default: \code{TRUE})
@@ -67,12 +70,20 @@
 #'   \item{Mediator}{the mediator variable}
 #'   \item{ACME_estimate}{the Average Causal Mediation Effect (ACME) estimate}
 #'   \item{ADE_estimate}{the Average Direct Effect (ADE) estimate}
+#'   \item{Total_estimate}{the Total Effect estimate}
 #'   \item{ACME_pval}{the adjusted p-value for the ACME estimate}
 #'   \item{ADE_pval}{the adjusted p-value for the ADE estimate}
+#'   \item{Total_pval}{the adjusted p-value for the Total Effect estimate}
+#'   \item{ACME_CI_lower}{the 2.5% CI for the ACME estimate}
+#'   \item{ACME_CI_upper}{the 2.5% CI for the ACME estimate}
+#'   \item{ADE_CI_lower}{the 2.5% CI for the ADE estimate}
+#'   \item{ADE_CI_upper}{the 97.5% CI for the ADE estimate}
+#'   \item{Total_CI_lower}{the 2.5 CI for the Total Effect estimate}
+#'   \item{Total_CI_upper}{the 97.5 CI for the Total Effect estimate}
 #' }
 #' 
 #' The original output of \code{\link[mediation:mediate]{mediate}} for each
-#' analysed mediator is stored as the "model metadata" attribute of the
+#' analysed mediator is stored as the "model_metadata" attribute of the
 #' resulting \code{data.frame} and can be accessed via the \code{attr} function.
 #'
 #' @name getMediation
@@ -148,9 +159,8 @@
 #' # Show results for first 5 mediators
 #' head(metadata(tse)$reddim_mediation, 5)
 #' 
-#' 
 #' # Access model metadata
-#' attr(metadata(tse)$reddim_mediation, "model metadata")
+#' attr(metadata(tse)$reddim_mediation, "model_metadata")
 #' }
 #' 
 NULL
@@ -184,7 +194,7 @@ setMethod("getMediation", signature = c(x = "SummarizedExperiment"),
         function(x, outcome, treatment,
             mediator = NULL, assay.type = NULL, dimred = NULL,
             family = gaussian(), covariates = NULL, p.adj.method = "holm",
-            add.metadata = TRUE, verbose = TRUE, ...) {
+            add.metadata = TRUE, sort = FALSE, verbose = TRUE, ...) {
         ###################### Input check ########################
         if( !outcome %in% names(colData(x)) ){
             stop(outcome, " not found in colData(x).", call. = FALSE)
@@ -203,7 +213,7 @@ setMethod("getMediation", signature = c(x = "SummarizedExperiment"),
         }
         
         # Check that arguments can be passed to mediate and filter samples
-        x <- .check.mediate.args(
+        x <- .check_mediate_args(
             x, outcome, treatment, mediator, covariates, verbose, ...
         )
         
@@ -250,14 +260,11 @@ setMethod("getMediation", signature = c(x = "SummarizedExperiment"),
             mediators <- rownames(mat)
         }
         
-        # Create template list of results
-        results <- list(
-            Mediator = c(), ACME_estimate = c(), ADE_estimate = c(),
-            ACME_pval = c(), ADE_pval = c(), Model = list()
-        )
-        
+        # Create template list of models
+        models <- list()
         # Set initial index  
         i <- 0
+        
         for( mediator in mediators ){
             # Update index 
             i <- i + 1
@@ -272,18 +279,22 @@ setMethod("getMediation", signature = c(x = "SummarizedExperiment"),
                 family = family, mat = mat,
                 covariates = covariates, ...
             )
-            # Update list of results
-            results <- .update.results(results, med_out, mediator)
+            # Update list of models
+            models <- c(models, list(med_out))
         }
+        
+        # Name models by mediators
+        names(models) <- mediators
         # Combine results into dataframe
-        med_df <- .make.output(results, p.adj.method, add.metadata)
+        med_df <- .make_output(models, p.adj.method, add.metadata, sort)
+        
         return(med_df)
     }
 )
 
 # Check that arguments can be passed to mediate and remove unused samples
 #' @importFrom stats na.omit
-.check.mediate.args <- function(
+.check_mediate_args <- function(
     x, outcome, treatment, mediator, covariates, verbose = TRUE, ...) {
     
     # Create dataframe from selected columns of colData
@@ -352,6 +363,7 @@ setMethod("getMediation", signature = c(x = "SummarizedExperiment"),
 #' @importFrom stats lm formula glm
 .run_mediate <- function(x, outcome, treatment, mediator = NULL, mat = NULL,
                         family = gaussian(), covariates = NULL, ...) {
+
     # Create initial dataframe with outcome and treatment variables
     df <- data.frame(
         Outcome = colData(x)[[outcome]], Treatment = colData(x)[[treatment]])
@@ -397,69 +409,22 @@ setMethod("getMediation", signature = c(x = "SummarizedExperiment"),
         treat = "Treatment", mediator = "Mediator",
         covariates = covariates, ...
     )
+
     return(med_out)
 }
 
-
-# Update list of results
-.update.results <- function(results, med_out, mediator) {
-    # Update model variables
-    results[["Mediator"]] <- c(results[["Mediator"]], mediator)
-    # Update stats of ACME (average causal mediation effect)
-    results[["ACME_estimate"]] <- c(results[["ACME_estimate"]], med_out$d.avg)
-    results[["ACME_pval"]] <- c(results[["ACME_pval"]], med_out$d.avg.p)
-    # Update stats of ADE (average direct effect)
-    results[["ADE_estimate"]] <- c(results[["ADE_estimate"]], med_out$z.avg)
-    results[["ADE_pval"]] <- c(results[["ADE_pval"]], med_out$z.avg.p)
-    # Add current model to metadata
-    results[["Model"]][[length(results[["Model"]]) + 1]] <- med_out
-    return(results)
-}
-
 # Combine results into output dataframe
-.make.output <- function(results, p.adj.method, add.metadata) {
-    
-    # Create dataframe with model variables, effect sizes and p-values
-    med_df <- do.call(data.frame, results[seq_len(length(results) - 1)])
-    
-    # Compute adjusted p-values and add them to dataframe
-    med_df[["ACME_pval"]] <- p.adjust(
-        med_df[["ACME_pval"]],
-        method = p.adj.method
-    )
-    med_df[["ADE_pval"]] <- p.adjust(
-        med_df[["ADE_pval"]],
-        method = p.adj.method
-    )
-    
-    if( add.metadata ){
-        # models for every mediator are saved into the metadata attribute
-        med_df <- .add.model.metadata(med_df, results[["Model"]])
-    }
-    
-    # Order output dataframe by ACME p-values
-    med_df <- med_df[order(med_df[["ACME_pval"]]), ]
-    
-    return(med_df)
-}
-
-# Organise model metadata into data.frame
-.add.model.metadata <- function(med_df, models) {
-  
+.make_output <- function(models, p.adj.method, add.metadata, sort) {
     # Create empty data.frame to store model metadata
-    metadata_df <- data.frame(matrix(nrow = nrow(med_df), ncol = 56))
-  
+    med_df <- data.frame(matrix(nrow = length(models), ncol = 56))
     # Use mediators and model properties as row and column names, respectively
-    rownames(metadata_df) <- med_df[["Mediator"]]
-    colnames(metadata_df) <- names(models[[1]])
-  
+    rownames(med_df) <- names(models)
+    colnames(med_df) <- names(models[[1]])
     # Iterate over mediators or rows
     for( row in seq_len(length(models)) ){
         # Iterate over model metadata or columns
-        for( col in colnames(metadata_df) ){
-      
+        for( col in colnames(med_df) ){
             entry <- models[[row]][[col]]
-            
             # If entry is null, replace with empty string
             if( is.null(entry) ){
                 entry <- ""
@@ -468,14 +433,50 @@ setMethod("getMediation", signature = c(x = "SummarizedExperiment"),
             if( length(entry) > 1){
                 entry <- list(entry)
             }
-            
             # Store entry into data.frame
-            metadata_df[[row, col]] <- I(entry)
+            med_df[[row, col]] <- I(entry)
         }
     }
-  
-    # Add metadata to output as an attribute
-    attr(med_df, "model metadata") <- metadata_df
-  
+    
+    # Convert rownames to column
+    med_df["Mediator"] <- rownames(med_df)
+    rownames(med_df) <- NULL
+    # Select columns to keep
+    med_df <- med_df[ , c("Mediator", "d.avg", "z.avg", "tau.coef", "d.avg.p",
+        "z.avg.p", "tau.p", "d.avg.ci", "z.avg.ci", "tau.ci")]
+    # Rename columns
+    colnames(med_df) <- c("Mediator", "ACME_estimate", "ADE_estimate",
+        "Total_estimate", "ACME_pval", "ADE_pval", "Total_pval", "ACME_CI",
+        "ADE_CI", "Total_CI")
+
+    # Compute adjusted p-values and add them to dataframe
+    pval_cols <- endsWith(colnames(med_df), "pval")
+    med_df[ , pval_cols] <- apply(
+        med_df[ , pval_cols], MARGIN = 2,
+        p.adjust, method = p.adj.method
+    )
+    
+    # Find CI columns
+    ci_cols <- colnames(med_df)[endsWith(colnames(med_df), "CI")]
+    for( col in ci_cols ){
+        # Retrieve CI columns
+        ci_list <- unlist(med_df[ , col])
+        upper_cond <- seq_len(length(ci_list)) %% 2 == 0
+        names(ci_list) <- NULL
+        # Split lower and upper CIs
+        med_df[ , paste(col, "lower", sep = "_")] <- ci_list[!upper_cond]
+        med_df[ , paste(col, "upper", sep = "_")] <- ci_list[upper_cond]
+        med_df[ , col] <- NULL
+    }
+    
+    if( add.metadata ){
+        # Store model for each mediator into the model_metadata attribute
+        attr(med_df, "model_metadata") <- models
+    }
+    if( sort ){
+        # Order output dataframe by ACME p-values
+        med_df <- med_df[order(med_df[["ACME_pval"]]), ]
+    }
+    
     return(med_df)
 }
