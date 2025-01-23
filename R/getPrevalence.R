@@ -1,7 +1,7 @@
 #' Calculation prevalence information for features across samples
 #'
 #' These functions calculate the population prevalence for taxonomic ranks in a
-#' \code{\link{SummarizedExperiment-class}} object.
+#' \code{\link[SummarizedExperiment]{SummarizedExperiment}} object.
 #'
 #' @inheritParams getDissimilarity
 #'

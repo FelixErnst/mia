@@ -128,7 +128,8 @@ Perform non-metric multi-dimensional scaling (nMDS) on samples, based on the
 data in a \code{SingleCellExperiment} object.
 }
 \details{
-For \code{addNMDS} a \linkS4class{SingleCellExperiment}
+For \code{addNMDS} a
+\code{\link[TreeSummarizedExperiment]{TreeSummarizedExperiment}}
 
 Either \code{\link[MASS:isoMDS]{MASS::isoMDS}} or
 \code{\link[vegan:monoMDS]{vegan::monoMDS}} are used internally to compute

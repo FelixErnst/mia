@@ -1,42 +1,41 @@
 #' Clustering wrapper
 #'
-#' This function returns a \code{SummarizedExperiment} with clustering 
+#' This function returns a \code{SummarizedExperiment} with clustering
 #'   information in its colData or rowData
 #'
 #' @param x A
 #' \code{\link[SummarizedExperiment:SummarizedExperiment-class]{SummarizedExperiment}}
 #' object.
-#' 
+#'
 #' @param by \code{Character scalar}. Determines if association is calculated
 #'   row-wise / for features ('rows') or column-wise / for samples ('cols').
 #'   Must be \code{'rows'} or \code{'cols'}.
-#'   
+#'
 #' @param MARGIN Deprecated. Use \code{by} instead.
-#'   
-#' @param clust.col \code{Character scalar}. Indicates the name of the 
+#'
+#' @param clust.col \code{Character scalar}. Indicates the name of the
 #'   \code{rowData} (or \code{colData}) where the data will be stored.
 #'   (Default: \code{"clusters"})
-#'   
+#'
 #' @param ... Additional parameters to use altExps for example
 #' @inheritParams bluster::clusterRows
 #' @inheritParams runDMN
 #' @inheritParams transformAssay
-#'   
-#'   
+#'
+#'
 #' @details
-#' This is a wrapper for the \code{clusterRows} function from the 
-#' \link[https://bioconductor.org/packages/release/bioc/html/bluster.html]{bluster} 
-#' package.
+#' This is a wrapper for the \code{clusterRows} function from the
+#' \link[bluster]{bluster} package.
 #'
 #' When setting \code{full = TRUE}, the clustering information will be stored in
 #' the metadata of the object.
-#' 
+#'
 #' By default, clustering is done on the features.
 #'
 #' @return
 #' \code{addCluster} returns an object of the same type as the \code{x}
 #' parameter with clustering information named \code{clusters} stored in
-#' \code{colData} or \code{rowData}. 
+#' \code{colData} or \code{rowData}.
 #'
 #' @name addCluster
 #' @export
@@ -48,15 +47,15 @@
 #'
 #' # Cluster on rows using Kmeans
 #' tse <- addCluster(tse, KmeansParam(centers = 3))
-#' 
+#'
 #' # Clustering done on the samples using Hclust
-#' tse <- addCluster(tse, 
-#'                by = "samples", 
+#' tse <- addCluster(tse,
+#'                by = "samples",
 #'                HclustParam(metric = "bray", dist.fun = vegan::vegdist))
-#' 
+#'
 #' # Getting the clusters
 #' colData(tse)$clusters
-#' 
+#'
 NULL
 
 #' @rdname addCluster
@@ -64,8 +63,8 @@ NULL
 #' @importFrom bluster clusterRows
 setMethod("addCluster", signature = c(x = "SummarizedExperiment"),
     function(
-            x, BLUSPARAM, assay.type = assay_name, 
-            assay_name = "counts", by = MARGIN, MARGIN = "rows", full = FALSE, 
+            x, BLUSPARAM, assay.type = assay_name,
+            assay_name = "counts", by = MARGIN, MARGIN = "rows", full = FALSE,
             name = "clusters", clust.col = "clusters", ...) {
         .require_package("bluster")
         # Checking parameters

@@ -3,8 +3,9 @@
 #' @inheritParams rarefyAssay
 #' @inheritParams getDominant
 #'
-#' @param y a \code{\link{SummarizedExperiment}} object when \code{x} is a
-#' \code{\link{SummarizedExperiment}} object. Disabled when \code{x} is a list.
+#' @param y a \code{\link[SummarizedExperiment]{SummarizedExperiment}} object
+#' when \code{x} is a \code{\link[SummarizedExperiment]{SummarizedExperiment}}
+#' object. Disabled when \code{x} is a list.
 #'
 #' @param join \code{Character scalar}. A value for selecting the joining
 #' method. Must be 'full', 'inner', 'left', or 'right'. 'left' and 'right' are

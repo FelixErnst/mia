@@ -1,11 +1,11 @@
 #' Estimate divergence
 #'
 #' Estimate divergence against a given reference sample.
-#' 
+#'
 #' @inheritParams addDissimilarity
-#' 
-#' @param x a \code{\link{SummarizedExperiment}} object.
-#'   
+#'
+#' @param x a \code{\link[SummarizedExperiment]{SummarizedExperiment}} object.
+#'
 #' @param assay_name Deprecated. Use \code{assay.type} instead.
 #'
 #' @param reference \code{Character scalar}. A column name from
@@ -20,9 +20,10 @@
 #'   values are used to calculate divergence instead of the assay. Can be
 #'   disabled with \code{NULL}. (Default: \code{NULL})
 #' }
-#' 
-#' @return \code{x} with additional \code{\link{colData}} named \code{name}
-#' 
+#'
+#' @return \code{x} with additional
+#' \code{\link[SummarizedExperiment:colData]{colData}} named \code{name}
+#'
 #' @details
 #'
 #' Microbiota divergence (heterogeneity / spread) within a given sample
@@ -30,43 +31,43 @@
 #' diversity with respect to a given reference sample.
 #'
 #' The calculation makes use of the function \code{getDissimilarity()}. The
-#' divergence 
-#' measure is sensitive to sample size. Subsampling or bootstrapping can be 
+#' divergence
+#' measure is sensitive to sample size. Subsampling or bootstrapping can be
 #' applied to equalize sample sizes between comparisons.
-#' 
+#'
 #' @seealso
 #' \itemize{
 #'   \item \code{\link[=addAlpha]{addAlpha}}
 #'   \item \code{\link[=addDissimilarity]{addDissimilarity}}
 #'   \item \code{\link[scater:plotColData]{plotColData}}
 #' }
-#' 
+#'
 #' @name addDivergence
 #' @export
-#' 
+#'
 #' @examples
 #' data(GlobalPatterns)
 #' tse <- GlobalPatterns
-#' 
+#'
 #' # By default, reference is median of all samples. The name of column where
-#' # results is "divergence" by default, but it can be specified. 
+#' # results is "divergence" by default, but it can be specified.
 #' tse <- addDivergence(tse)
-#' 
-#' # The method that are used to calculate distance in divergence and 
+#'
+#' # The method that are used to calculate distance in divergence and
 #' # reference can be specified. Here, euclidean distance is used. Reference is
 #' # the first sample. It is recommended # to add reference to colData.
 #' tse[["reference"]] <- rep(colnames(tse)[[1]], ncol(tse))
 #' tse <- addDivergence(
-#'     tse, name = "divergence_first_sample", 
+#'     tse, name = "divergence_first_sample",
 #'     reference = "reference",
 #'     method = "euclidean")
-#' 
+#'
 #' # Here we compare samples to global mean
 #' tse <- addDivergence(tse, name = "divergence_average", reference = "mean")
-#' 
+#'
 #' # All three divergence results are stored in colData.
 #' colData(tse)
-#' 
+#'
 NULL
 
 #' @rdname addDivergence
@@ -91,7 +92,7 @@ setMethod("addDivergence", signature = c(x="SummarizedExperiment"),
 #' @export
 setMethod("getDivergence", signature = c(x="SummarizedExperiment"),
     function(
-        x, assay.type = assay_name, assay_name = "counts", 
+        x, assay.type = assay_name, assay_name = "counts",
         reference = "median", method = "bray", ...){
         ################### Input check ###############
         # Get altExp if user has specified
@@ -182,7 +183,7 @@ setMethod("getDivergence", signature = c(x="SummarizedExperiment"),
     } else{
         mat <- t(reducedDim(x, dimred))
     }
-    
+
     # If reference type is median or mean, calculate it
     if( ref_type %in% c("median", "mean") ){
         reference <- apply(mat, 1, ref_type)
@@ -231,7 +232,7 @@ setMethod("getDivergence", signature = c(x="SummarizedExperiment"),
         temp <- temp[[1]]
         return(temp)
     })
-    # Add values to data.frame that holds sample pairs 
+    # Add values to data.frame that holds sample pairs
     temp <- unlist(temp)
     reference[["value"]] <- temp
     return(reference)

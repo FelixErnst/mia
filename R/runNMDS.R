@@ -5,15 +5,16 @@
 #'
 #' @inheritParams getDominant
 #' @inheritParams runDPCoA
-#' 
+#'
 #' @details
-#'   For \code{addNMDS} a \linkS4class{SingleCellExperiment}
+#' For \code{addNMDS} a
+#' \code{\link[TreeSummarizedExperiment]{TreeSummarizedExperiment}}
 #'
 #' @param keep.dist \code{Logical scalar}. Indicates whether the \code{dist}
 #' object calculated by \code{FUN} should be stored as \sQuote{dist} attribute
-#' of the matrix returned/stored by \code{getNMDS}/ \code{addNMDS}. (Default: 
+#' of the matrix returned/stored by \code{getNMDS}/ \code{addNMDS}. (Default:
 #' \code{FALSE})
-#' 
+#'
 #' @param keep_dist Deprecated. Use \code{keep.dist} instead.
 #'
 #' @param FUN \code{Function} or \code{Character scalar}. A value with a
@@ -23,10 +24,10 @@
 #'   implementation, either \dQuote{isoMDS} for
 #'   \code{\link[MASS:isoMDS]{MASS::isoMDS}} or \dQuote{monoMDS} for
 #'   \code{\link[vegan:monoMDS]{vegan::monoMDS}}
-#'   
+#'
 #' @param nmdsFUN Deprecated. Use \code{nmds.fun} instead.
-#' 
-#' @param name \code{Character scalar}. A name for the column of the 
+#'
+#' @param name \code{Character scalar}. A name for the column of the
 #' \code{colData} where results will be stored. (Default: \code{"NMDS"})
 #'
 #' @param ... additional arguments to pass to \code{FUN} and
@@ -37,9 +38,9 @@
 #'
 #' @param ndimred \code{integer vector}. Specifies the dimensions to use if
 #'   dimred is specified.
-#' 
+#'
 #' @param n_dimred Deprecated. Use \code{ndimred} instead.
-#' 
+#'
 #' @param exprs_values Deprecated. Use \code{assay.type} instead.
 #'
 #' @return For \code{getNMDS}, a matrix is returned containing the MDS
@@ -125,10 +126,10 @@ NULL
 #' @importFrom stats cmdscale
 #' @importFrom vegan vegdist monoMDS
 .calculate_nmds <- function(
-        x, FUN = vegdist, 
+        x, FUN = vegdist,
         nmds.fun = nmdsFUN,
         nmdsFUN = c("isoMDS","monoMDS"),
-        ncomponents = 2, ntop = 500, subset.row = subset_row, 
+        ncomponents = 2, ntop = 500, subset.row = subset_row,
         subset_row = NULL, scale = FALSE, transposed = FALSE,
         keep.dist = keep_dist,
         keep_dist = FALSE, ...){
@@ -162,7 +163,7 @@ setMethod("getNMDS", "ANY", .calculate_nmds)
 #' @importFrom SummarizedExperiment assay
 #' @export
 setMethod("getNMDS", "SummarizedExperiment",
-    function(x, ..., assay.type = assay_name, assay_name = exprs_values, 
+    function(x, ..., assay.type = assay_name, assay_name = exprs_values,
         exprs_values = "counts", FUN = vegdist) {
         .calculate_nmds(assay(x, assay.type), FUN = FUN, ...)
     }
@@ -171,8 +172,8 @@ setMethod("getNMDS", "SummarizedExperiment",
 #' @rdname runNMDS
 #' @export
 setMethod("getNMDS", "SingleCellExperiment",
-    function(x, ..., assay.type = assay_name, assay_name = exprs_values, 
-            exprs_values = "counts", dimred = NULL, ndimred = n_dimred, 
+    function(x, ..., assay.type = assay_name, assay_name = exprs_values,
+            exprs_values = "counts", dimred = NULL, ndimred = n_dimred,
             n_dimred = NULL, FUN = vegdist){
         mat <- .get_mat_from_sce(
             x, exprs_values = assay.type, dimred = dimred, n_dimred = ndimred)

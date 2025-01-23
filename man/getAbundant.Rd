@@ -74,7 +74,7 @@ addAbundanceClass(x, ...)
 \S4method{addAbundanceClass}{SummarizedExperiment}(x, name = "abundance_class", ...)
 }
 \arguments{
-\item{x}{a \code{\link{SummarizedExperiment}} object.}
+\item{x}{a \code{\link[SummarizedExperiment]{SummarizedExperiment}} object.}
 
 \item{...}{additional arguments.}
 

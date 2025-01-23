@@ -99,8 +99,9 @@ Double Principal Correspondance analysis is made available via the
 \code{reducedDims} and are available for all the expected functions.
 }
 \details{
-For \code{addDPCoA} a \linkS4class{TreeSummarizedExperiment} containing the
-expression values as well as a \code{rowTree} to calculate \code{y} using
+For \code{addDPCoA} a
+\code{\link[TreeSummarizedExperiment]{TreeSummarizedExperiment}} containing
+the expression values as well as a \code{rowTree} to calculate \code{y} using
 \code{\link[ape:cophenetic.phylo]{cophenetic.phylo}}.
 
 In addition to the reduced dimension on the features, the reduced dimension

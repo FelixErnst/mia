@@ -165,3 +165,4 @@ Changes in version 1.15.x
 + Add functions for classifying taxa based on their average abundance
 + Add addPrevalence function that adds results of getPrevalence to rowData
 + Added support for dimred to getCrossAssociation
++ Add wrapper for PhILR transformation

@@ -406,6 +406,40 @@ test_that("transformAssay", {
         test <- transformAssay(tse, method = "relabundance", altexp = altExpNames(tse))
         test <- altExp(test, "Genus")
         expect_equal(assay(test, "relabundance"), assay(ref, "relabundance"))
+
+        # Check that philt transformation works
+        skip_if_not_installed("philr")
+        data("GlobalPatterns")
+        tse <- GlobalPatterns
+        # The default is columns, and colTree is not present
+        expect_error(transformAssay(tse, method = "philr", pseudocount = 1))
+        # There must not be 0s
+        expect_error(transformAssay(tse, method = "philr", MARGIN = 1))
+        # Give error if tree does not match
+        data("esophagus")
+        expect_error(transformAssay(
+            tse, method = "philr", MARGIN = 1, pseudocount = 1,
+            tree = rowTree(esophagus)))
+        tse <- agglomerateByRank(tse, rank = "Phylum")
+        tse <- transformAssay(
+            tse, method = "philr", pseudocount = 1, MARGIN = 1L,
+            part.weights = "enorm.x.gm.counts",
+            ilr.weights = "blw.sqrt") |>
+            expect_message()
+        expect_true( "philr" %in% altExpNames(tse) )
+        #
+        test <- philr::philr(
+            t(assay(tse, "counts")+1),
+            rowTree(tse),
+            part.weights = "enorm.x.gm.counts",
+            ilr.weights = "blw.sqrt"
+            ) |> t()
+        expect_equal(
+            assay(altExp(tse, "philr"), "philr"),
+            test,
+            check.attributes = FALSE
+        )
+        expect_equal(colData(tse), colData(altExp(tse, "philr")))
     }
 
     # TSE object

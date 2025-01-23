@@ -68,8 +68,9 @@ taxonomy information along with OTU number matches.
 \item{verbose}{\code{Logical scalar}. Choose whether to show
 messages. (Default: \code{TRUE})}
 
-\item{y}{a \code{\link{SummarizedExperiment}} object when \code{x} is a
-\code{\link{SummarizedExperiment}} object. Disabled when \code{x} is a list.}
+\item{y}{a \code{\link[SummarizedExperiment]{SummarizedExperiment}} object
+when \code{x} is a \code{\link[SummarizedExperiment]{SummarizedExperiment}}
+object. Disabled when \code{x} is a list.}
 }
 \value{
 A single \code{SummarizedExperiment} object.

@@ -5,7 +5,7 @@
 #'
 #' @inheritParams calculateDMN
 #'
-#' @param x a \code{\link{SummarizedExperiment}} object.
+#' @param x a \code{\link[SummarizedExperiment]{SummarizedExperiment}} object.
 #'
 #' @param assay.type \code{Character scalar}. Specifies the name of assay
 #'   used in calculation. (Default: \code{"counts"})

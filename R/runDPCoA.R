@@ -8,9 +8,10 @@
 #' @inheritParams getDissimilarity
 #'
 #' @details
-#'   For \code{addDPCoA} a \linkS4class{TreeSummarizedExperiment} containing the
-#'   expression values as well as a \code{rowTree} to calculate \code{y} using
-#'   \code{\link[ape:cophenetic.phylo]{cophenetic.phylo}}.
+#' For \code{addDPCoA} a
+#' \code{\link[TreeSummarizedExperiment]{TreeSummarizedExperiment}} containing
+#' the expression values as well as a \code{rowTree} to calculate \code{y} using
+#' \code{\link[ape:cophenetic.phylo]{cophenetic.phylo}}.
 #'
 #' @param y a \code{dist} or a symmetric \code{matrix} compatible with
 #'   \code{ade4:dpcoa}
@@ -26,24 +27,24 @@
 #' to use for dimensionality reduction. This can be a character vector of row
 #' names, an integer vector of row indices or a logical vector.
 #' (Default: \code{NULL})
-#' 
+#'
 #' @param subset_row Deprecated. Use \code{subset.row} instead.
 #'
 #' @param scale \code{Logical scalar}. Should the expression values be
 #' standardized? (Default: \code{FALSE})
-#' 
-#' @param name \code{Character scalar}. A name for the column of the 
+#'
+#' @param name \code{Character scalar}. A name for the column of the
 #'   \code{colData} where results will be stored. (Default: \code{"DPCoA"})
-#' 
+#'
 #' @param altexp \code{Character scalar} or \code{integer scalar}. Specifies an
 #'   alternative experiment containing the input data. (Default: \code{NULL})
-#'   
+#'
 #' @param exprs_values Deprecated. Use \code{assay.type} instead.
-#' 
+#'
 #' @param tree.name \code{Character scalar}. Specifies the name of the
-#'   tree to be included in the phyloseq object that is created, 
+#'   tree to be included in the phyloseq object that is created,
 #'   (Default: \code{"phylo"})
-#'   
+#'
 #' @param tree_name Deprecated. Use \code{tree.name} instead.
 #'
 #' @param ... Currently not used.
@@ -142,7 +143,7 @@ setMethod("getDPCoA", c("ANY","ANY"), .calculate_dpcoa)
 #' @importFrom ape cophenetic.phylo
 #' @rdname runDPCoA
 setMethod("getDPCoA", signature = c("TreeSummarizedExperiment","missing"),
-    function(x, ..., assay.type = assay_name, assay_name = exprs_values, 
+    function(x, ..., assay.type = assay_name, assay_name = exprs_values,
         exprs_values = "counts", tree.name = tree_name, tree_name = "phylo")
     {
         .require_package("ade4")
