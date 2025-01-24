@@ -141,7 +141,7 @@ library(scater)
 # Load dataset
 data(hitchip1006, package = "miaTime")
 tse <- hitchip1006
- 
+
 # Agglomerate features by family (merely to speed up execution)
 tse <- agglomerateByRank(tse, rank = "Phylum")
 # Convert BMI variable to numeric
@@ -157,7 +157,7 @@ med_df <- getMediation(tse,
                        treat.value = "Scandinavia",
                        control.value = "CentralEurope",
                        boot = TRUE, sims = 100)
- 
+
  # Visualise model statistics for 1st mediator
  plotMediation(med_df)
 
@@ -180,7 +180,7 @@ tse <- addMediation(tse, name = "assay_mediation",
 
 # Show results for first 5 mediators
 head(metadata(tse)$assay_mediation, 5)
- 
+
 # Perform ordination
 tse <- runMDS(tse, name = "MDS",
               method = "euclidean",

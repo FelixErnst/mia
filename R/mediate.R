@@ -422,8 +422,8 @@ setMethod("getMediation", signature = c(x = "SummarizedExperiment"),
     res <- do.call(rbind, models) |> as.data.frame()
     # Select certain data types
     res <- res |>
-        select(tidyr::starts_with(c("d.avg", "z.avg", "tau"))) |>
-        select(-tidyr::ends_with(c("sims")))
+        select(starts_with(c("d.avg", "z.avg", "tau"))) |>
+        select(-ends_with(c("sims")))
     # Get columns with scalar values and turn them into vector instead of list
     cols <- vapply(res, function(col) all(lengths(col) == 1L), logical(1L))
     res[, cols] <- lapply(res[, cols], unlist)
