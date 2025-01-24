@@ -204,7 +204,7 @@ setMethod("getDivergence", signature = c(x="SummarizedExperiment"),
         reference <- rep(reference, ncol(mat))
     }
     # Check that all reference samples are included in the data
-    if( !all(reference %in% colnames(mat) | is.na(reference)) ){
+    if( !all(unlist(reference) %in% colnames(mat) | is.na(unlist(reference))) ){
         stop("All reference samples must be included in the data.",
             call. = FALSE)
     }
@@ -214,12 +214,21 @@ setMethod("getDivergence", signature = c(x="SummarizedExperiment"),
 }
 
 # For each sample-pair, this function calculates dissimilarity.
-#' @importFrom dplyr mutate
+#' @importFrom dplyr group_by summarise
+#' @importFrom tidyr unnest
 .calc_divergence <- function(mat, reference, method, ...){
     # Create sample-pair data.frame
-    reference <- data.frame(sample = colnames(mat), reference = reference)
+    reference <- data.frame(
+        sample = colnames(mat), reference = I(unname(reference)))
+    # Check if there are multiple reference samples assigned for samples
+    if( any(lengths(reference[["reference"]]) > 1L) ){
+        reference <- reference |> unnest(cols = reference)
+        warning("Some samples are associated with multiple reference samples. ",
+                "In these cases, the reference time point includes multiple ",
+                "samples, and their average is used.", call. = FALSE)
+    }
     # Exclude NA values
-    reference <- reference[!is.na(reference$reference), ]
+    reference <- reference[!is.na(reference[["reference"]]), ]
     # For dissimilarity calculation, the samples must be in rows
     mat <- t(mat)
     # Loop through sample-pairs
@@ -235,5 +244,12 @@ setMethod("getDivergence", signature = c(x="SummarizedExperiment"),
     # Add values to data.frame that holds sample pairs
     temp <- unlist(temp)
     reference[["value"]] <- temp
+    # If there were multiple reference samples, take average
+    if( anyDuplicated(reference[["sample"]]) ){
+        reference <- reference |>
+            group_by(sample) |>
+            summarise(value = mean(value)) |>
+            as.data.frame()
+    }
     return(reference)
 }
