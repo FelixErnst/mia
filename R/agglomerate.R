@@ -454,7 +454,7 @@ setMethod("agglomerateByVariable", signature = c(x = "SummarizedExperiment"),
 # Agglomerate all rowTrees found in TreeSE object. Get tips that represent
 # rows and remove all others.
 #' @importFrom TreeSummarizedExperiment subsetByLeaf
-.agglomerate_trees <- function(x, by = 1, ...){
+.agglomerate_trees <- function(x, by = MARGIN, MARGIN = 1L, ...){
     # Get right functions based on direction
     tree_names_FUN <- switch(
         by, "1" = rowTreeNames, "2" = colTreeNames, stop("."))
