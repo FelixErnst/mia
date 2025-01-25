@@ -281,7 +281,6 @@ setMethod("splitOn", signature = c(x = "TreeSummarizedExperiment"),
         # Manipulate rowTree or not?
         if( update.tree ){
             # Update both colTree and rowTree
-            browser()
             for( direction in c(1, 2) ){
                 # If the returned value is a list, go through all of them
                 if( is(x, "SimpleList") ){

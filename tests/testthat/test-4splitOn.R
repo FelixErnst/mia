@@ -59,7 +59,7 @@ test_that("splitOn", {
     # Test that works
     x_sub <- x[1:100, 1:10]
     # Split
-    list <- splitOn(x_sub, "group", by = 1)
+    list <- splitOn(x_sub, "group", by = "features")
     # Unsplit
     unsplitted <- unsplitOn(list)
     # Order the data
