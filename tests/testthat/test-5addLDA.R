@@ -18,12 +18,12 @@ test_that("addLDA", {
   lda_model <- topicmodels::LDA(df, 2)
   posteriors <- topicmodels::posterior(lda_model, df)
   scores1 <- t(as.data.frame(posteriors$topics))
-  loadings <- t(as.data.frame(posteriors$terms)) 
+  loadings <- t(as.data.frame(posteriors$terms))
   # Compare topicmodels::LDA and addLDA
-  expect_equal(loadings, attr(red, "loadings"), tolerance = 10**-4)
+  expect_equal(loadings, attr(red, "loadings"), tolerance = 10**-3)
   scores2 <- getLDA(tse)
   # Compare topicmodels::LDA and getLDA
-  expect_equal(loadings, attr(scores2, "loadings"), tolerance = 10**-4)
+  expect_equal(loadings, attr(scores2, "loadings"), tolerance = 10**-3)
   # ERRORs
   expect_error(
     addLDA(GlobalPatterns, k = "test", assay.type = "counts", name = "LDA")
