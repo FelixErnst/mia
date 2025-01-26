@@ -68,18 +68,21 @@
 #'
 #' \describe{
 #'   \item{Mediator}{the mediator variable}
-#'   \item{ACME_estimate}{the Average Causal Mediation Effect (ACME) estimate}
-#'   \item{ADE_estimate}{the Average Direct Effect (ADE) estimate}
-#'   \item{Total_estimate}{the Total Effect estimate}
-#'   \item{ACME_pval}{the adjusted p-value for the ACME estimate}
-#'   \item{ADE_pval}{the adjusted p-value for the ADE estimate}
-#'   \item{Total_pval}{the adjusted p-value for the Total Effect estimate}
-#'   \item{ACME_lower}{the 2.5% CI for the ACME estimate}
-#'   \item{ACME_upper}{the 2.5% CI for the ACME estimate}
-#'   \item{ADE_lower}{the 2.5% CI for the ADE estimate}
-#'   \item{ADE_upper}{the 97.5% CI for the ADE estimate}
-#'   \item{Total_lower}{the 2.5 CI for the Total Effect estimate}
-#'   \item{Total_upper}{the 97.5 CI for the Total Effect estimate}
+#'   \item{ACME}{the Average Causal Mediation Effect (ACME) estimate}
+#'   \item{ACME_pval}{the original p-value for the ACME estimate}
+#'   \item{ACME_lower}{the lower bound of the CI for the ACME estimate}
+#'   \item{ACME_upper}{the upper bound of the CI for the ACME estimate}
+#'   \item{ADE}{the Average Direct Effect (ADE) estimate}
+#'   \item{ADE_pval}{the original p-value for the ADE estimate}
+#'   \item{ADE_lower}{the lower bound of the CI for the ADE estimate}
+#'   \item{ADE_upper}{the upper bound of the CI for the ADE estimate}
+#'   \item{Total.coef}{the Total Effect estimate}
+#'   \item{Total_pval}{the original p-value for the Total Effect estimate}
+#'   \item{Total_lower}{the lower bound of the CI for the Total Effect estimate}
+#'   \item{Total_upper}{the upper bound of the CI for the Total Effect estimate}
+#'   \item{ACME_padj}{the adjusted p-value for the ACME estimate}
+#'   \item{ADE_padj}{the adjusted p-value for the ADE estimate}
+#'   \item{Total_padj}{the adjusted p-value for the Total Effect estimate}
 #' }
 #'
 #' The original output of \code{\link[mediation:mediate]{mediate}} for each
@@ -415,14 +418,15 @@ setMethod("getMediation", signature = c(x = "SummarizedExperiment"),
 
 # Combine results into output dataframe
 #' @importFrom dplyr select
-#' @importFrom tidyr function starts_with ends_with unnest_wider
+#' @importFrom tidyr starts_with ends_with unnest_wider
 #' @importFrom stringr str_extract str_replace_all
 .make_output <- function(models, p.adj.method, add.metadata, sort) {
     # Combine results
     res <- do.call(rbind, models) |> as.data.frame()
+    res[["Mediator"]] <- names(models)
     # Select certain data types
     res <- res |>
-        select(starts_with(c("d.avg", "z.avg", "tau"))) |>
+        select(Mediator, starts_with(c("d.avg", "z.avg", "tau"))) |>
         select(-ends_with(c("sims")))
     # Get columns with scalar values and turn them into vector instead of list
     cols <- vapply(res, function(col) all(lengths(col) == 1L), logical(1L))

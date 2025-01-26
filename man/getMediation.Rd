@@ -99,18 +99,21 @@ instance with the same \code{data.frame} stored in the metadata as
 
 \describe{
 \item{Mediator}{the mediator variable}
-\item{ACME_estimate}{the Average Causal Mediation Effect (ACME) estimate}
-\item{ADE_estimate}{the Average Direct Effect (ADE) estimate}
-\item{Total_estimate}{the Total Effect estimate}
-\item{ACME_pval}{the adjusted p-value for the ACME estimate}
-\item{ADE_pval}{the adjusted p-value for the ADE estimate}
-\item{Total_pval}{the adjusted p-value for the Total Effect estimate}
-\item{ACME_lower}{the 2.5\% CI for the ACME estimate}
-\item{ACME_upper}{the 2.5\% CI for the ACME estimate}
-\item{ADE_lower}{the 2.5\% CI for the ADE estimate}
-\item{ADE_upper}{the 97.5\% CI for the ADE estimate}
-\item{Total_lower}{the 2.5 CI for the Total Effect estimate}
-\item{Total_upper}{the 97.5 CI for the Total Effect estimate}
+\item{ACME}{the Average Causal Mediation Effect (ACME) estimate}
+\item{ACME_pval}{the original p-value for the ACME estimate}
+\item{ACME_lower}{the lower bound of the CI for the ACME estimate}
+\item{ACME_upper}{the upper bound of the CI for the ACME estimate}
+\item{ADE}{the Average Direct Effect (ADE) estimate}
+\item{ADE_pval}{the original p-value for the ADE estimate}
+\item{ADE_lower}{the lower bound of the CI for the ADE estimate}
+\item{ADE_upper}{the upper bound of the CI for the ADE estimate}
+\item{Total.coef}{the Total Effect estimate}
+\item{Total_pval}{the original p-value for the Total Effect estimate}
+\item{Total_lower}{the lower bound of the CI for the Total Effect estimate}
+\item{Total_upper}{the upper bound of the CI for the Total Effect estimate}
+\item{ACME_padj}{the adjusted p-value for the ACME estimate}
+\item{ADE_padj}{the adjusted p-value for the ADE estimate}
+\item{Total_padj}{the adjusted p-value for the Total Effect estimate}
 }
 
 The original output of \code{\link[mediation:mediate]{mediate}} for each
