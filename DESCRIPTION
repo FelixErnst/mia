@@ -1,6 +1,6 @@
 Package: mia
 Type: Package
-Version: 1.15.18
+Version: 1.15.19
 Authors@R:
     c(person(given = "Tuomas", family = "Borman", role = c("aut", "cre"),
              email = "tuomas.v.borman@utu.fi",
