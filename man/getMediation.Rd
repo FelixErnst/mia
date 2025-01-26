@@ -108,9 +108,9 @@ instance with the same \code{data.frame} stored in the metadata as
 \item{ADE_lower}{the lower bound of the CI for the ADE estimate}
 \item{ADE_upper}{the upper bound of the CI for the ADE estimate}
 \item{Total.coef}{the Total Effect estimate}
-\item{Total_pval}{the original p-value for the Total Effect estimate}
 \item{Total_lower}{the lower bound of the CI for the Total Effect estimate}
 \item{Total_upper}{the upper bound of the CI for the Total Effect estimate}
+\item{Total_pval}{the original p-value for the Total Effect estimate}
 \item{ACME_padj}{the adjusted p-value for the ACME estimate}
 \item{ADE_padj}{the adjusted p-value for the ADE estimate}
 \item{Total_padj}{the adjusted p-value for the Total Effect estimate}

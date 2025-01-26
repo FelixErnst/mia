@@ -81,9 +81,8 @@ test_that("getMediation", {
   
   expect_named(tse, med_df[["Mediator"]])
   
-  expect_named(med_df, c("Mediator", "ACME_estimate", "ADE_estimate",
-      "Total_estimate", "ACME_pval", "ADE_pval", "Total_pval", "ACME_lower",
-      "ACME_upper", "ADE_lower", "ADE_upper", "Total_lower",
-      "Total_upper"))
-
+  expect_named(med_df, c("Mediator", "ACME", "ACME_pval", "ACME_lower",
+      "ACME_upper", "ADE", "ADE_pval", "ADE_lower", "ADE_upper", "Total.coef",
+      "Total_lower", "Total_upper", "Total_pval", "ACME_padj", "ADE_padj",
+      "Total_padj"))
 })
