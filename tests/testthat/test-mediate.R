@@ -79,10 +79,10 @@ test_that("getMediation", {
                          treat.value = "Scandinavia", control.value = "CentralEurope",
                          boot = TRUE, sims = 1)
   
-  expect_named(tse, med_df[["Mediator"]])
+  expect_named(tse, med_df[["mediator"]])
   
-  expect_named(med_df, c("Mediator", "ACME", "ACME_pval", "ACME_lower",
-      "ACME_upper", "ADE", "ADE_pval", "ADE_lower", "ADE_upper", "Total.coef",
-      "Total_lower", "Total_upper", "Total_pval", "ACME_padj", "ADE_padj",
-      "Total_padj"))
+  expect_named(med_df, c("mediator", "acme", "acme_pval", "acme_lower",
+      "acme_upper", "ade", "ade_pval", "ade_lower", "ade_upper", "total",
+      "total_lower", "total_upper", "total_pval", "acme_padj", "ade_padj",
+      "total_padj"))
 })

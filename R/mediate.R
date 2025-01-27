@@ -67,22 +67,22 @@
 #' "mediation" or as specified in the \code{name} argument. Its columns include:
 #'
 #' \describe{
-#'   \item{Mediator}{the mediator variable}
-#'   \item{ACME}{the Average Causal Mediation Effect (ACME) estimate}
-#'   \item{ACME_pval}{the original p-value for the ACME estimate}
-#'   \item{ACME_lower}{the lower bound of the CI for the ACME estimate}
-#'   \item{ACME_upper}{the upper bound of the CI for the ACME estimate}
-#'   \item{ADE}{the Average Direct Effect (ADE) estimate}
-#'   \item{ADE_pval}{the original p-value for the ADE estimate}
-#'   \item{ADE_lower}{the lower bound of the CI for the ADE estimate}
-#'   \item{ADE_upper}{the upper bound of the CI for the ADE estimate}
-#'   \item{Total.coef}{the Total Effect estimate}
-#'   \item{Total_lower}{the lower bound of the CI for the Total Effect estimate}
-#'   \item{Total_upper}{the upper bound of the CI for the Total Effect estimate}
-#'   \item{Total_pval}{the original p-value for the Total Effect estimate}
-#'   \item{ACME_padj}{the adjusted p-value for the ACME estimate}
-#'   \item{ADE_padj}{the adjusted p-value for the ADE estimate}
-#'   \item{Total_padj}{the adjusted p-value for the Total Effect estimate}
+#'   \item{mediator}{the mediator variable}
+#'   \item{acme}{the Average Causal Mediation Effect (ACME) estimate}
+#'   \item{acme_pval}{the original p-value for the ACME estimate}
+#'   \item{acme_lower}{the lower bound of the CI for the ACME estimate}
+#'   \item{acme_upper}{the upper bound of the CI for the ACME estimate}
+#'   \item{ade}{the Average Direct Effect (ADE) estimate}
+#'   \item{ade_pval}{the original p-value for the ADE estimate}
+#'   \item{ade_lower}{the lower bound of the CI for the ADE estimate}
+#'   \item{ade_upper}{the upper bound of the CI for the ADE estimate}
+#'   \item{total}{the Total Effect estimate}
+#'   \item{total_lower}{the lower bound of the CI for the Total Effect estimate}
+#'   \item{total_upper}{the upper bound of the CI for the Total Effect estimate}
+#'   \item{total_pval}{the original p-value for the Total Effect estimate}
+#'   \item{acme_padj}{the adjusted p-value for the ACME estimate}
+#'   \item{ade_padj}{the adjusted p-value for the ADE estimate}
+#'   \item{total_padj}{the adjusted p-value for the Total Effect estimate}
 #' }
 #'
 #' The original output of \code{\link[mediation:mediate]{mediate}} for each
@@ -423,10 +423,10 @@ setMethod("getMediation", signature = c(x = "SummarizedExperiment"),
 .make_output <- function(models, p.adj.method, add.metadata, sort) {
     # Combine results
     res <- do.call(rbind, models) |> as.data.frame()
-    res[["Mediator"]] <- names(models)
+    res[["mediator"]] <- names(models)
     # Select certain data types
     res <- res |>
-        select(Mediator, starts_with(c("d.avg", "z.avg", "tau"))) |>
+        select(mediator, starts_with(c("d.avg", "z.avg", "tau"))) |>
         select(-ends_with(c("sims")))
     # Get columns with scalar values and turn them into vector instead of list
     cols <- vapply(res, function(col) all(lengths(col) == 1L), logical(1L))
@@ -441,8 +441,8 @@ setMethod("getMediation", signature = c(x = "SummarizedExperiment"),
     names(lookup) <- limits
     colnames(res) <- str_replace_all(colnames(res), lookup)
     # Tidy other names also
-    lookup <- c("d.avg" = "ACME", "z.avg" = "ADE", "tau" = "Total",
-        "\\.p" = "_pval", "\\.ci_" = "_")
+    lookup <- c("d.avg" = "acme", "z.avg" = "ade", "tau" = "total",
+        "\\.p" = "_pval", "\\.ci_" = "_", "\\.coef" = "")
     colnames(res) <- str_replace_all(colnames(res), lookup)
 
     # Compute adjusted p-values and add them to dataframe
