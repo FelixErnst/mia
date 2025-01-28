@@ -116,7 +116,7 @@ biom_file <- system.file(
 
 # Clean artifacts from taxonomic data
 tse <- importBIOM(biom_file, artifact.rm = TRUE)
-                    
+
 }
 \seealso{
 \code{\link[=importQIIME2]{importQIIME2}}

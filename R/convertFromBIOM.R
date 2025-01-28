@@ -1,86 +1,86 @@
 #' Convert a \code{TreeSummarizedExperiment} object to/from \sQuote{BIOM}
 #' results
 #'
-#' For convenience, a few functions are available to convert BIOM, DADA2 and 
-#' phyloseq objects to 
+#' For convenience, a few functions are available to convert BIOM, DADA2 and
+#' phyloseq objects to
 #' \code{\link[TreeSummarizedExperiment:TreeSummarizedExperiment-class]{TreeSummarizedExperiment}}
-#' objects, and 
+#' objects, and
 #' \code{\link[TreeSummarizedExperiment:TreeSummarizedExperiment-class]{TreeSummarizedExperiment}}
 #' objects to phyloseq objects.
-#' 
+#'
 #' @param prefix.rm \code{Logical scalar}. Should
 #' taxonomic prefixes be removed? The prefixes is removed only from detected
 #' taxa columns meaning that \code{rank.from.prefix} should be enabled in the
 #' most cases. (Default: \code{FALSE})
-#' 
+#'
 #' @param removeTaxaPrefixes Deprecated. Use \code{prefix.rm} instead.
-#' 
+#'
 #' @param rank.from.prefix \code{Logical scalar}. If file does not have
 #' taxonomic ranks on feature table, should they be scraped from prefixes?
 #' (Default: \code{FALSE})
-#' 
+#'
 #' @param rankFromPrefix Deprecated.Use \code{rank.from.prefix} instead.
-#' 
+#'
 #' @param artifact.rm \code{Logical scalar}. If file have
 #' some taxonomic character naming artifacts, should they be removed.
 #' (default (Default: \code{FALSE})
-#' 
+#'
 #' @param remove.artifacts Deprecated. Use \code{artifact.rm} instead.
-#' 
-#' @details 
+#'
+#' @details
 #' \code{convertFromBIOM} coerces a \code{\link[biomformat:biom-class]{biom}}
-#' object to a 
+#' object to a
 #' \code{\link[TreeSummarizedExperiment:TreeSummarizedExperiment-class]{TreeSummarizedExperiment}}
 #' object.
-#' 
+#'
 #' \code{convertToBIOM} coerces a
 #' \code{\link[TreeSummarizedExperiment:TreeSummarizedExperiment-class]{TreeSummarizedExperiment}}
 #' object to a \code{\link[biomformat:biom-class]{biom}} object.
-#'   
+#'
 #' @return
 #' \code{convertFromBIOM} returns an object of class
 #' \code{\link[TreeSummarizedExperiment:TreeSummarizedExperiment-class]{TreeSummarizedExperiment}}
-#'   
+#'
 #' @name importBIOM
-#' 
+#'
 #' @seealso
 #' \code{\link[=importQIIME2]{importQIIME2}}
 #' \code{\link[=importMothur]{importMothur}}
 #'
 #' @examples
-#' 
+#'
 #' # Convert BIOM results to a TreeSE
 #' # Load biom file
 #' library(biomformat)
 #' biom_file <- system.file("extdata", "rich_dense_otu_table.biom",
 #'                          package = "biomformat")
-#' 
+#'
 #' # Make TreeSE from BIOM object
 #' biom_object <- biomformat::read_biom(biom_file)
 #' tse <- convertFromBIOM(biom_object)
-#' 
+#'
 #' # Convert TreeSE object to BIOM
 #' biom <- convertToBIOM(tse)
-#' 
+#'
 NULL
 
 #' Import BIOM results to \code{TreeSummarizedExperiment}
-#' 
+#'
 #' @param file BIOM file location
-#' 
+#'
 #' @param ... additional arguments to be passed to \code{convertFromBIOM}
-#' 
+#'
 #' @details
-#' \code{importBIOM} loads a BIOM file and creates a 
-#' \code{\link[TreeSummarizedExperiment:TreeSummarizedExperiment-class]{TreeSummarizedExperiment}} 
+#' \code{importBIOM} loads a BIOM file and creates a
+#' \code{\link[TreeSummarizedExperiment:TreeSummarizedExperiment-class]{TreeSummarizedExperiment}}
 #' object from the BIOM object contained in the loaded file.
-#' 
-#' @return 
+#'
+#' @return
 #' \code{importBIOM} returns an object of class
 #' \code{\link[TreeSummarizedExperiment:TreeSummarizedExperiment-class]{TreeSummarizedExperiment}}
-#' 
+#'
 #' @name importBIOM
-#' 
+#'
 #' @seealso
 #' \code{\link[=importMetaPhlAn]{importMetaPhlAn}}
 #' \code{\link[=convertFromPhyloseq]{convertFromPhyloseq}}
@@ -95,21 +95,21 @@ NULL
 #' library(biomformat)
 #' biom_file <- system.file(
 #'     "extdata", "rich_dense_otu_table.biom", package = "biomformat")
-#' 
+#'
 #' # Make TreeSE from biom file
 #' tse <- importBIOM(biom_file)
-#' 
+#'
 #' # Get taxonomyRanks from prefixes and remove prefixes
 #' tse <- importBIOM(
 #'     biom_file, rank.from.prefix = TRUE, prefix.rm = TRUE)
-#' 
+#'
 #' # Load another biom file
 #' biom_file <- system.file(
 #'    "extdata", "Aggregated_humanization2.biom", package = "mia")
-#' 
+#'
 #' # Clean artifacts from taxonomic data
 #' tse <- importBIOM(biom_file, artifact.rm = TRUE)
-#'                     
+#'
 #' @export
 importBIOM <- function(file, ...) {
     .require_package("biomformat")
@@ -118,15 +118,15 @@ importBIOM <- function(file, ...) {
 }
 
 #' @rdname importBIOM
-#' 
+#'
 #' @param x object of type \code{\link[biomformat:biom-class]{biom}}
 #'
 #' @export
 #' @importFrom S4Vectors make_zero_col_DFrame DataFrame
 #' @importFrom dplyr %>% bind_rows
 convertFromBIOM <- function(
-        x, prefix.rm = removeTaxaPrefixes, 
-        removeTaxaPrefixes = FALSE, rank.from.prefix = rankFromPrefix, 
+        x, prefix.rm = removeTaxaPrefixes,
+        removeTaxaPrefixes = FALSE, rank.from.prefix = rankFromPrefix,
         rankFromPrefix = FALSE,
         artifact.rm = remove.artifacts, remove.artifacts = FALSE, ...){
     # input check
@@ -147,7 +147,7 @@ convertFromBIOM <- function(
     counts <- as(biomformat::biom_data(x), "matrix")
     sample_data <- biomformat::sample_metadata(x)
     feature_data <- biomformat::observation_metadata(x)
-    
+
     # colData is initialized with empty tables with rownames if it is NULL
     if( is.null(sample_data) ){
         sample_data <- S4Vectors::make_zero_col_DFrame(ncol(counts))
@@ -164,15 +164,15 @@ convertFromBIOM <- function(
         rownames(feature_data) <- rownames(counts)
     # Otherwise convert it into correct format if it is a list
     } else if( is(feature_data, "list") ){
-        # Feature data is a list of taxa info. Dfs are merged together 
-        # differently than sample metadata since the column names are only 
-        # "Taxonomy". If there is only one taxonomy level, the column name does 
+        # Feature data is a list of taxa info. Dfs are merged together
+        # differently than sample metadata since the column names are only
+        # "Taxonomy". If there is only one taxonomy level, the column name does
         # not get a suffix.
         # --> bind rows based on the index of column.
-        
+
         # Get the maximum length of list
         max_length <- max( lengths(feature_data) )
-        # Get the column names from the taxa info that has all the levels that 
+        # Get the column names from the taxa info that has all the levels that
         # occurs in the data
         colnames <- names( head(
             feature_data[ lengths(feature_data) == max_length ], 1)[[1]])
@@ -181,7 +181,7 @@ convertFromBIOM <- function(
         # have all the levels. E.g., if only Kingdom level is found, all lower
         # ranks are now NA
         feature_data <- lapply(feature_data, function(x){
-            length(x) <- max_length 
+            length(x) <- max_length
             return(x)
         })
         # Create a data.frame from the list
@@ -203,7 +203,7 @@ convertFromBIOM <- function(
         feature_data <- cbind(tax_tab, feature_data)
         feature_data <- as.data.frame(feature_data)
     }
-    
+
     # Clean feature_data from possible character artifacts if specified.
     if( artifact.rm ){
         feature_data <- .detect_taxa_artifacts_and_clean(feature_data, ...)
@@ -224,7 +224,7 @@ convertFromBIOM <- function(
     # Adjust row and colnames
     rownames(counts) <- rownames(feature_data) <- biomformat::rownames(x)
     colnames(counts) <- rownames(sample_data) <- biomformat::colnames(x)
-    
+
     # Convert into DataFrame
     sample_data <- DataFrame(sample_data)
     feature_data <- DataFrame(feature_data)
@@ -245,15 +245,15 @@ convertFromBIOM <- function(
 }
 
 #' @rdname importBIOM
-#' 
+#'
 #' @param x
 #' \code{\link[TreeSummarizedExperiment:TreeSummarizedExperiment-class]{TreeSummarizedExperiment}}
-#' 
+#'
 #' @param assay.type \code{Character scaler}. The name of assay.
 #' (Default: \code{"counts"})
-#' 
+#'
 #' @param ... Additional arguments. Not used currently.
-#' 
+#'
 #' @export
 setMethod(
     "convertToBIOM", signature = c(x = "SummarizedExperiment"),
@@ -287,8 +287,8 @@ setMethod(
         stop("'ignore.col' must be a character value or NULL.", call. = FALSE)
     }
     #
-    # Subset by taking only taxonomy info if user want to remove the pattern 
-    # only from those. (Might be too restricting, e.g., if taxonomy columns are 
+    # Subset by taking only taxonomy info if user want to remove the pattern
+    # only from those. (Might be too restricting, e.g., if taxonomy columns are
     # not detected in previous steps. That is way the default is FALSE)
     ind <- rep(TRUE, ncol(feature_tab))
     if( only.taxa.col ){
@@ -334,10 +334,11 @@ setMethod(
     if( sum(found_rank) == 1 ){
         colname <- names(prefixes)[found_rank]
     }
-    return(colname)    
+    return(colname)
 }
 
 # Detect and clean non wanted characters from Taxonomy data if needed.
+#' @importFrom stringr str_extract_all
 .detect_taxa_artifacts_and_clean <- function(
         x, pattern = "auto", ignore.col = "taxonomy_unparsed", ...) {
     #
@@ -360,13 +361,12 @@ setMethod(
     if( ncol(x) > 0 ){
         # Remove artifacts
         if( pattern == "auto" ){
-            .require_package("stringr")
             # Remove all but these characters
             pattern <- "[[:alnum:]]|-|_|\\[|\\]|,|;\\||[[:space:]]"
             x <- lapply(x, function(col){
                 # Take all specified characters as a matrix where each column
                 # is a character
-                temp <- stringr::str_extract_all(
+                temp <- str_extract_all(
                     col, pattern = pattern, simplify = TRUE)
                 # Collapse matrix to strings
                 temp <- apply(temp, 1, paste, collapse = "")
@@ -403,7 +403,7 @@ setMethod(
     # Check if assay contains integers or floats. biom constructor
     # requires that information since the default value is "int".
     mat_type <- ifelse(all(assay %% 1 == 0), "int", "float")
-    
+
     # Create argument list
     args <- list(data = assay, matrix_element_type = mat_type)
     # Add rowData and colData only if they contain information

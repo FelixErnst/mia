@@ -1,6 +1,6 @@
 Package: mia
 Type: Package
-Version: 1.15.19
+Version: 1.15.20
 Authors@R:
     c(person(given = "Tuomas", family = "Borman", role = c("aut", "cre"),
              email = "tuomas.v.borman@utu.fi",
@@ -75,7 +75,6 @@ Imports:
     IRanges,
     MASS,
     MatrixGenerics,
-    mediation,
     methods,
     rbiom,
     rlang,
@@ -94,6 +93,7 @@ Suggests:
     biomformat,
     dada2,
     knitr,
+    mediation,
     miaViz,
     microbiomeDataSets,
     NMF,

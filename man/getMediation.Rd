@@ -152,55 +152,55 @@ tse$bmi_group <- as.numeric(tse$bmi_group)
 
 # Analyse mediated effect of nationality on BMI via alpha diversity
 # 100 permutations were done to speed up execution, but ~1000 are recommended
-med_df <- getMediation(tse,
-                       outcome = "bmi_group",
-                       treatment = "nationality",
-                       mediator = "diversity",
-                       covariates = c("sex", "age"),
-                       treat.value = "Scandinavia",
-                       control.value = "CentralEurope",
-                       boot = TRUE, sims = 100)
+med_df <- getMediation(
+    tse,
+    outcome = "bmi_group",
+    treatment = "nationality",
+    mediator = "diversity",
+    covariates = c("sex", "age"),
+    treat.value = "Scandinavia",
+    control.value = "CentralEurope",
+    boot = TRUE, sims = 100)
 
- # Visualise model statistics for 1st mediator
- plotMediation(med_df)
+# Visualise model statistics
+plotMediation(med_df)
 
 # Apply clr transformation to counts assay
-tse <- transformAssay(tse,
-                      method = "clr",
-                      pseudocount = 1)
+tse <- transformAssay(tse, method = "clr", pseudocount = 1)
 
 # Analyse mediated effect of nationality on BMI via clr-transformed features
 # 100 permutations were done to speed up execution, but ~1000 are recommended
-tse <- addMediation(tse, name = "assay_mediation",
-                    outcome = "bmi_group",
-                    treatment = "nationality",
-                    assay.type = "clr",
-                    covariates = c("sex", "age"),
-                    treat.value = "Scandinavia",
-                    control.value = "CentralEurope",
-                    boot = TRUE, sims = 100,
-                    p.adj.method = "fdr")
+tse <- addMediation(
+    tse, name = "assay_mediation",
+    outcome = "bmi_group",
+    treatment = "nationality",
+    assay.type = "clr",
+    covariates = c("sex", "age"),
+    treat.value = "Scandinavia",
+    control.value = "CentralEurope",
+    boot = TRUE, sims = 100,
+    p.adj.method = "fdr")
 
 # Show results for first 5 mediators
 head(metadata(tse)$assay_mediation, 5)
 
 # Perform ordination
-tse <- runMDS(tse, name = "MDS",
-              method = "euclidean",
-              assay.type = "clr",
-              ncomponents = 3)
+tse <- runMDS(
+    tse, name = "MDS", method = "euclidean",
+    assay.type = "clr", ncomponents = 3)
 
 # Analyse mediated effect of nationality on BMI via NMDS components
 # 100 permutations were done to speed up execution, but ~1000 are recommended
-tse <- addMediation(tse, name = "reddim_mediation",
-                    outcome = "bmi_group",
-                    treatment = "nationality",
-                    dimred = "MDS",
-                    covariates = c("sex", "age"),
-                    treat.value = "Scandinavia",
-                    control.value = "CentralEurope",
-                    boot = TRUE, sims = 100,
-                    p.adj.method = "fdr")
+tse <- addMediation(
+    tse, name = "reddim_mediation",
+    outcome = "bmi_group",
+    treatment = "nationality",
+    dimred = "MDS",
+    covariates = c("sex", "age"),
+    treat.value = "Scandinavia",
+    control.value = "CentralEurope",
+    boot = TRUE, sims = 100,
+    p.adj.method = "fdr")
 
 # Show results for first 5 mediators
 head(metadata(tse)$reddim_mediation, 5)

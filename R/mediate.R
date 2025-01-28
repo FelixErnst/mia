@@ -109,55 +109,55 @@
 #'
 #' # Analyse mediated effect of nationality on BMI via alpha diversity
 #' # 100 permutations were done to speed up execution, but ~1000 are recommended
-#' med_df <- getMediation(tse,
-#'                        outcome = "bmi_group",
-#'                        treatment = "nationality",
-#'                        mediator = "diversity",
-#'                        covariates = c("sex", "age"),
-#'                        treat.value = "Scandinavia",
-#'                        control.value = "CentralEurope",
-#'                        boot = TRUE, sims = 100)
+#' med_df <- getMediation(
+#'     tse,
+#'     outcome = "bmi_group",
+#'     treatment = "nationality",
+#'     mediator = "diversity",
+#'     covariates = c("sex", "age"),
+#'     treat.value = "Scandinavia",
+#'     control.value = "CentralEurope",
+#'     boot = TRUE, sims = 100)
 #'
-#'  # Visualise model statistics for 1st mediator
-#'  plotMediation(med_df)
+#' # Visualise model statistics
+#' plotMediation(med_df)
 #'
 #' # Apply clr transformation to counts assay
-#' tse <- transformAssay(tse,
-#'                       method = "clr",
-#'                       pseudocount = 1)
+#' tse <- transformAssay(tse, method = "clr", pseudocount = 1)
 #'
 #' # Analyse mediated effect of nationality on BMI via clr-transformed features
 #' # 100 permutations were done to speed up execution, but ~1000 are recommended
-#' tse <- addMediation(tse, name = "assay_mediation",
-#'                     outcome = "bmi_group",
-#'                     treatment = "nationality",
-#'                     assay.type = "clr",
-#'                     covariates = c("sex", "age"),
-#'                     treat.value = "Scandinavia",
-#'                     control.value = "CentralEurope",
-#'                     boot = TRUE, sims = 100,
-#'                     p.adj.method = "fdr")
+#' tse <- addMediation(
+#'     tse, name = "assay_mediation",
+#'     outcome = "bmi_group",
+#'     treatment = "nationality",
+#'     assay.type = "clr",
+#'     covariates = c("sex", "age"),
+#'     treat.value = "Scandinavia",
+#'     control.value = "CentralEurope",
+#'     boot = TRUE, sims = 100,
+#'     p.adj.method = "fdr")
 #'
 #' # Show results for first 5 mediators
 #' head(metadata(tse)$assay_mediation, 5)
 #'
 #' # Perform ordination
-#' tse <- runMDS(tse, name = "MDS",
-#'               method = "euclidean",
-#'               assay.type = "clr",
-#'               ncomponents = 3)
+#' tse <- runMDS(
+#'     tse, name = "MDS", method = "euclidean",
+#'     assay.type = "clr", ncomponents = 3)
 #'
 #' # Analyse mediated effect of nationality on BMI via NMDS components
 #' # 100 permutations were done to speed up execution, but ~1000 are recommended
-#' tse <- addMediation(tse, name = "reddim_mediation",
-#'                     outcome = "bmi_group",
-#'                     treatment = "nationality",
-#'                     dimred = "MDS",
-#'                     covariates = c("sex", "age"),
-#'                     treat.value = "Scandinavia",
-#'                     control.value = "CentralEurope",
-#'                     boot = TRUE, sims = 100,
-#'                     p.adj.method = "fdr")
+#' tse <- addMediation(
+#'     tse, name = "reddim_mediation",
+#'     outcome = "bmi_group",
+#'     treatment = "nationality",
+#'     dimred = "MDS",
+#'     covariates = c("sex", "age"),
+#'     treat.value = "Scandinavia",
+#'     control.value = "CentralEurope",
+#'     boot = TRUE, sims = 100,
+#'     p.adj.method = "fdr")
 #'
 #' # Show results for first 5 mediators
 #' head(metadata(tse)$reddim_mediation, 5)
@@ -362,11 +362,10 @@ setMethod("getMediation", signature = c(x = "SummarizedExperiment"),
 }
 
 # Run mediation analysis
-#' @importFrom mediation mediate
 #' @importFrom stats lm formula glm
 .run_mediate <- function(x, outcome, treatment, mediator = NULL, mat = NULL,
                         family = gaussian(), covariates = NULL, ...) {
-
+    .require_package("mediation")
     # Create initial dataframe with outcome and treatment variables
     df <- data.frame(
         Outcome = colData(x)[[outcome]], Treatment = colData(x)[[treatment]])
@@ -407,7 +406,7 @@ setMethod("getMediation", signature = c(x = "SummarizedExperiment"),
         list(formula = formula(relation_dv), family = family, data = df)
     )
     # Run mediation analysis
-    med_out <- mediate(
+    med_out <- mediation::mediate(
         fit_m, fit_dv,
         treat = "Treatment", mediator = "Mediator",
         covariates = covariates, ...
@@ -420,6 +419,7 @@ setMethod("getMediation", signature = c(x = "SummarizedExperiment"),
 #' @importFrom dplyr select
 #' @importFrom tidyr starts_with ends_with unnest_wider
 #' @importFrom stringr str_extract str_replace_all
+#' @importFrom stats p.adjust
 .make_output <- function(models, p.adj.method, add.metadata, sort) {
     # Combine results
     res <- do.call(rbind, models) |> as.data.frame()
@@ -432,9 +432,9 @@ setMethod("getMediation", signature = c(x = "SummarizedExperiment"),
     cols <- vapply(res, function(col) all(lengths(col) == 1L), logical(1L))
     res[, cols] <- lapply(res[, cols], unlist)
     # Unnest confidence interval columns
-    res <- res |> unnest_wider(tidyr::ends_with(".ci"), names_sep = "_")
+    res <- res |> unnest_wider(ends_with(".ci"), names_sep = "_")
     # Replace confidence interval values with "lower" and "upper"
-    limits <- unique(str_extract(colnames(res), "([0-9.]+)%"))
+    limits <- str_extract(colnames(res), "([0-9.]+)%") |> unique()
     limits <- limits[!is.na(limits)]
     limits <- limits[order(as.numeric(gsub("%", "", limits)))]
     lookup <- c("lower", "upper")
