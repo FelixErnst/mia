@@ -19,7 +19,7 @@ SummarizedExperiment."><!-- mathjax --><script src="https://cdnjs.cloudflare.com
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mia</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.15.19</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.15.20</span>
       </span>
     </div>
 
@@ -264,55 +264,55 @@ Importantly, those three arguments are mutually exclusive.</p>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Analyse mediated effect of nationality on BMI via alpha diversity</span></span></span>
 <span class="r-in"><span><span class="co"># 100 permutations were done to speed up execution, but ~1000 are recommended</span></span></span>
-<span class="r-in"><span><span class="va">med_df</span> <span class="op">&lt;-</span> <span class="fu">getMediation</span><span class="op">(</span><span class="va">tse</span>,</span></span>
-<span class="r-in"><span>                       outcome <span class="op">=</span> <span class="st">"bmi_group"</span>,</span></span>
-<span class="r-in"><span>                       treatment <span class="op">=</span> <span class="st">"nationality"</span>,</span></span>
-<span class="r-in"><span>                       mediator <span class="op">=</span> <span class="st">"diversity"</span>,</span></span>
-<span class="r-in"><span>                       covariates <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"sex"</span>, <span class="st">"age"</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>                       treat.value <span class="op">=</span> <span class="st">"Scandinavia"</span>,</span></span>
-<span class="r-in"><span>                       control.value <span class="op">=</span> <span class="st">"CentralEurope"</span>,</span></span>
-<span class="r-in"><span>                       boot <span class="op">=</span> <span class="cn">TRUE</span>, sims <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">med_df</span> <span class="op">&lt;-</span> <span class="fu">getMediation</span><span class="op">(</span></span></span>
+<span class="r-in"><span>    <span class="va">tse</span>,</span></span>
+<span class="r-in"><span>    outcome <span class="op">=</span> <span class="st">"bmi_group"</span>,</span></span>
+<span class="r-in"><span>    treatment <span class="op">=</span> <span class="st">"nationality"</span>,</span></span>
+<span class="r-in"><span>    mediator <span class="op">=</span> <span class="st">"diversity"</span>,</span></span>
+<span class="r-in"><span>    covariates <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"sex"</span>, <span class="st">"age"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>    treat.value <span class="op">=</span> <span class="st">"Scandinavia"</span>,</span></span>
+<span class="r-in"><span>    control.value <span class="op">=</span> <span class="st">"CentralEurope"</span>,</span></span>
+<span class="r-in"><span>    boot <span class="op">=</span> <span class="cn">TRUE</span>, sims <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span> <span class="co"># Visualise model statistics for 1st mediator</span></span></span>
-<span class="r-in"><span> <span class="fu">plotMediation</span><span class="op">(</span><span class="va">med_df</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="co"># Visualise model statistics</span></span></span>
+<span class="r-in"><span><span class="fu">plotMediation</span><span class="op">(</span><span class="va">med_df</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Apply clr transformation to counts assay</span></span></span>
-<span class="r-in"><span><span class="va">tse</span> <span class="op">&lt;-</span> <span class="fu"><a href="transformAssay.html">transformAssay</a></span><span class="op">(</span><span class="va">tse</span>,</span></span>
-<span class="r-in"><span>                      method <span class="op">=</span> <span class="st">"clr"</span>,</span></span>
-<span class="r-in"><span>                      pseudocount <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">tse</span> <span class="op">&lt;-</span> <span class="fu"><a href="transformAssay.html">transformAssay</a></span><span class="op">(</span><span class="va">tse</span>, method <span class="op">=</span> <span class="st">"clr"</span>, pseudocount <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Analyse mediated effect of nationality on BMI via clr-transformed features</span></span></span>
 <span class="r-in"><span><span class="co"># 100 permutations were done to speed up execution, but ~1000 are recommended</span></span></span>
-<span class="r-in"><span><span class="va">tse</span> <span class="op">&lt;-</span> <span class="fu">addMediation</span><span class="op">(</span><span class="va">tse</span>, name <span class="op">=</span> <span class="st">"assay_mediation"</span>,</span></span>
-<span class="r-in"><span>                    outcome <span class="op">=</span> <span class="st">"bmi_group"</span>,</span></span>
-<span class="r-in"><span>                    treatment <span class="op">=</span> <span class="st">"nationality"</span>,</span></span>
-<span class="r-in"><span>                    assay.type <span class="op">=</span> <span class="st">"clr"</span>,</span></span>
-<span class="r-in"><span>                    covariates <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"sex"</span>, <span class="st">"age"</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>                    treat.value <span class="op">=</span> <span class="st">"Scandinavia"</span>,</span></span>
-<span class="r-in"><span>                    control.value <span class="op">=</span> <span class="st">"CentralEurope"</span>,</span></span>
-<span class="r-in"><span>                    boot <span class="op">=</span> <span class="cn">TRUE</span>, sims <span class="op">=</span> <span class="fl">100</span>,</span></span>
-<span class="r-in"><span>                    p.adj.method <span class="op">=</span> <span class="st">"fdr"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">tse</span> <span class="op">&lt;-</span> <span class="fu">addMediation</span><span class="op">(</span></span></span>
+<span class="r-in"><span>    <span class="va">tse</span>, name <span class="op">=</span> <span class="st">"assay_mediation"</span>,</span></span>
+<span class="r-in"><span>    outcome <span class="op">=</span> <span class="st">"bmi_group"</span>,</span></span>
+<span class="r-in"><span>    treatment <span class="op">=</span> <span class="st">"nationality"</span>,</span></span>
+<span class="r-in"><span>    assay.type <span class="op">=</span> <span class="st">"clr"</span>,</span></span>
+<span class="r-in"><span>    covariates <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"sex"</span>, <span class="st">"age"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>    treat.value <span class="op">=</span> <span class="st">"Scandinavia"</span>,</span></span>
+<span class="r-in"><span>    control.value <span class="op">=</span> <span class="st">"CentralEurope"</span>,</span></span>
+<span class="r-in"><span>    boot <span class="op">=</span> <span class="cn">TRUE</span>, sims <span class="op">=</span> <span class="fl">100</span>,</span></span>
+<span class="r-in"><span>    p.adj.method <span class="op">=</span> <span class="st">"fdr"</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Show results for first 5 mediators</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">metadata</span><span class="op">(</span><span class="va">tse</span><span class="op">)</span><span class="op">$</span><span class="va">assay_mediation</span>, <span class="fl">5</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Perform ordination</span></span></span>
-<span class="r-in"><span><span class="va">tse</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/scater/man/runMDS.html" class="external-link">runMDS</a></span><span class="op">(</span><span class="va">tse</span>, name <span class="op">=</span> <span class="st">"MDS"</span>,</span></span>
-<span class="r-in"><span>              method <span class="op">=</span> <span class="st">"euclidean"</span>,</span></span>
-<span class="r-in"><span>              assay.type <span class="op">=</span> <span class="st">"clr"</span>,</span></span>
-<span class="r-in"><span>              ncomponents <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">tse</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/scater/man/runMDS.html" class="external-link">runMDS</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>    <span class="va">tse</span>, name <span class="op">=</span> <span class="st">"MDS"</span>, method <span class="op">=</span> <span class="st">"euclidean"</span>,</span></span>
+<span class="r-in"><span>    assay.type <span class="op">=</span> <span class="st">"clr"</span>, ncomponents <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Analyse mediated effect of nationality on BMI via NMDS components</span></span></span>
 <span class="r-in"><span><span class="co"># 100 permutations were done to speed up execution, but ~1000 are recommended</span></span></span>
-<span class="r-in"><span><span class="va">tse</span> <span class="op">&lt;-</span> <span class="fu">addMediation</span><span class="op">(</span><span class="va">tse</span>, name <span class="op">=</span> <span class="st">"reddim_mediation"</span>,</span></span>
-<span class="r-in"><span>                    outcome <span class="op">=</span> <span class="st">"bmi_group"</span>,</span></span>
-<span class="r-in"><span>                    treatment <span class="op">=</span> <span class="st">"nationality"</span>,</span></span>
-<span class="r-in"><span>                    dimred <span class="op">=</span> <span class="st">"MDS"</span>,</span></span>
-<span class="r-in"><span>                    covariates <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"sex"</span>, <span class="st">"age"</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>                    treat.value <span class="op">=</span> <span class="st">"Scandinavia"</span>,</span></span>
-<span class="r-in"><span>                    control.value <span class="op">=</span> <span class="st">"CentralEurope"</span>,</span></span>
-<span class="r-in"><span>                    boot <span class="op">=</span> <span class="cn">TRUE</span>, sims <span class="op">=</span> <span class="fl">100</span>,</span></span>
-<span class="r-in"><span>                    p.adj.method <span class="op">=</span> <span class="st">"fdr"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">tse</span> <span class="op">&lt;-</span> <span class="fu">addMediation</span><span class="op">(</span></span></span>
+<span class="r-in"><span>    <span class="va">tse</span>, name <span class="op">=</span> <span class="st">"reddim_mediation"</span>,</span></span>
+<span class="r-in"><span>    outcome <span class="op">=</span> <span class="st">"bmi_group"</span>,</span></span>
+<span class="r-in"><span>    treatment <span class="op">=</span> <span class="st">"nationality"</span>,</span></span>
+<span class="r-in"><span>    dimred <span class="op">=</span> <span class="st">"MDS"</span>,</span></span>
+<span class="r-in"><span>    covariates <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"sex"</span>, <span class="st">"age"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>    treat.value <span class="op">=</span> <span class="st">"Scandinavia"</span>,</span></span>
+<span class="r-in"><span>    control.value <span class="op">=</span> <span class="st">"CentralEurope"</span>,</span></span>
+<span class="r-in"><span>    boot <span class="op">=</span> <span class="cn">TRUE</span>, sims <span class="op">=</span> <span class="fl">100</span>,</span></span>
+<span class="r-in"><span>    p.adj.method <span class="op">=</span> <span class="st">"fdr"</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Show results for first 5 mediators</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">metadata</span><span class="op">(</span><span class="va">tse</span><span class="op">)</span><span class="op">$</span><span class="va">reddim_mediation</span>, <span class="fl">5</span><span class="op">)</span></span></span>
