@@ -11,19 +11,19 @@
 #' merged. If \code{length(levels(group)) == nrow(x)/ncol(x)}, \code{x} will be
 #' returned unchanged. If \code{group} matches with both dimensions,
 #' \code{by} must be specified. (Default: \code{NULL})
-#'   
+#'
 #' @param f Deprecated. Use \code{group} instead.
-#' 
+#'
 #' @param update_rowTree Deprecated. Use \code{update.tree} instead.
-#'   
+#'
 #' @param altexp \code{Character vector}. Specify the alternative experiments
 #'   to be unsplit. (Default: \code{names(altExps(x))})
-#' 
+#'
 #' @param altExpNames Deprecated. Use \code{altexp} instead.
-#'   
+#'
 #' @param ... Arguments passed to \code{agglomerateByVariable} function for
 #'   \code{SummarizedExperiment} objects and other functions.
-#'   See \code{\link[=agglomerate-methods]{agglomerateByVariable}} for more 
+#'   See \code{\link[=agglomerate-methods]{agglomerateByVariable}} for more
 #'   details.
 #'   \itemize{
 #'     \item \code{use.names}: \code{Logical scalar}. Specifies whether to name
@@ -46,7 +46,7 @@
 #' data replaced by the unsplit data. \code{colData} of x is kept as well
 #' and any existing \code{rowTree} is dropped as well, since existing
 #' \code{rowLinks} are not valid anymore.
-#' 
+#'
 #' @name splitOn
 #' @seealso
 #' \code{\link[=agglomerate-methods]{agglomerateByRanks}}
@@ -57,41 +57,41 @@
 #' \code{\link[SingleCellExperiment:splitAltExps]{splitAltExps}}
 #'
 #' @export
-#' 
+#'
 #' @examples
 #' data(GlobalPatterns)
 #' tse <- GlobalPatterns
-#' # Split data based on SampleType. 
+#' # Split data based on SampleType.
 #' se_list <- splitOn(tse, group = "SampleType")
-#' 
-#' # List of SE objects is returned. 
+#'
+#' # List of SE objects is returned.
 #' se_list
-#' 
+#'
 #' # Create arbitrary groups
 #' rowData(tse)$group <- sample(1:3, nrow(tse), replace = TRUE)
 #' colData(tse)$group <- sample(1:3, ncol(tse), replace = TRUE)
-#' 
+#'
 #' # Split based on rows
 #' # Each element is named based on their group name. If you don't want to name
 #' # elements, use use_name = FALSE. Since "group" can be found from rowdata and
 #' # colData you must use `by`.
 #' se_list <- splitOn(tse, group = "group", use.names = FALSE, by = 1)
-#' 
+#'
 #' # When column names are shared between elements, you can store the list to
 #' # altExps
 #' altExps(tse) <- se_list
-#' 
+#'
 #' altExps(tse)
-#' 
+#'
 #' # If you want to split on columns and update rowTree, you can do
 #' se_list <- splitOn(tse, group = colData(tse)$group, update.tree = TRUE)
-#' 
+#'
 #' # If you want to combine groups back together, you can use unsplitBy
 #' unsplitOn(se_list)
-#' 
+#'
 NULL
 
-# This function collects group (grouping variable), by, and 
+# This function collects group (grouping variable), by, and
 # use.names and returns them as a list.
 .norm_args_for_split_by <- function(
         x, group = f, f, by = MARGIN, MARGIN = NULL, use.names = use_names,
@@ -123,7 +123,7 @@ NULL
                 "Please specify 'by'.", call. = FALSE)
         # If by is specified but it does not match with length of group
         } else if( !is.null(by) && (length(group) !=  dim(x)[[by]]) ){
-            stop("'group' does not match with ", 
+            stop("'group' does not match with ",
                 ifelse(by==1, "nrow", "ncol"), ". Please check 'by'.",
                 call. = FALSE)
         # IF group matches with nrow
@@ -133,7 +133,7 @@ NULL
         } else if( is.null(by) ){
             by <- 2L
         }
-    # Else if group is a character specifying column from rowData or colData  
+    # Else if group is a character specifying column from rowData or colData
     } else {
         # If by is specified
         if( !is.null(by) ){
@@ -162,14 +162,14 @@ NULL
             tmp_row <- try({retrieveFeatureInfo(x, group, search = "rowData")},
                             silent = TRUE)
             # Try to get information from colData
-            tmp_col <- try({retrieveCellInfo(x, group, search = "colData")}, 
+            tmp_col <- try({retrieveCellInfo(x, group, search = "colData")},
                             silent = TRUE)
-            
-            # If it was not found 
+
+            # If it was not found
             if( is(tmp_row, "try-error") && is(tmp_col, "try-error") ){
                 stop("'group' is not found. ",
                     "Please check that 'group' specifies a column from ",
-                    "rowData or colData.", 
+                    "rowData or colData.",
                     call. = FALSE)
                 # If group was found from both
             } else if( !is(tmp_row, "try-error") && !is(tmp_col, "try-error") ){
@@ -190,7 +190,7 @@ NULL
         }
         # Convert values into factors
         group <- factor(group, unique(group))
-        
+
         # If there are NAs, add NA as level
         if( any(is.na(group)) ){
             group <- addNA(group)
@@ -285,11 +285,11 @@ setMethod("splitOn", signature = c(x = "TreeSummarizedExperiment"),
                 # If the returned value is a list, go through all of them
                 if( is(x, "SimpleList") ){
                     x <- lapply(x, function(y){
-                        .agglomerate_trees(y, MARGIN = direction, ...)})
+                        .agglomerate_trees(y, by = direction)})
                     x <- SimpleList(x)
                 } else {
                     # Otherwise, the returned value is TreeSE
-                    x <- .agglomerate_trees(x, MARGIN = direction, ...)
+                    x <- .agglomerate_trees(x, by = direction)
                 }
             }
         }
@@ -337,8 +337,8 @@ setMethod("splitOn", signature = c(x = "TreeSummarizedExperiment"),
         } else if(length(unique(dims[2L,])) == 1L) {
             by <- 1L
         } else {
-            stop("The dimensions are not equal across all elements. ", 
-                "Please check that either number of rows or columns match.", 
+            stop("The dimensions are not equal across all elements. ",
+                "Please check that either number of rows or columns match.",
                 call. = FALSE)
         }
     } else{
@@ -349,7 +349,7 @@ setMethod("splitOn", signature = c(x = "TreeSummarizedExperiment"),
                 call. = FALSE)
         }
     }
-    
+
     # Get the class of objects SCE, SE or TreeSE
     class_x <- class(ses[[1L]])
     # Combine assays
@@ -374,7 +374,7 @@ setMethod("splitOn", signature = c(x = "TreeSummarizedExperiment"),
     rowData(ans) <- rd
     # Update rownames
     rownames(ans) <- rownames(rd)
-    
+
     # IF the object is TreeSE. add rowTree
     if( class_x == "TreeSummarizedExperiment" ){
         # Add both colTree and rowTree

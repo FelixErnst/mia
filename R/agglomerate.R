@@ -246,7 +246,9 @@ setMethod(
         # Agglomerate data by using SCE method
         x <- callNextMethod(x, rank = rank, update.tree = update.tree, ...)
         # Rename tree to correspond the current rownames
-        x <- .rename_all_tree_nodes(x, by = 1L)
+        if( update.tree ){
+            x <- .rename_all_tree_nodes(x, by = 1L)
+        }
         return(x)
     }
 )
@@ -454,7 +456,7 @@ setMethod("agglomerateByVariable", signature = c(x = "SummarizedExperiment"),
 # Agglomerate all rowTrees found in TreeSE object. Get tips that represent
 # rows and remove all others.
 #' @importFrom TreeSummarizedExperiment subsetByLeaf
-.agglomerate_trees <- function(x, by = 1, ...){
+.agglomerate_trees <- function(x, by = MARGIN, MARGIN = 1L, ...){
     # Get right functions based on direction
     tree_names_FUN <- switch(
         by, "1" = rowTreeNames, "2" = colTreeNames, stop("."))
