@@ -458,7 +458,7 @@ setMethod("getMediation", signature = c(x = "SummarizedExperiment"),
     }
     # Order output dataframe by ACME p-values
     if( sort ){
-        res <- res[order(res[["ACME_padj"]]), ]
+        res <- res[order(res[["acme_padj"]]), ]
     }
     return(res)
 }
