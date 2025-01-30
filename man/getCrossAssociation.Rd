@@ -13,9 +13,9 @@ getCrossAssociation(x, ...)
   experiment1 = 1,
   experiment2 = 2,
   assay.type1 = assay_name1,
-  assay_name1 = "counts",
+  assay_name1 = NULL,
   assay.type2 = assay_name2,
-  assay_name2 = "counts",
+  assay_name2 = NULL,
   altexp1 = NULL,
   altexp2 = NULL,
   col.var1 = colData_variable1,
@@ -91,12 +91,12 @@ Selects the experiment 2 from\code{experiments(x)} of
 \code{x} when \code{x} is \code{TreeSE})}
 
 \item{assay.type1}{\code{Character scalar}. Specifies the name of the assay
-in experiment 1 to be transformed.. (Default: \code{"counts"})}
+in experiment 1 to be transformed.. (Default: \code{NULL})}
 
 \item{assay_name1}{Deprecated. Use \code{assay.type1} instead.}
 
 \item{assay.type2}{\code{Character scalar}. Specifies the name of the
-assay in experiment 2 to be transformed.. (Default: \code{"counts"})}
+assay in experiment 2 to be transformed.. (Default: \code{NULL})}
 
 \item{assay_name2}{Deprecated. Use \code{assay.type2} instead.}
 
@@ -220,7 +220,8 @@ mae[[1]] <- mae[[1]][rowSds(assay(mae[[1]])) > 0, ]
 mae[[1]] <- transformAssay(mae[[1]], method = "rclr")
 
 # Calculate cross-correlations
-result <- getCrossAssociation(mae, method = "pearson", assay.type2 = "nmr")
+result <- getCrossAssociation(
+    mae, method = "pearson", assay.type1 = "counts", assay.type2 = "nmr")
 # Show first 5 entries
 head(result, 5)
 
@@ -243,6 +244,7 @@ head(result, 5)
 # have any correlations whose p-value is lower than the threshold
 result <- getCrossAssociation(
     mae[[1]], experiment2 = mae[[1]], method = "pearson",
+    assay.type1 = "counts", assay.type2 = "counts",
     filter.self.cor = TRUE, p.adj.threshold = 0.05, test.signif = TRUE)
 # Show first 5 entries
 head(result, 5)
@@ -254,6 +256,7 @@ names(result)
 # paired samples, you can use paired = TRUE.
 result <- getCrossAssociation(
     mae[[1]], mae[[1]], by = 2, paired = FALSE,
+    assay.type1 = "counts", assay.type2 = "counts",
     association.fun = getDissimilarity, method = "bray")
 
 # If experiments are equal and measure is symmetric
@@ -272,7 +275,8 @@ result <- getCrossAssociation(
 sample_size <- 0.3
 tse <- mae[[1]]
 tse_sub <- tse[ sample( seq_len( nrow(tse) ), sample_size * nrow(tse) ), ]
-result <- getCrossAssociation(tse_sub)
+result <- getCrossAssociation(
+    tse_sub, assay.type1 = "counts", assay.type2 = "counts")
 
 # It is also possible to choose variables from colData and calculate
 # association between assay and sample metadata or between variables of

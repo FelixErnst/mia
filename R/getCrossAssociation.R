@@ -19,10 +19,10 @@
 #' \code{x} when \code{x} is \code{TreeSE})
 #'
 #' @param assay.type1 \code{Character scalar}. Specifies the name of the assay
-#' in experiment 1 to be transformed.. (Default: \code{"counts"})
+#' in experiment 1 to be transformed. (Default: \code{NULL})
 #'
 #' @param assay.type2  \code{Character scalar}. Specifies the name of the
-#' assay in experiment 2 to be transformed.. (Default: \code{"counts"})
+#' assay in experiment 2 to be transformed. (Default: \code{NULL})
 #'
 #' @param assay_name1 Deprecated. Use \code{assay.type1} instead.
 #'
@@ -171,7 +171,8 @@
 #' mae[[1]] <- transformAssay(mae[[1]], method = "rclr")
 #'
 #' # Calculate cross-correlations
-#' result <- getCrossAssociation(mae, method = "pearson", assay.type2 = "nmr")
+#' result <- getCrossAssociation(
+#'     mae, method = "pearson", assay.type1 = "counts", assay.type2 = "nmr")
 #' # Show first 5 entries
 #' head(result, 5)
 #'
@@ -194,6 +195,7 @@
 #' # have any correlations whose p-value is lower than the threshold
 #' result <- getCrossAssociation(
 #'     mae[[1]], experiment2 = mae[[1]], method = "pearson",
+#'     assay.type1 = "counts", assay.type2 = "counts",
 #'     filter.self.cor = TRUE, p.adj.threshold = 0.05, test.signif = TRUE)
 #' # Show first 5 entries
 #' head(result, 5)
@@ -205,6 +207,7 @@
 #' # paired samples, you can use paired = TRUE.
 #' result <- getCrossAssociation(
 #'     mae[[1]], mae[[1]], by = 2, paired = FALSE,
+#'     assay.type1 = "counts", assay.type2 = "counts",
 #'     association.fun = getDissimilarity, method = "bray")
 #'
 #' # If experiments are equal and measure is symmetric
@@ -223,7 +226,8 @@
 #' sample_size <- 0.3
 #' tse <- mae[[1]]
 #' tse_sub <- tse[ sample( seq_len( nrow(tse) ), sample_size * nrow(tse) ), ]
-#' result <- getCrossAssociation(tse_sub)
+#' result <- getCrossAssociation(
+#'     tse_sub, assay.type1 = "counts", assay.type2 = "counts")
 #'
 #' # It is also possible to choose variables from colData and calculate
 #' # association between assay and sample metadata or between variables of
@@ -269,8 +273,8 @@ setMethod("getCrossAssociation", signature = c(x = "MultiAssayExperiment"),
         x,
         experiment1 = 1,
         experiment2 = 2,
-        assay.type1 = assay_name1, assay_name1 = "counts",
-        assay.type2 = assay_name2, assay_name2 = "counts",
+        assay.type1 = assay_name1, assay_name1 = NULL,
+        assay.type2 = assay_name2, assay_name2 = NULL,
         altexp1 = NULL,
         altexp2 = NULL,
         col.var1 = colData_variable1,
@@ -396,8 +400,8 @@ setMethod("getCrossAssociation", signature = "SummarizedExperiment",
         x,
         experiment1 = 1,
         experiment2 = 2,
-        assay.type1 = "counts",
-        assay.type2 = "counts",
+        assay.type1 = NULL,
+        assay.type2 = NULL,
         altexp1 = NULL,
         altexp2 = NULL,
         col.var1 = colData_variable1, colData_variable1 = NULL,
@@ -434,13 +438,17 @@ setMethod("getCrossAssociation", signature = "SummarizedExperiment",
     tse2 <- .check_and_get_altExp(tse2, altexp2)
     # There are 3 options, from where the values are fetched. First option, that
     # takes the precedence, is the column metadata variables. Second option
-    # is the dimension reduction results. The third option is the default
-    # default choice, i.e., abundance table.
-    if( !is.null(col.var1) && !is.null(dimred1) ){
-        stop("Specify either 'col.var1' or 'dimred1'.", call. = FALSE)
+    # is the dimension reduction results. The third option is the
+    # abundance table.
+    if( sum(c(is.null(assay.type1), is.null(col.var1), is.null(dimred1)))
+            != 2 ){
+        stop("One of the following parameters must be specified: ",
+            "'assay.type1', 'col.var1', 'dimred1'.", call. = FALSE)
     }
-    if( !is.null(col.var2) && !is.null(dimred2) ){
-        stop("Specify either 'col.var2' or 'dimred2'.", call. = FALSE)
+    if( sum(c(is.null(assay.type2), is.null(col.var2), is.null(dimred2)))
+            != 2 ){
+        stop("One of the following parameters must be specified: ",
+            "'assay.type2', 'col.var2', 'dimred2'.", call. = FALSE)
     }
     if( !is.null(col.var1) ){
         tse1 <- .check_and_subset_colData_variables(tse1, col.var1)
