@@ -107,8 +107,6 @@ Suggests:
     topicdoc,
     topicmodels,
     yaml
-Remotes:
-    github::joey711/phyloseq
 URL: https://github.com/microbiome/mia
 BugReports: https://github.com/microbiome/mia/issues
 Roxygen: list(markdown = TRUE)
